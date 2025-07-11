@@ -1,0 +1,26 @@
+<div class="category-filter">
+  <button
+    *ngFor="let category of categories"
+    class="category-button"
+    [class.active]="activeCategory === category.id"
+    (click)="selectCategory(category.id)"
+  >
+    {{ category.name }}
+  </button>
+</div>
+
+<div class="product-carousel">
+  <div class="carousel-container" #carouselContainer>
+    <div class="carousel-track">
+      <div class="product-card" *ngFor="let product of filteredProducts">
+       <app-product-item [product]="product"></app-product-item>
+      </div>
+    </div>
+  </div>
+  <button class="carousel-nav carousel-prev" (click)="scrollLeft()">
+    <i class="fa fa-chevron-left icon-small"></i>
+  </button>
+  <button class="carousel-nav carousel-next" (click)="scrollRight()">
+    <i class="fa fa-chevron-right icon-small"></i>
+  </button>
+</div>
