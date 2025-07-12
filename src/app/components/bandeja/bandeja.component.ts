@@ -72,7 +72,7 @@ export class BandejaComponent {
     //mostramos la info del producto cambiando el nombre de la clase bandeja-item-info-hide por bandeja-item-info
     //si pulso la cambio entre bandeja-item-info-hide y bandeja-item-info
     const bandejaItemInfo = document.querySelector('.bandeja-item-info');
-    bandejaItemInfo?.classList.toggle('bandeja-item-info-hide');
+    bandejaItemInfo?.classList.remove('bandeja-item-info');
 
     
   }
