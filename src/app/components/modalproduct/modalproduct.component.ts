@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-modalproduct',
@@ -7,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrl: './modalproduct.component.scss'
 })
 export class ModalproductComponent {
-
+  @Input() product:any;
 }

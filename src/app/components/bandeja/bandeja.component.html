@@ -1,14 +1,24 @@
-<div class="featured-image">
-  <img src="./assets/img/bandeja.png" alt="Assorted pastries on wooden board" />
-  <!-- <img
-          src="https://images.unsplash.com/photo-1586444248879-bc604bc77f85?q=80&w=1000&auto=format&fit=crop"
-          alt="Assorted pastries on wooden board"
-        /> -->
+<div class="featured-image"
+cdkDropList #doneList="cdkDropList" id="doneList"
+    [cdkDropListConnectedTo]="['todoList']"
+    [cdkDropListData]="items"
+    (cdkDropListDropped)="drop($event)"
+>
+
+<div *ngFor="let item of items; let i = index" class="bandeja-item" cdkDrag>
+  <div class="eliminaritem" (click)="removeItem(item)">
+    <i class="fa fa-trash"></i>
+  </div>
+  <div class="item-bandeja">
+      <img [src]="item.image" [alt]="item.name" class="bandeja-item-image" />
+    <div class="bandeja-item-info">
+      <!-- <p class="bandeja-item-name">{{ item.name }}</p> -->
+      <!-- <p class="bandeja-item-price">${{ item.price }}</p> -->
+    </div>
+  </div>
+</div>
+<img src="./assets/img/bandeja.png" alt="Assorted pastries on wooden board" class="tray-image" />
+
 </div>
 
-<div class="order-button-container">
-  <button class="order-button" routerLink="/review">
-    Review Order
-    <i class="fa fa-chevron-right icon-small"></i>
-  </button>
-</div>
+

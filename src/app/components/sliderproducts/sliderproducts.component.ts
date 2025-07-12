@@ -1,6 +1,7 @@
+import { Component, ElementRef, ViewChild, AfterViewInit, Output, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { NgFor } from '@angular/common';
-import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { ProductItemComponent } from '../product-item/product-item.component';
+import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 
 interface Category {
   id: string;
@@ -19,12 +20,15 @@ interface Product {
   selector: 'app-sliderproducts',
   imports:[
     NgFor,
-    ProductItemComponent
+    ProductItemComponent,
+    CdkDropList, CdkDrag
   ],
   templateUrl: './sliderproducts.component.html',
   styleUrls: ['./sliderproducts.component.scss']
 })
-export class SliderproductsComponent implements AfterViewInit {
+export class SliderproductsComponent implements AfterViewInit, OnChanges {
+  @Input() productsList: Product[] = [];
+
   categories: Category[] = [
     { id: 'all', name: 'All' },
     { id: 'classic', name: 'Classic Breads' },
@@ -46,23 +50,45 @@ export class SliderproductsComponent implements AfterViewInit {
 
   activeCategory: string = 'all';
 
+  todo: Product[] = [];
+
+  @Output() productDropped: EventEmitter<Product> = new EventEmitter<Product>();
+
   @ViewChild('carouselContainer', { static: false }) carouselContainer!: ElementRef<HTMLDivElement>;
 
-  constructor() {}
+  constructor() {
+    this.todo = this.products.slice();
+  }
 
   ngAfterViewInit() {
     // Any initialization after view is ready
   }
 
-  selectCategory(categoryId: string) {
-    this.activeCategory = categoryId;
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['productsList']) {
+      this.updateTodoFromInput();
+    }
   }
 
-  get filteredProducts(): Product[] {
+  selectCategory(categoryId: string) {
+    this.activeCategory = categoryId;
+    this.updateTodo();
+  }
+
+  updateTodo() {
     if (this.activeCategory === 'all') {
-      return this.products;
+      this.todo = this.products.slice();
+    } else {
+      this.todo = this.products.filter(product => product.category === this.activeCategory);
     }
-    return this.products.filter(product => product.category === this.activeCategory);
+  }
+
+  updateTodoFromInput() {
+    if (this.activeCategory === 'all') {
+      this.todo = this.productsList.slice();
+    } else {
+      this.todo = this.productsList.filter(product => product.category === this.activeCategory);
+    }
   }
 
   scrollLeft() {
@@ -76,4 +102,15 @@ export class SliderproductsComponent implements AfterViewInit {
       this.carouselContainer.nativeElement.scrollBy({ left: 200, behavior: 'smooth' });
     }
   }
-}
+
+  drop(event:CdkDragDrop<Product[]>){
+    if(event.previousContainer === event.container){
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex)
+    }else{
+      const product = event.previousContainer.data[event.previousIndex];
+      this.productDropped.emit(product);
+      // Optionally remove the product from todo if you want it to move rather than copy
+      // event.previousContainer.data.splice(event.previousIndex, 1);
+    }
+  }
+  }

@@ -11,8 +11,12 @@
 
 <div class="product-carousel">
   <div class="carousel-container" #carouselContainer>
-    <div class="carousel-track">
-      <div class="product-card" *ngFor="let product of filteredProducts">
+    <div class="carousel-track"
+    cdkDropList #todoList="cdkDropList" id="todoList"
+    [cdkDropListConnectedTo]="['doneList']"
+    [cdkDropListData]="todo"
+    (cdkDropListDropped)="drop($event)">
+      <div class="product-card" *ngFor="let product of todo" cdkDrag>
        <app-product-item [product]="product"></app-product-item>
       </div>
     </div>

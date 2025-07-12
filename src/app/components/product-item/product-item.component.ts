@@ -14,5 +14,12 @@ import { ModalproductComponent } from '../modalproduct/modalproduct.component';
 export class ProductItemComponent {
 
   @Input() product: any;
+  selectedStudentProfile:any;
+
+  openPaymentsModal(product: any): void {
+      this.selectedStudentProfile = product;
+    }
+
+    
 
 }
