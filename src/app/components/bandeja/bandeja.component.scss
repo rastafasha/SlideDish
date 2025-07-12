@@ -65,4 +65,8 @@
         display: flex;
          font-size: 12px;
     }
+
+    animation: reveal linear both;
+        animation-timeline: view();
+        animation-range: entry 20% cover 30%;
 }

@@ -1,16 +1,29 @@
 <header class="header">
-      <div class="header-left">
-        <i class="fa fa-bars icon-small"></i>
-        <div class="location">
-           <i class="fa fa-map-pin icon-small"></i>
-          <span>Grand City, MI</span>
-        </div>
-      </div>
-      <div class="logo" routerLink="/">
-        <i class="fa fa-shopping-bag icon-small"></i>
-        <span>SlideDish </span>
-      </div>
-      <div class="header-right">
-        <i class="fa fa-bell icon-small"></i>
-      </div>
-    </header>
+  <div class="header-left">
+    <i class="fa fa-bars icon-small"></i>
+    <div class="location">
+      <i class="fa fa-map-pin icon-small"></i>
+      <span>Grand City, MI</span>
+    </div>
+  </div>
+  <div class="logo" routerLink="/">
+    <i class="fa fa-shopping-bag icon-small"></i>
+    <span>SlideDish </span>
+  </div>
+  <div class="header-right">
+    <i class="fa fa-bell icon-small"></i>
+    <span class="cart-count-badge"> {{totalList}}</span>
+    <i class="fa fa-shopping-cart icon-small"></i>
+
+
+    <!-- <div *ngIf="bandejaList > 0">
+      <a routerLink="/cart">
+        <span class="cart-count-badge" *ngIf="bandejaList > 0 && bandejaList <= 10">{{bandejaList}}</span>
+        <span class="cart-count-badge" *ngIf="bandejaList > 10">
+          <i class="fa fa-shopping-cart icon-small"></i>
+        </span>
+      </a>
+    </div> -->
+  </div>
+
+</header>

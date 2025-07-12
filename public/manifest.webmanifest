@@ -1,6 +1,6 @@
 {
-  "name": "slidedishapp",
-  "short_name": "slidedishapp",
+  "name": "slidedish",
+  "short_name": "slidedish",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",

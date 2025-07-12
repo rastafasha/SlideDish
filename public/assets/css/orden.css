@@ -37,6 +37,10 @@
   margin: 0 auto;
   margin-bottom: 40px;
   position: relative;
+
+  animation: reveal linear both;
+        animation-timeline: view();
+        animation-range: entry 20% cover 30%;
 }
 
 .overf{

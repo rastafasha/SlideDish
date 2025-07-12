@@ -23,6 +23,7 @@ export class ReviewOrderComponent {
   
     constructor() {
       this.loadBandejaListFromLocalStorage();
+      window.scrollTo(0,0);
     }
 
     loadBandejaListFromLocalStorage() {

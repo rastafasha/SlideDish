@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild, AfterViewInit, Output, EventEmitter, 
 import { NgFor } from '@angular/common';
 import { ProductItemComponent } from '../product-item/product-item.component';
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { ModalproductComponent } from '../modalproduct/modalproduct.component';
 
 interface Category {
   id: string;
@@ -21,7 +22,8 @@ interface Product {
   imports:[
     NgFor,
     ProductItemComponent,
-    CdkDropList, CdkDrag
+    CdkDropList, CdkDrag,
+    ModalproductComponent
   ],
   templateUrl: './sliderproducts.component.html',
   styleUrls: ['./sliderproducts.component.scss']

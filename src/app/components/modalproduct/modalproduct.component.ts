@@ -1,8 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-modalproduct',
-  imports: [],
+  imports: [
+    CommonModule
+  ],
   templateUrl: './modalproduct.component.html',
   styleUrl: './modalproduct.component.scss'
 })

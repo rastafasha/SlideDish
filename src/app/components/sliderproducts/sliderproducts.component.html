@@ -16,8 +16,9 @@
     [cdkDropListConnectedTo]="['doneList']"
     [cdkDropListData]="todo"
     (cdkDropListDropped)="drop($event)">
-      <div class="product-card" *ngFor="let product of todo" cdkDrag>
+      <div class="product-card" *ngFor="let product of todo; let i = index" cdkDrag>
        <app-product-item [product]="product"></app-product-item>
+       <app-modalproduct [product]="product"></app-modalproduct>
       </div>
     </div>
   </div>
@@ -28,3 +29,4 @@
     <i class="fa fa-chevron-right icon-small"></i>
   </button>
 </div>
+

@@ -1,0 +1,26 @@
+.cart-count-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #ff0000;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 2px 6px;
+  line-height: 1;
+  pointer-events: none;
+  transform: translate(-80%, 80%);
+}
+
+.icon-bag-red {
+  filter: invert(22%) sepia(91%) saturate(7481%) hue-rotate(357deg) brightness(95%) contrast(105%);
+}
+
+.icon-bag-black {
+  filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0%) contrast(100%);
+}
+
+.icon-bag-yellow {
+  filter: invert(88%) sepia(64%) saturate(749%) hue-rotate(1deg) brightness(102%) contrast(102%);
+}

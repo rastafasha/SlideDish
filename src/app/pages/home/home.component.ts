@@ -26,6 +26,7 @@ export class HomeComponent {
 
   constructor() {
     this.loadBandejaListFromLocalStorage();
+    window.scroll(0,0);
   }
 
   onProductDropped(product: any) {
