@@ -15,7 +15,7 @@ cdkDropList #doneList="cdkDropList" id="doneList"
       <p class="bandeja-item-name">{{ itemSelected?.name }}</p>
      <p class="bandeja-item-price">${{ itemSelected?.price }}</p>
     </div>
-     <div class="eliminaritem" (click)="removeItem(item)">
+     <div class="eliminaritem" (click)="removeItem(itemSelected)">
        <i class="fa fa-trash"></i>
        
      </div>

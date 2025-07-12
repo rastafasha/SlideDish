@@ -44,6 +44,7 @@ export class BandejaComponent {
       this.itemsChange.emit(this.items);
       this.itemRemoved.emit(item);
       this.saveItemsToLocalStorage();
+      this.removeMostrarinfo()
     }
   }
 
