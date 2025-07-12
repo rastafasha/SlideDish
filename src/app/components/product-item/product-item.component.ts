@@ -6,10 +6,10 @@ import { ModalproductComponent } from '../modalproduct/modalproduct.component';
   selector: 'app-product-item',
   imports: [
     CommonModule,
-    ModalproductComponent
+    // ModalproductComponent
   ],
   templateUrl: './product-item.component.html',
-  styleUrl: './product-item.component.scss'
+  styleUrls: ['./product-item.component.scss']
 })
 export class ProductItemComponent {
 
@@ -18,5 +18,9 @@ export class ProductItemComponent {
 
   openPaymentsModal(product: any): void {
     this.productSelected.emit(product);
+  }
+
+  onAddButtonClick(): void {
+    this.productSelected.emit(this.product);
   }
 }

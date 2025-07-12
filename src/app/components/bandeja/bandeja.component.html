@@ -23,14 +23,14 @@ cdkDropList #doneList="cdkDropList" id="doneList"
        X
      </div> -->
   </div>
+  <!-- Empty tray with add button when items length is 3 -->
 </div>
-
-<!-- Empty tray with add button when items length is 3 -->
 <div *ngIf="items.length >= 3" class="bandeja-item slide-in">
   <div class="item-bandeja empty-tray">
     <button (click)="addNewTray()" class="add-tray-button order-button">Agregar nueva bandeja</button>
   </div>
 </div>
+
 
 <img src="./assets/img/bandeja.png" alt="Assorted pastries on wooden board" class="tray-image" />
 </div>

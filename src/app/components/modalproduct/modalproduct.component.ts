@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-modalproduct',
@@ -11,4 +11,9 @@ import { Component, Input } from '@angular/core';
 })
 export class ModalproductComponent {
   @Input() product:any;
+  @Output() productSelected: EventEmitter<any> = new EventEmitter<any>();
+
+  onAddButtonClick(): void {
+    this.productSelected.emit(this.product);
+  }
 }

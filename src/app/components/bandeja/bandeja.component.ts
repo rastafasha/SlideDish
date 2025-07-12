@@ -19,8 +19,9 @@ export class BandejaComponent {
   @Input() items: any[] = [];
   @Output() itemsChange: EventEmitter<any[]> = new EventEmitter<any[]>();
   @Output() itemRemoved: EventEmitter<any> = new EventEmitter<any>();
-  @Output() addTray: EventEmitter<void> = new EventEmitter<void>();
+  @Output() addTray: EventEmitter<boolean> = new EventEmitter<boolean>();
   itemSelected!:Product;
+  showEmptyTray:boolean = false;
 
   drop(event:CdkDragDrop<any[]>){
     if(event.previousContainer === event.container){
@@ -59,7 +60,7 @@ export class BandejaComponent {
 
 
   mostrarinfo(item:Product){
-    console.log(item);
+    // console.log(item);
     this.itemSelected =item;
     //mostramos la info del producto cambiando el nombre de la clase bandeja-item-info-hide por bandeja-item-info
     //si pulso la cambio entre bandeja-item-info-hide y bandeja-item-info
@@ -79,7 +80,7 @@ export class BandejaComponent {
   }
 
   addNewTray() {
-    this.addTray.emit();
-    console.log('object');
+    this.showEmptyTray = false;
+    this.addTray.emit(this.showEmptyTray);
   }
 }

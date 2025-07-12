@@ -1,31 +1,38 @@
 <app-header></app-header>
 <app-hero></app-hero>
 <div class="container">
-    <app-sliderproducts (productDropped)="onProductDropped($event)"></app-sliderproducts>
-<div *ngFor="let tray of bandejaList; let i = index">
-  <app-bandeja 
-    *ngIf="tray.items.length > 0"
-    [items]="tray.items" 
-    (itemsChange)="onItemsChange($event, i)" 
-    (itemRemoved)="onItemRemoved($event, i)"
-    (addTray)="onAddTray()">
-  </app-bandeja>
-</div>
+  <app-sliderproducts (productDropped)="onProductDropped($event)"></app-sliderproducts>
 
-
-
-<!-- Empty tray with add button, shown only when showEmptyTray is true -->
-<div *ngIf="showEmptyTray">
-  <app-bandeja 
-    [items]="[]" 
-    (addTray)="onAddTray()">
-  </app-bandeja>
-</div>
-<div class="order-button-container">
-  <button class="order-button" routerLink="/review">
-    Review Order
+  <div *ngIf="!showEmptyTray" class="carousel-container">
+     <button class="carousel-button prev" (click)="scrollCarousel('prev')">
+    <i class="fa fa-chevron-left icon-small"></i>
+  </button>
+    <div class="carousel-track" #carouselTrack>
+      <div *ngFor="let tray of bandejaList; let i = index" class="carousel-item">
+        <app-bandeja 
+          [items]="tray.items" 
+          (itemsChange)="onItemsChange($event, i)" 
+          (itemRemoved)="onItemRemoved($event, i)"
+          (addTray)="onAddTray()">
+        </app-bandeja>
+      </div>
+    </div>
+    <button class="carousel-button next" (click)="scrollCarousel('next')">
     <i class="fa fa-chevron-right icon-small"></i>
   </button>
-</div>
-</div>
+  </div>
 
+  <div *ngIf="showEmptyTray">
+    <app-bandeja 
+      [items]="[]" 
+      (addTray)="onAddTray()">
+    </app-bandeja>
+  </div>
+
+  <div class="order-button-container">
+    <button class="order-button" routerLink="/review">
+      Review Order
+      <i class="fa fa-chevron-right icon-small"></i>
+    </button>
+  </div>
+</div>
