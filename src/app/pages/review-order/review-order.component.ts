@@ -11,8 +11,7 @@ import { BandejaComponent } from '../../components/bandeja/bandeja.component';
     HeaderComponent,
     CommonModule,
     BandejaComponent,
-    RouterModule,
-    
+    RouterModule
 
   ],
   templateUrl: './review-order.component.html',

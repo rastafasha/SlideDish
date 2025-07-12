@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { CommonModule, NgFor } from '@angular/common';
+import { Product } from '../../models/product';
 
 @Component({
   selector: 'app-bandeja',
@@ -17,6 +18,8 @@ export class BandejaComponent {
   @Input() items: any[] = [];
   @Output() itemsChange: EventEmitter<any[]> = new EventEmitter<any[]>();
   @Output() itemRemoved: EventEmitter<any> = new EventEmitter<any>();
+  itemSelected!:Product;
+
 
   drop(event:CdkDragDrop<any[]>){
     if(event.previousContainer === event.container){
@@ -50,5 +53,17 @@ export class BandejaComponent {
     } catch (e) {
       console.error('Error saving items to localStorage', e);
     }
+  }
+
+
+  mostrarinfo(item:Product){
+    console.log(item);
+    this.itemSelected =item;
+    //mostramos la info del producto cambiando el nombre de la clase bandeja-item-info-hide por bandeja-item-info
+    //si pulso la cambio entre bandeja-item-info-hide y bandeja-item-info
+    const bandejaItemInfo = document.querySelector('.bandeja-item-info-hide');
+    bandejaItemInfo?.classList.toggle('bandeja-item-info');
+
+    
   }
 }
