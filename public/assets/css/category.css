@@ -27,3 +27,12 @@
   color: white;
   border-color: #1f2937;
 }
+
+@media (max-width:768px) {
+    .category-filter {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+}

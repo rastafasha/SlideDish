@@ -21,8 +21,8 @@
 }
 
 .item-bandeja{
-    width: 90px;
-    height: 90px;
+    width: 140px;
+    height: 140px;
     display: flex;
     
 }
@@ -31,11 +31,17 @@
     
 }
 
+.bandeja-item {
+    position: relative;
+}
+
+
+
 
 .featured-image {
     display: flex;
     flex-wrap: wrap;
-    gap: 0px;
+    gap: 5px;
     align-items: center;
     height: 210px;
     justify-content: center;
@@ -59,30 +65,32 @@
 .bandeja-item-info{
 
     
+    position: absolute;
+    // top: -50px;
+    // left: 60px;
+    top: 110px;
+    left: 110px;
     width: 190px;
     min-height: 60px;
     height: auto;
     border-radius: 15px;
-    position: relative;
-    /* top: 70px; */
-    transform: translate(90px, 40px);
-    z-index: 300;
+    z-index: 3000;
     padding: 10px;
-    display: flex;
-
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: beige;
-     box-shadow: 0 3px 1px -2px rgba(0,0,0,0.2),
-    0 2px 2px 0 rgba(5, 5, 5, 0.14),
-    0 1px 5px 0 rgba(0,0,0,0.12);
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,0.2),
+                0 2px 2px 0 rgba(5, 5, 5, 0.14),
+                0 1px 5px 0 rgba(0,0,0,0.12);
 
-    & p{
+    & p {
         margin: 0;
         padding: 0;
     }
 }
+
+.bandeja-item-info
 
 .eliminaritem{
     position: relative;
@@ -93,7 +101,7 @@
     background: #e1155ca6;
     float: right;
     right: 0px;
-    top: 0px;
+    top: -30px;
     border: 1px solid #fff;
     border-radius: 100px;
     display: flex;
@@ -108,4 +116,41 @@
     animation: reveal linear both;
         animation-timeline: view();
         animation-range: entry 20% cover 30%;
+}
+
+
+@media (max-width:768px) {
+    .item-bandeja {
+        width: 90px;
+        height: 90px;
+        display: flex;
+       
+    }
+
+    .featured-image{
+        display: flex;
+        flex-wrap: wrap;
+         gap: 5px;
+        height: 190px;
+        align-items: center; 
+        justify-content: center;
+    }
+}
+
+@media (max-width:368px) {
+    .item-bandeja {
+        width: 70px;
+        height: 70px;
+        display: flex;
+       
+    }
+
+    .featured-image{
+        display: flex;
+        flex-wrap: wrap;
+         gap: 5px;
+        height: 130px;
+        align-items: center; 
+        justify-content: center;
+    }
 }

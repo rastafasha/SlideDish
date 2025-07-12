@@ -32,21 +32,3 @@
     }
 }
 
-/* .images__container {
-    columns: 2;
-    padding: 16px;
-    column-gap: 32px;
-
-    & img {
-        width: 100%;
-        height: auto;
-        border-radius: 4px;
-        margin-bottom: 32px;
-
-        animation: reveal linear both;
-        animation-timeline: view();
-        animation-range: entry 20% cover 30%;
-    }
-} */
-
-
