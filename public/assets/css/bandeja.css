@@ -1,0 +1,17 @@
+
+
+/* Featured image styles */
+.featured-image {
+  position: relative;
+  margin: 0 auto 2rem auto;
+  max-width: 32rem;
+}
+
+.featured-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+   z-index: 20;
+    position: relative;
+}

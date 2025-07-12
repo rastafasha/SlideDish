@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, input } from '@angular/core';
 import { SliderproductsComponent } from "../../components/sliderproducts/sliderproducts.component";
 import { HeroComponent } from "../../components/hero/hero.component";
 import { HeaderComponent } from '../../shared/header/header.component';
@@ -21,6 +21,8 @@ import { ModalproductComponent } from '../../components/modalproduct/modalproduc
 })
 export class HomeComponent {
   bandejaList: any[] = [];
+
+  @Input() product:any;
 
   constructor() {
     this.loadBandejaListFromLocalStorage();
