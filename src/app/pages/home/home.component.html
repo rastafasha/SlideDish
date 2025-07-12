@@ -2,11 +2,25 @@
 <app-hero></app-hero>
 <div class="container">
     <app-sliderproducts (productDropped)="onProductDropped($event)"></app-sliderproducts>
-<app-bandeja 
-  [items]="bandejaList" 
-  (itemsChange)="onItemsChange($event)" 
-  (itemRemoved)="onItemRemoved($event)">
-</app-bandeja>
+<div *ngFor="let tray of bandejaList; let i = index">
+  <app-bandeja 
+    *ngIf="tray.items.length > 0"
+    [items]="tray.items" 
+    (itemsChange)="onItemsChange($event, i)" 
+    (itemRemoved)="onItemRemoved($event, i)"
+    (addTray)="onAddTray()">
+  </app-bandeja>
+</div>
+
+
+
+<!-- Empty tray with add button, shown only when showEmptyTray is true -->
+<div *ngIf="showEmptyTray">
+  <app-bandeja 
+    [items]="[]" 
+    (addTray)="onAddTray()">
+  </app-bandeja>
+</div>
 <div class="order-button-container">
   <button class="order-button" routerLink="/review">
     Review Order

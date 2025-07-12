@@ -118,6 +118,13 @@
         animation-range: entry 20% cover 30%;
 }
 
+.add-tray-button{
+    position: relative;
+    z-index: 99999;
+    top: 40px;
+    left: 180px;
+}
+
 
 @media (max-width:768px) {
     .item-bandeja {
@@ -153,4 +160,19 @@
         align-items: center; 
         justify-content: center;
     }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slide-in {
+  animation: slideIn 0.5s ease forwards;
 }

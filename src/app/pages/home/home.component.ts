@@ -20,8 +20,8 @@ import { ModalproductComponent } from '../../components/modalproduct/modalproduc
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
-  bandejaList: any[] = [];
-
+  bandejaList: { items: any[] }[] = [];
+  showEmptyTray:boolean=false;
   @Input() product:any;
 
   constructor() {
@@ -30,29 +30,43 @@ export class HomeComponent {
   }
 
   onProductDropped(product: any) {
-    // Add the dropped product to bandejaItems if not already present
-    if (!this.bandejaList.find(item => item.id === product.id)) {
-      this.bandejaList.push(product);
+    if (this.bandejaList.length === 0) {
+      this.bandejaList.push({ items: [] });
+    }
+    const firstTray = this.bandejaList[0];
+    if (!firstTray.items.find(item => item.id === product.id)) {
+      firstTray.items.push(product);
       this.saveBandejaListToLocalStorage();
     }
   }
 
-  onItemsChange(items: any[]) {
-    this.bandejaList = items;
+  onItemsChange(items: any[], trayIndex: number) {
+    this.bandejaList[trayIndex].items = items;
     this.saveBandejaListToLocalStorage();
   }
 
-  onItemRemoved(item: any) {
-    this.bandejaList = this.bandejaList.filter(i => i.id !== item.id);
+  onItemRemoved(item: any, trayIndex: number) {
+    const tray = this.bandejaList[trayIndex];
+    tray.items = tray.items.filter(i => i.id !== item.id);
+    this.saveBandejaListToLocalStorage();
+  }
 
-   localStorage.removeItem('bandejaItems');
+  onAddTray() {
+    this.bandejaList.push({ items: [] });
     this.saveBandejaListToLocalStorage();
   }
 
   loadBandejaListFromLocalStorage() {
     const storedItems = localStorage.getItem('bandejaItems');
     if (storedItems) {
-      this.bandejaList = JSON.parse(storedItems);
+      const parsed = JSON.parse(storedItems);
+      if (Array.isArray(parsed)) {
+        this.bandejaList = parsed;
+      } else {
+        this.bandejaList = [{ items: parsed }];
+      }
+    } else {
+      this.bandejaList = [{ items: [] }];
     }
   }
 

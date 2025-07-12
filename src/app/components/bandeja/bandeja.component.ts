@@ -14,12 +14,13 @@ import { Product } from '../../models/product';
   templateUrl: './bandeja.component.html',
   styleUrls: ['./bandeja.component.scss']
 })
+
 export class BandejaComponent {
   @Input() items: any[] = [];
   @Output() itemsChange: EventEmitter<any[]> = new EventEmitter<any[]>();
   @Output() itemRemoved: EventEmitter<any> = new EventEmitter<any>();
+  @Output() addTray: EventEmitter<void> = new EventEmitter<void>();
   itemSelected!:Product;
-
 
   drop(event:CdkDragDrop<any[]>){
     if(event.previousContainer === event.container){
@@ -75,5 +76,10 @@ export class BandejaComponent {
     bandejaItemInfo?.classList.remove('bandeja-item-info');
 
     
+  }
+
+  addNewTray() {
+    this.addTray.emit();
+    console.log('object');
   }
 }
