@@ -1,9 +1,9 @@
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content" *ngIf="product">
             <div class="modal-header">
-                <!-- <h5 class="modal-title" id="exampleModalLabel">Modal title</h5> -->
+                <!-- <h5 class="modal-title" id="exampleModalLabel">{{product.name}}</h5> -->
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -12,8 +12,7 @@
                         <span id="close-modal">
                             <i class="ion ion-md-close"></i>
                         </span>
-                        <img src="https://zippypaws.com/app/uploads/2018/05/strawberry-waffles-1024x668.jpg"
-                            alt="Strawberry Waffle" />
+                        <img [src]="product.image" [alt]="product.name" />
                     </div>
                     <div class="ft-recipe__content">
                         <header class="content__header">
@@ -34,14 +33,13 @@
                                 </li>
                                 <li class="recipe-details-item servings">
                                     <i class="fa fa-users icon-small"></i>
-                                    <span class="value">{{product.price|currency}}</span>
+                                    <span class="value">{{product.price | currency}}</span>
                                     <span class="title">Price</span>
                                 </li>
                             </ul>
                         </header>
                         <p class="description">
-                            There’s no better way to celebrate May being National Strawberry Month than by sharing a
-                            sweet treat with your pup!!! Strawberries...
+                            {{product.description || 'No description available.'}}
                         </p>
                     </div>
                 </div>
@@ -53,4 +51,3 @@
         </div>
     </div>
 </div>
-

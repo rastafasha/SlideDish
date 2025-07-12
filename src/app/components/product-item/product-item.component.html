@@ -1,6 +1,5 @@
 <div class="example-box" cdkDrag>
-    <div class="product-image" data-bs-toggle="modal" data-bs-target="#exampleModal"
-    (click)="openPaymentsModal(product)">
+    <div class="product-image" (click)="openPaymentsModal(product)">
         <img [src]="product.image" [alt]="product.name" />
     </div>
     <h3 class="product-name">{{ product.name }}</h3>
@@ -11,5 +10,4 @@
 
 </div>
 
-<app-modalproduct [product]="product"></app-modalproduct>
 

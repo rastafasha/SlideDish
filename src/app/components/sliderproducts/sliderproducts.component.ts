@@ -1,21 +1,12 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, Output, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, Output, EventEmitter, Input, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { NgFor } from '@angular/common';
 import { ProductItemComponent } from '../product-item/product-item.component';
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ModalproductComponent } from '../modalproduct/modalproduct.component';
-
-interface Category {
-  id: string;
-  name: string;
-}
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  category: string;
-  image: string;
-}
+import { Product } from '../../models/product';
+import { Category } from '../../models/category';
+import { ProductoService } from '../../services/producto.service';
+import { CategoryService } from '../../services/category.service';
 
 @Component({
   selector: 'app-sliderproducts',
@@ -31,24 +22,11 @@ interface Product {
 export class SliderproductsComponent implements AfterViewInit, OnChanges {
   @Input() productsList: Product[] = [];
 
-  categories: Category[] = [
-    { id: 'all', name: 'All' },
-    { id: 'classic', name: 'Classic Breads' },
-    { id: 'pastries', name: 'Pastries' },
-    { id: 'special', name: 'Special Breads' }
-  ];
+  selectedProduct: Product | null = null;
 
-  products: Product[] = [
-    { id: 1, name: 'Baguette', price: 4.5, category: 'classic', image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=1000&auto=format&fit=crop' },
-    { id: 2, name: 'Croissant', price: 3.5, category: 'pastries', image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=1000&auto=format&fit=crop' },
-    { id: 3, name: 'Sourdough Bread', price: 6.0, category: 'classic', image: 'https://images.unsplash.com/photo-1589367920969-ab8e050bbb04?q=80&w=1000&auto=format&fit=crop' },
-    { id: 4, name: 'Cinnamon Roll', price: 3.5, category: 'pastries', image: 'https://images.unsplash.com/photo-1509365465985-25d11c17e812?q=80&w=1000&auto=format&fit=crop' },
-    { id: 5, name: 'Brioche Bun', price: 3.0, category: 'special', image: 'https://images.unsplash.com/photo-1620921568790-c1cf8984624c?q=80&w=1000&auto=format&fit=crop' },
-    { id: 6, name: 'Sweet Pie', price: 5.0, category: 'pastries', image: 'https://images.unsplash.com/photo-1620921568790-c1cf8984624c?q=80&w=1000&auto=format&fit=crop' },
-    { id: 7, name: 'Cinnamon Roll', price: 3.5, category: 'pastries', image: 'https://images.unsplash.com/photo-1509365465985-25d11c17e812?q=80&w=1000&auto=format&fit=crop' },
-    { id: 8, name: 'Brioche Bun', price: 3.0, category: 'special', image: 'https://images.unsplash.com/photo-1620921568790-c1cf8984624c?q=80&w=1000&auto=format&fit=crop' },
-    { id: 9, name: 'Sweet Pie', price: 5.0, category: 'pastries', image: 'https://images.unsplash.com/photo-1620921568790-c1cf8984624c?q=80&w=1000&auto=format&fit=crop' }
-  ];
+  categories: Category[] = [];
+
+  products: Product[] = [];
 
   activeCategory: string = 'all';
 
@@ -58,18 +36,45 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
 
   @ViewChild('carouselContainer', { static: false }) carouselContainer!: ElementRef<HTMLDivElement>;
 
+  private productoService = inject(ProductoService);
+  private categoryService = inject(CategoryService);
+
   constructor() {
     this.todo = this.products.slice();
   }
 
   ngAfterViewInit() {
-    // Any initialization after view is ready
+    this.getProductos();
+    this.getCategories();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['productsList']) {
       this.updateTodoFromInput();
     }
+  }
+
+  getProductos() {
+    this.productoService.getProductos().subscribe(
+      (productos) => {
+        this.products = productos;
+        this.updateTodo();
+      },
+      (error) => {
+        console.error('Error al obtener los productos', error);
+      }
+    );
+  }
+
+  getCategories() {
+    this.categoryService.getCategories().subscribe(
+      (categories) => {
+        this.categories = categories;
+      },
+      (error) => {
+        console.error('Error al obtener las categorías', error);
+      }
+    );
   }
 
   selectCategory(categoryId: string) {
@@ -115,4 +120,14 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
       // event.previousContainer.data.splice(event.previousIndex, 1);
     }
   }
+
+  openModal(product: Product) {
+    this.selectedProduct = product;
+    // Use Bootstrap's modal method to show modal programmatically
+    const modalElement = document.getElementById('exampleModal');
+    if (modalElement) {
+      const modal = new (window as any).bootstrap.Modal(modalElement);
+      modal.show();
+    }
   }
+}

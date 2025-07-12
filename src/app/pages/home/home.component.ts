@@ -13,7 +13,7 @@ import { ModalproductComponent } from '../../components/modalproduct/modalproduc
     SliderproductsComponent, HeroComponent,
     HeaderComponent, CommonModule,
     BandejaComponent,
-    ModalproductComponent,
+    // ModalproductComponent,
     RouterModule
   ],
   templateUrl: './home.component.html',

@@ -1,5 +1,5 @@
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
 import { ModalproductComponent } from '../modalproduct/modalproduct.component';
 
 @Component({
@@ -14,12 +14,9 @@ import { ModalproductComponent } from '../modalproduct/modalproduct.component';
 export class ProductItemComponent {
 
   @Input() product: any;
-  selectedStudentProfile:any;
+  @Output() productSelected: EventEmitter<any> = new EventEmitter<any>();
 
   openPaymentsModal(product: any): void {
-      this.selectedStudentProfile = product;
-    }
-
-    
-
+    this.productSelected.emit(product);
+  }
 }

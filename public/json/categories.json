@@ -1,0 +1,6 @@
+[
+     { "id": "all", "name": "All" },
+    { "id": "classic", "name": "Classic Breads" },
+    { "id": "pastries", "name": "Pastries" },
+    { "id": "special", "name": "Special Breads" }
+]
