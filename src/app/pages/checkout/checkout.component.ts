@@ -14,7 +14,7 @@ import { RouterModule } from '@angular/router';
 export class CheckoutComponent {
 
   constructor(){
-    window.scrollTo(0,0);
+    // window.scrollTo(0,0);
   }
 
 }
