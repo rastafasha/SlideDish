@@ -6,6 +6,7 @@
 @import url('bandeja.css');
 @import url('orden.css');
 @import url('animate.css');
+@import url('checkout.css');
 
 /* Base styles */
 * {
@@ -30,6 +31,10 @@ body {
   max-width: 72rem;
   margin: 0 auto;
   padding: 1.5rem 1rem;
+}
+
+.cursor{
+  cursor: pointer;
 }
 
 

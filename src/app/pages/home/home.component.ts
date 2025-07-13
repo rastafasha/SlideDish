@@ -21,7 +21,7 @@ import { ModalproductComponent } from '../../components/modalproduct/modalproduc
 })
 export class HomeComponent {
   bandejaList: any[] = [];
-
+  isbandejaList:boolean= false;
   @Input() product:any;
 
   constructor() {
@@ -47,12 +47,17 @@ export class HomeComponent {
 
    localStorage.removeItem('bandejaItems');
     this.saveBandejaListToLocalStorage();
+    
   }
 
   loadBandejaListFromLocalStorage() {
     const storedItems = localStorage.getItem('bandejaItems');
     if (storedItems) {
       this.bandejaList = JSON.parse(storedItems);
+      
+    }
+    if(this.bandejaList.length > 0){
+      this.isbandejaList = true;
     }
   }
 

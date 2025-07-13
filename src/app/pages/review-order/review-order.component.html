@@ -1,51 +1,67 @@
 <app-header></app-header>
- <main class="container">
-      <div class="hero">
+<main class="container">
+    <div class="hero">
         <h1>Review Order</h1>
-      </div>
-     
-      <app-bandeja 
-  [items]="bandejaList" 
-  (itemsChange)="onItemsChange($event)" 
-  (itemRemoved)="onItemRemoved($event)">
-</app-bandeja>
-      <div class="order-list">
+    </div>
+    <div class="hero" *ngIf="!isbandejaList">
+        <h1>Shopping Bag Empty</h1>
+    </div>
+
+    
+
+    <app-bandeja *ngIf="isbandejaList"  [items]="bandejaList" (itemsChange)="onItemsChange($event)"
+        (itemRemoved)="onItemRemoved($event)">
+    </app-bandeja>
+    <div class="order-list" *ngIf="isbandejaList">
         <div class="order-list-bar"></div>
-          <div class="list-box">
+        <div class="list-box">
             <h3>My Order</h3>
             <div class="clear"></div>
             <div class="overf">
                 <!-- itemlist -->
-             <div class="list-item" *ngFor="let item of bandejaList; let i = index">
                 <div class="top-item">
                     <div class="list-item-left">
-                        <i data-lucide="shopping-bag" class="icon"></i>
-                        <span>Order #12345</span>
-                        
+
+                        <span class="burbleinfo">
+                            <!-- <i class="fa fa-shopping-bag icon-small" ></i> -->
+                            Order No.{{randomNum}}
+                        </span>
+
                     </div>
                     <div class="list-item-right">
-                        <span>2022-01-01 12:00:00</span>
-                        
-                    </div>
-                </div>
-                <div class="clear"></div>
-                <div class="info-item">
-                    <img src="{{item.image}}" alt="">
-                    <h2>{{item.name}}</h2>
-                    <div class="add-items">
-                        <i data-lucide="minus" class="icon"></i>
-                        <span>1</span>
-                        <i data-lucide="plus" class="icon"></i>
-                    </div>
-                    <div class="price">
-                        <p>{{item.price|currency}}</p>
-                    </div>
-                </div>
-            </div>
-            <!-- itemlist -->
+                        <span class="burbleinfo">Hoy es: {{fechaHoy}}</span>
 
-             <!-- itemlist -->
-             <!-- <div class="list-item">
+                    </div>
+                </div>
+                <div class="list-item" *ngFor="let item of bandejaList; let i = index">
+                    <div class="clear"></div>
+                    <div class="info-item">
+                        <img src="{{item.image}}" alt="">
+                        <h2>{{item.name}}</h2>
+                        <div class="add-items">
+                            <i class="fa fa-minus icon-small" (click)="removeItem(item,i )"></i>
+                            <span>{{item.quantity}}</span>
+                            <i class="fa fa-plus icon-small" (click)="addItem(item, i)"></i>
+                        </div>
+                        <div class="price">
+                            <p *ngIf="item.price * item.quantity > 0">Price: {{item.price * item.quantity | currency}}
+                            </p>
+                            <p *ngIf="item.price * item.quantity == 0">Price: {{item.price | currency}}</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- itemlist -->
+                <div class="d-flex justify-content-between mb-4 total">
+                    <p>
+                        <b>Total</b>
+                    </p>
+                    <p>
+                        <b>${{total() | number:'1.2-2'}}</b>
+                    </p>
+                </div>
+
+                <!-- itemlist -->
+                <!-- <div class="list-item">
                 <div class="top-item">
                     <div class="list-item-left">
                         <i data-lucide="shopping-bag" class="icon"></i>
@@ -71,20 +87,20 @@
                     </div>
                 </div>
             </div> -->
-            <!-- itemlist -->
+                <!-- itemlist -->
 
-             
+
             </div>
         </div>
-      </div>
-      <div class="order-button-container">
+    </div>
+    <div class="order-button-container">
         <button class="check-button" routerLink="/">
-          <i class="fa fa-chevron-left icon-small"></i>
-          Back
+            <i class="fa fa-chevron-left icon-small"></i>
+            Back
         </button>
-        <button class="check-button" routerLink="/checkout">
-          Checkout
-          <i class="fa fa-chevron-right icon-small"></i>
+        <button class="check-button" routerLink="/checkout" *ngIf="isbandejaList">
+            Checkout
+            <i class="fa fa-chevron-right icon-small"></i>
         </button>
-      </div>
-    </main>
+    </div>
+</main>

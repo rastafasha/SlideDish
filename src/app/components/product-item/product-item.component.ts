@@ -1,12 +1,10 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ModalproductComponent } from '../modalproduct/modalproduct.component';
 
 @Component({
   selector: 'app-product-item',
   imports: [
-    CommonModule,
-    ModalproductComponent
+    CommonModule
   ],
   templateUrl: './product-item.component.html',
   styleUrl: './product-item.component.scss'
