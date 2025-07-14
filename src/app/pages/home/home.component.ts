@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { BandejaComponent } from "../../components/bandeja/bandeja.component";
 import { ModalproductComponent } from '../../components/modalproduct/modalproduct.component';
+import { LoadingComponent } from '../../shared/loading/loading.component';
 
 @Component({
   selector: 'app-home',
@@ -14,7 +15,8 @@ import { ModalproductComponent } from '../../components/modalproduct/modalproduc
     HeaderComponent, CommonModule,
     BandejaComponent,
     // ModalproductComponent,
-    RouterModule
+    RouterModule,
+    LoadingComponent
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
@@ -23,6 +25,7 @@ export class HomeComponent {
   bandejaList: any[] = [];
   isbandejaList:boolean= false;
   @Input() product:any;
+  isLoading: boolean= false;
 
   constructor() {
     this.loadBandejaListFromLocalStorage();
@@ -51,6 +54,7 @@ export class HomeComponent {
   }
 
   loadBandejaListFromLocalStorage() {
+    this.isLoading =true;
     const storedItems = localStorage.getItem('bandejaItems');
     if (storedItems) {
       this.bandejaList = JSON.parse(storedItems);
@@ -59,6 +63,7 @@ export class HomeComponent {
     if(this.bandejaList.length > 0){
       this.isbandejaList = true;
     }
+    this.isLoading = false;
   }
 
   saveBandejaListToLocalStorage() {

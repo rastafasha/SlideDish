@@ -2,7 +2,10 @@
 <app-hero></app-hero>
 <div class="container">
     <app-sliderproducts (productDropped)="onProductDropped($event)"></app-sliderproducts>
+
+  <app-loading *ngIf="isLoading"></app-loading>
 <app-bandeja 
+*ngIf="!isLoading"
   [items]="bandejaList" 
   (itemsChange)="onItemsChange($event)" 
   (itemRemoved)="onItemRemoved($event)">

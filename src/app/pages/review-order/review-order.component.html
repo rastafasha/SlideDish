@@ -36,17 +36,16 @@
                 <div class="list-item" *ngFor="let item of bandejaList; let i = index">
                     <div class="clear"></div>
                     <div class="info-item">
-                        <img src="{{item.image}}" alt="">
-                        <h2>{{item.name}}</h2>
+                        <img [src]="item.img | imagenPipe:'productos' " alt="">
+                        <h2>{{item.titulo}}</h2>
                         <div class="add-items">
                             <i class="fa fa-minus icon-small" (click)="removeItem(item,i )"></i>
-                            <span>{{item.quantity}}</span>
+                            <!-- <span>{{item.quantity}}</span> -->
                             <i class="fa fa-plus icon-small" (click)="addItem(item, i)"></i>
                         </div>
                         <div class="price">
-                            <p *ngIf="item.price * item.quantity > 0">Price: {{item.price * item.quantity | currency}}
-                            </p>
-                            <p *ngIf="item.price * item.quantity == 0">Price: {{item.price | currency}}</p>
+                            <!-- <p *ngIf="item.precio_ahora * item.quantity > 0">{{item.precio_ahora * item.quantity | currency}}</p> -->
+                            <p >{{item.precio_ahora | currency}}</p>
                         </div>
                     </div>
                 </div>
@@ -56,7 +55,7 @@
                         <b>Total</b>
                     </p>
                     <p>
-                        <b>${{total() | number:'1.2-2'}}</b>
+                        <!-- <b>${{total() | number:'1.2-2'}}</b> -->
                     </p>
                 </div>
 

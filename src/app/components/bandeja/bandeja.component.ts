@@ -2,23 +2,25 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { CommonModule, NgFor } from '@angular/common';
-import { Product } from '../../models/product';
+import { Producto } from '../../models/product';
+import { ImagenPipe } from '../../pipes/imagen-pipe.pipe';
 
 @Component({
   selector: 'app-bandeja',
   imports: [
     RouterModule,
     CdkDropList, CdkDrag,
-    CommonModule, NgFor
+    CommonModule, NgFor,
+    ImagenPipe
   ],
   templateUrl: './bandeja.component.html',
   styleUrls: ['./bandeja.component.scss']
 })
 export class BandejaComponent {
-  @Input() items: any[] = [];
+  @Input() items: Producto[] = [];
   @Output() itemsChange: EventEmitter<any[]> = new EventEmitter<any[]>();
   @Output() itemRemoved: EventEmitter<any> = new EventEmitter<any>();
-  itemSelected!:Product;
+  itemSelected!:Producto;
 
 
   drop(event:CdkDragDrop<any[]>){
@@ -57,7 +59,7 @@ export class BandejaComponent {
   }
 
 
-  mostrarinfo(item:Product){
+  mostrarinfo(item:Producto){
     console.log(item);
     this.itemSelected =item;
     //mostramos la info del producto cambiando el nombre de la clase bandeja-item-info-hide por bandeja-item-info

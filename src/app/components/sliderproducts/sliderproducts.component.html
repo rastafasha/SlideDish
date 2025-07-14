@@ -1,15 +1,19 @@
+
+
 <div class="category-filter">
   <button
     *ngFor="let category of categories"
     class="category-button"
-    [class.active]="activeCategory === category.id"
-    (click)="selectCategory(category.id)"
+    [class.active]="activeCategory === category._id"
+    (click)="selectCategory(category.nombre)"
   >
-    {{ category.name }}
+    {{ category.nombre }}
   </button>
 </div>
 
-<div class="product-carousel">
+<app-loading *ngIf="isLoading"></app-loading>
+
+<div class="product-carousel" *ngIf="!isLoading">
   <div class="carousel-container" #carouselContainer>
     <div class="carousel-track"
     cdkDropList #todoList="cdkDropList" id="todoList"

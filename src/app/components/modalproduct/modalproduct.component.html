@@ -12,12 +12,12 @@
                         <span id="close-modal">
                             <i class="ion ion-md-close"></i>
                         </span>
-                        <img [src]="product.image" [alt]="product.name" />
+                        <img [src]="product.img" [alt]="product.titulo" />
                     </div>
                     <div class="ft-recipe__content">
                         <header class="content__header">
                             <div class="row-wrapper">
-                                <h2 class="recipe-title">{{product.name}}</h2>
+                                <h2 class="recipe-title">{{product.titulo}}</h2>
                                 <div class="user-rating"></div>
                             </div>
                             <ul class="recipe-details">
@@ -33,14 +33,12 @@
                                 </li>
                                 <li class="recipe-details-item servings">
                                     <i class="fa fa-users icon-small"></i>
-                                    <span class="value">{{product.price | currency}}</span>
-                                    <span class="title">Price</span>
+                                    <span class="value" style="text-decoration: line-through;">{{product.precio_antes | currency}}</span>
+                                    <span class="value">{{product.precio_ahora | currency}}</span>
                                 </li>
                             </ul>
                         </header>
-                        <p class="description">
-                            {{product.description || 'No description available.'}}
-                        </p>
+                        <p class="description" [innerHTML]="product.detalle"></p>
                     </div>
                 </div>
             </div>

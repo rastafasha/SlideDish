@@ -3,9 +3,9 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { Categoria } from '../models/categoria.model';
 
 import { Observable } from "rxjs";
+import { Categoria } from '../models/categoria.model';
 
 const base_url = environment.baseUrl;
 
@@ -33,6 +33,13 @@ export class CategoryService {
         'x-token': this.token
       }
     }
+  }
+
+  
+  private url: string = 'json/categories.json';
+
+  getCategorieslocal() {
+    return this.http.get<Categoria[]>(this.url);
   }
 
   getCategories() {
@@ -63,7 +70,7 @@ export class CategoryService {
     const url = `${base_url}/categorias/category_by_nombre/nombre/${nombre}`;
     return this.http.get<any>(url)
     .pipe(
-      map((resp:{ok: boolean, categoria: Categoria}) => resp.categoria)
+      map((resp:{ok: boolean, categoria:any}) => resp)
       );
   }
 

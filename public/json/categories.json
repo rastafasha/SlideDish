@@ -1,6 +1,6 @@
 [
-     { "id": "all", "name": "All" },
-    { "id": "classic", "name": "Classic Breads" },
-    { "id": "pastries", "name": "Pastries" },
-    { "id": "special", "name": "Special Breads" }
+     { "id": "all", "nombre": "All" },
+    { "id": "classic", "nombre": "Classic Breads" },
+    { "id": "pastries", "nombre": "Pastries" },
+    { "id": "special", "nombre": "Special Breads" }
 ]

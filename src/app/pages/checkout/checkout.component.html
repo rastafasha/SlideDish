@@ -39,9 +39,6 @@
               <hr class="mt-0 line">
 
               <div class="p-3">
-
-
-
                 <div class="d-flex justify-content-between">
 
                   <span>IVA <i class="fa fa-clock-o"></i></span>
@@ -53,10 +50,6 @@
               </div>
 
               <hr class="mt-0 line">
-
-
-
-
               <div class="p-3 d-flex justify-content-between">
 
                 <div class="d-flex flex-column">
@@ -89,7 +82,18 @@
               </div>
             </div>
           </div>
-          <div class="col-12">
+          
+
+
+
+        </div>
+
+
+      </div>
+
+    </div>
+  </div>
+  <div class="col-12">
 
             <!-- <span>Metodos de Pago</span> -->
             <div class="card" id="card-pay">
@@ -98,12 +102,6 @@
                         <div class="p-3">
                             <select id="paymentMethod" class="form-control" (change)="onPaymentMethodChange($event)"
                                 [(ngModel)]="selectedMethod">
-                                <!-- <option>Selecciona un método de pago</option> -->
-                                <!-- <option value="paypal">Paypal</option>
-                                <option value="card">Tarjeta de Crédito/Débito</option>
-                                <option value="transferencia">Pagos Bancarios</option>
-                                <option value="cheque">Cheque</option> -->
-
                                 <option [value]="" >
                                             Seleccione
                                         </option>
@@ -247,16 +245,6 @@
                     </div>
 
           </div>
-
-
-
-        </div>
-
-
-      </div>
-
-    </div>
-  </div>
   <div class="order-button-container">
     <button class="check-button" routerLink="/review">
       <i class="fa fa-chevron-left icon-small"></i>

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { Producto } from '../../models/product';
 
 @Component({
   selector: 'app-modalproduct',
@@ -10,5 +11,5 @@ import { Component, Input } from '@angular/core';
   styleUrl: './modalproduct.component.scss'
 })
 export class ModalproductComponent {
-  @Input() product:any;
+  @Input() product!:Producto|null;
 }

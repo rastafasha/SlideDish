@@ -8,12 +8,12 @@ cdkDropList #doneList="cdkDropList" id="doneList"
 <div *ngFor="let item of items; let i = index" class="bandeja-item" cdkDrag>
  
   <div class="item-bandeja" (click)="mostrarinfo(item)">
-      <img [src]="item.image" [alt]="item.name" class="bandeja-item-image" />
+      <img [src]="item.img | imagenPipe:'productos' " [alt]="item.titulo" class="bandeja-item-image" />
   </div>
   <div class="bandeja-item-info-hide animated fadeInUp">
     <div class="inff">
-      <p class="bandeja-item-name">{{ itemSelected?.name }}</p>
-     <p class="bandeja-item-price">${{ itemSelected?.price }}</p>
+      <p class="bandeja-item-name">{{ itemSelected?.titulo }}</p>
+     <p class="bandeja-item-price">${{ itemSelected?.precio_ahora }}</p>
     </div>
      <div class="eliminaritem" (click)="removeItem(itemSelected)">
        <i class="fa fa-trash"></i>
