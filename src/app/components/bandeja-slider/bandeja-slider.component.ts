@@ -6,14 +6,16 @@ import { ModalproductComponent } from '../modalproduct/modalproduct.component';
 import { ProductItemComponent } from '../product-item/product-item.component';
 import { BandejaComponent } from '../bandeja/bandeja.component';
 import { Producto } from '../../models/product';
+import { BandejaAdicionalComponent } from "../bandeja-adicional/bandeja-adicional.component";
 
 @Component({
   selector: 'app-bandeja-slider',
   imports: [
     NgFor,
     CdkDropList, CdkDrag, NgIf,
-    BandejaComponent
-  ],
+    BandejaComponent,
+    BandejaAdicionalComponent,
+],
   templateUrl: './bandeja-slider.component.html',
   styleUrl: './bandeja-slider.component.scss'
 })
@@ -61,17 +63,6 @@ export class BandejaSliderComponent {
       this.bandejaList = JSON.parse(storedItems);
       
     }
-    // const storedItems = localStorage.getItem('bandejaItems');
-    // if (storedItems) {
-    //   try {
-    //     this.bandejaItems = JSON.parse(storedItems);
-    //   } catch (e) {
-    //     console.error('Error parsing bandejaItems from localStorage', e);
-    //     this.bandejaItems = [];
-    //   }
-    // } else {
-    //   this.bandejaItems = [];
-    // }
   }
 
   saveBandejasToLocalStorage() {
@@ -99,7 +90,7 @@ export class BandejaSliderComponent {
     this.updateConnectedDropListsIds();
   }
 
-  deleteBandeja(index: number) {
+  deleteBandeja(index: any) {
     this.bandejas.splice(index, 1);
     this.saveBandejasToLocalStorage();
     this.updateCartInLocalStorage();

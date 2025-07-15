@@ -1,23 +1,20 @@
-
-
 <div class="product-carousel mt-5" >
   <div class="carousel-container" #carouselContainer>
     <div class="carousel-track ordenar">
 
       <!-- agregadas -->
-      <app-bandeja 
+      <app-bandeja-adicional 
         *ngFor="let bandeja of bandejas; let i = index"
         [items]="bandeja.items" 
         (itemsChange)="onItemsChange($event, i)" 
         (itemRemoved)="onItemRemoved($event, i)" 
         cdkDropList 
-        
+        cdkDropList #doneList="cdkDropList" id="doneList"
         [cdkDropListConnectedTo]="connectedDropListsIds[i]"
         [cdkDropListData]="bandeja.items"
-        (cdkDropListDropped)="drop1($event,i)">
-      </app-bandeja>
+        (cdkDropListDropped)="drop1($event,i)"
+      ></app-bandeja-adicional>
       <!-- agregadas -->
-
 
       <!-- la que viene del solitario -->
       <app-bandeja [items]="bandejaList" ></app-bandeja>
@@ -31,5 +28,5 @@
     <i class="fa fa-chevron-right icon-small"></i>
   </button>
   <button class="add-bandeja-button order-button" (click)="addBandeja()">Agregar Bandeja</button>
+  
 </div>
-
