@@ -30,9 +30,10 @@ export class InfoburbujaComponent implements OnInit {
       }
     }
 
-    onRemoveItem(item: any) {debugger
-      console.log('object', item);
-      const index = this.items.indexOf(item);
+    onRemoveItem(item: any) {
+      // console.log('object', item);
+      // const index = this.items.indexOf(item);
+      const index = this.items.findIndex(i => i._id === item._id);
       if (index > -1) {
         this.items.splice(index, 1);
         this.itemsChange.emit(this.items);
@@ -43,7 +44,7 @@ export class InfoburbujaComponent implements OnInit {
       }
   }
 
-  saveItemsToLocalStorage(): void {debugger
+  saveItemsToLocalStorage(): void {
     try {
       localStorage.setItem('bandejaItems', JSON.stringify(this.items));
     } catch (e) {

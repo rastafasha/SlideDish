@@ -25,7 +25,7 @@ export class HomeComponent {
   bandejaList: any[] = [];
   isbandejaList:boolean= false;
   @Input() product:any;
-  isLoading: boolean= false;
+  isLoading:boolean=false;
 
   constructor() {
     this.loadBandejaListFromLocalStorage();
@@ -54,7 +54,6 @@ export class HomeComponent {
   }
 
   loadBandejaListFromLocalStorage() {
-    this.isLoading =true;
     const storedItems = localStorage.getItem('bandejaItems');
     if (storedItems) {
       this.bandejaList = JSON.parse(storedItems);
@@ -63,7 +62,6 @@ export class HomeComponent {
     if(this.bandejaList.length > 0){
       this.isbandejaList = true;
     }
-    this.isLoading = false;
   }
 
   saveBandejaListToLocalStorage() {

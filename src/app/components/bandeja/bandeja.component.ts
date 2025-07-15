@@ -44,6 +44,7 @@ export class BandejaComponent {
   }
 
   removeItem(item: any) {
+    // const index = this.items.findIndex(i => i._id === item._id);
     const index = this.items.indexOf(item);
     if (index > -1) {
       this.items.splice(index, 1);
@@ -63,6 +64,8 @@ export class BandejaComponent {
     }
     this.isLoading=false;
   }
+
+  
 
 
 
@@ -99,5 +102,3 @@ removeMostrarinfo(){
     }
   }
 }
-
-
