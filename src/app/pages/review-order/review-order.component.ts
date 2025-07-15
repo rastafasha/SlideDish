@@ -36,7 +36,8 @@ export class ReviewOrderComponent {
     }
 
     loadBandejaListFromLocalStorage() {
-    const storedItems = localStorage.getItem('bandejaItems');
+    // const storedItems = localStorage.getItem('bandejaItems');
+    const storedItems = localStorage.getItem('carrito');
     if (storedItems) {
       this.bandejaList = JSON.parse(storedItems);
       
@@ -53,14 +54,15 @@ export class ReviewOrderComponent {
   onItemRemoved(item: any) {
     this.bandejaList = this.bandejaList.filter(i => i._id !== item.id);
 
-   localStorage.removeItem('bandejaItems');
+  //  localStorage.removeItem('bandejaItems');
+   localStorage.removeItem('carrito');
     this.saveBandejaListToLocalStorage();
     this.ngOnInit();
   }
 
   saveBandejaListToLocalStorage() {
     try {
-      localStorage.setItem('bandejaItems', JSON.stringify(this.bandejaList));
+      localStorage.setItem('carrito', JSON.stringify(this.bandejaList));
     } catch (e) {
       console.error('Error saving bandejaList to localStorage', e);
     }

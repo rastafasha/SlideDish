@@ -5,11 +5,18 @@
 
   <app-loading *ngIf="isLoading"></app-loading>
 <app-bandeja 
-*ngIf="!isLoading"
+*ngIf="!isLoading && bandejaList.length < 3"
   [items]="bandejaList" 
   (itemsChange)="onItemsChange($event)" 
   (itemRemoved)="onItemRemoved($event)">
 </app-bandeja>
+
+<app-bandeja-slider *ngIf="bandejaList.length >= 3" 
+  [items]="bandejaList" 
+  (itemsChange)="onItemsChange($event)" 
+  (itemRemoved)="onItemRemoved($event)"
+  ></app-bandeja-slider>
+
 <div class="order-button-container">
   <button class="order-button" routerLink="/review" >
     Review Order

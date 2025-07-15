@@ -75,7 +75,7 @@ export class CheckoutComponent {
     }
 
     loadBandejaListFromLocalStorage() {
-    const storedItems = localStorage.getItem('bandejaItems');
+    const storedItems = localStorage.getItem('carrito');
     if (storedItems) {
       this.bandejaList = JSON.parse(storedItems);
       

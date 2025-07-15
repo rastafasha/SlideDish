@@ -1,0 +1,44 @@
+
+
+.featured-image {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    align-items: center;
+    height: 210px;
+    justify-content: center;
+}
+
+
+.tray-image {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: auto;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.ordenar{
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    // overflow: hidden;
+}
+
+.carousel-container {
+    width: 100%;
+    // overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+.product-carousel {
+    width: 100%;
+    position: relative;
+}
+
+app-bandeja {
+    flex: 0 0 300px; /* fixed width for each bandeja */
+    margin-right: 10px;
+}
