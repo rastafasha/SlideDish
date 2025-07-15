@@ -89,6 +89,7 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
   }
   //obtenemos las subcategorias de los productos
   getCategories() {
+    this.isLoading = true
     this.productoService.getProductosActivos().subscribe((resp:any)=>{
       //filtramos los productos donde sea igual a la categoria Panaderia
       const productos = resp.filter((producto: any) => producto.categoria.nombre ===  this.catname);
@@ -103,6 +104,7 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
         }));
         this.subcategories = categorias;
     })
+    this.isLoading = false
   }
 
   selectCategory(category: string) {
@@ -111,12 +113,14 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
   }
 
   updateTodo() {
+    this.isLoading = true
     if (this.activeCategory === 'all') {
       this.todo = this.products.slice();
     } else {
       const selectedCategory = this.subcategories.find(subcat => subcat.nombre === this.activeCategory);
       this.todo = selectedCategory ? selectedCategory.products : [];
     }
+    this.isLoading = false
   }
 
   

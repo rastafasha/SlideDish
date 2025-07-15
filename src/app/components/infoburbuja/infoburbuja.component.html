@@ -1,0 +1,11 @@
+
+
+  <div *ngIf="itemSelected" class=" bandeja-item-info-hide animated fadeInUp">
+    <div class="inff">
+      <p class="bandeja-item-name">{{ itemSelected?.titulo }}</p>
+     <p class="bandeja-item-price">${{ itemSelected?.precio_ahora }}</p>
+    </div>
+     <div class="eliminaritem " (click)="onRemoveItem(itemSelected)">
+       <i class="fa fa-trash"></i>
+     </div>
+  </div>

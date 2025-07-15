@@ -1,4 +1,4 @@
-<div class="category-filter">
+<div class="category-filter" *ngIf="!isLoading">
   <button
     class="category-button"
     [class.active]="activeCategory === 'all'"
@@ -38,4 +38,4 @@
   </button>
 </div>
 
-<app-modalproduct [product]="selectedProduct"></app-modalproduct>
+<app-modalproduct [product]="selectedProduct" *ngIf="!isLoading"></app-modalproduct>

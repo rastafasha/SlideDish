@@ -88,33 +88,6 @@
     }
 }
 
-.bandeja-item-info
-
-.eliminaritem{
-    position: relative;
-    z-index: 500;
-    cursor: pointer;
-    width: 25px;
-    height: 25px;
-    background: #e1155ca6;
-    float: right;
-    right: 0px;
-    top: -30px;
-    border: 1px solid #fff;
-    border-radius: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    & i{
-        color: #fff;
-        display: flex;
-         font-size: 12px;
-    }
-
-    animation: reveal linear both;
-        animation-timeline: view();
-        animation-range: entry 20% cover 30%;
-}
 
 
 @media (max-width:768px) {
