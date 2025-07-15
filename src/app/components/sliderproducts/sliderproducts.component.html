@@ -2,9 +2,9 @@
 
 <div class="category-filter">
   <button
-    *ngFor="let category of categories"
+    *ngFor="let category of subcategories"
     class="category-button"
-    [class.active]="activeCategory === category._id"
+    [class.active]="activeCategory === category.nombre"
     (click)="selectCategory(category.nombre)"
   >
     {{ category.nombre }}

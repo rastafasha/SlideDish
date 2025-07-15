@@ -29,6 +29,7 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
   selectedProduct: Producto | null = null;
 
   categories: Categoria[] = [];
+  subcategories: any[] = [];
 
   products: Producto[] = [];
 
@@ -43,7 +44,6 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
 
   private productoService = inject(ProductoService);
   private categoryService = inject(CategoryService);
-  // private categoryService = inject(CategoryService);
 
   catname:string = 'Panaderia'
 
@@ -87,28 +87,35 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
       }
     );
   }
-
+  //obtenemos las subcategorias de los productos
   getCategories() {
-    this.categoryService.getCategorieslocal().subscribe(
-      (categories) => {
-        this.categories = categories;
-      },
-      (error) => {
-        console.error('Error al obtener las categorías', error);
-      }
-    );
+    this.productoService.getProductosActivos().subscribe((resp:any)=>{
+      //filtramos los productos donde sea igual a la categoria Panaderia
+      const productos = resp.filter((producto: any) => producto.categoria.nombre ===  this.catname);
+      //extraemos el campo subcategoria
+      const subcategorias = productos.map((producto: any) => producto.subcategoria);
+      //eliminamos los duplicados
+      const subcategoriasUnicas = [...new Set(subcategorias)];
+      //creamos un arreglo de objetos con el nombre de la subcategoria y el arreglo de productos
+      const categorias = subcategoriasUnicas.map((subcategoria: any) => ({
+        nombre: subcategoria,
+        products: productos.filter((product: any) => product.subcategoria === subcategoria),
+        }));
+        this.subcategories = categorias;
+    })
   }
 
-  selectCategory(categoryId: string) {
-    this.activeCategory = categoryId;
-    this.updateTodo();
+  selectCategory(category: string) {
+    this.activeCategory = category;
+    this.updateTodoFromInput();
   }
 
   updateTodo() {
     if (this.activeCategory === 'all') {
       this.todo = this.products.slice();
     } else {
-      this.todo = this.products.filter(product => product.categoria === this.activeCategory);
+      const selectedCategory = this.subcategories.find(subcat => subcat.nombre === this.activeCategory);
+      this.todo = selectedCategory ? selectedCategory.products : [];
     }
   }
 
@@ -116,7 +123,8 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
     if (this.activeCategory === 'all') {
       this.todo = this.productsList.slice();
     } else {
-      this.todo = this.productsList.filter(product => product.categoria === this.activeCategory);
+      const selectedCategory = this.subcategories.find(subcat => subcat.nombre === this.activeCategory);
+      this.todo = selectedCategory ? selectedCategory.products : [];
     }
   }
 
