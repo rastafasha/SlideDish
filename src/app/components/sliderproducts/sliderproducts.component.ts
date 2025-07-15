@@ -59,7 +59,7 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['productsList']) {
-      this.updateTodoFromInput();
+      this.updateTodo();
     }
   }
 
@@ -107,7 +107,7 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
 
   selectCategory(category: string) {
     this.activeCategory = category;
-    this.updateTodoFromInput();
+    this.updateTodo();
   }
 
   updateTodo() {
@@ -119,14 +119,7 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  updateTodoFromInput() {
-    if (this.activeCategory === 'all') {
-      this.todo = this.productsList.slice();
-    } else {
-      const selectedCategory = this.subcategories.find(subcat => subcat.nombre === this.activeCategory);
-      this.todo = selectedCategory ? selectedCategory.products : [];
-    }
-  }
+  
 
   scrollLeft() {
     if (this.carouselContainer) {

@@ -1,6 +1,11 @@
-
-
 <div class="category-filter">
+  <button
+    class="category-button"
+    [class.active]="activeCategory === 'all'"
+    (click)="selectCategory('all')"
+  >
+    Todo
+  </button>
   <button
     *ngFor="let category of subcategories"
     class="category-button"
@@ -34,4 +39,3 @@
 </div>
 
 <app-modalproduct [product]="selectedProduct"></app-modalproduct>
-
