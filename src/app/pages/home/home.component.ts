@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 import { BandejaComponent } from "../../components/bandeja/bandeja.component";
 import { ModalproductComponent } from '../../components/modalproduct/modalproduct.component';
 import { LoadingComponent } from '../../shared/loading/loading.component';
+import { MenuComponent } from "../../shared/menu/menu.component";
 
 @Component({
   selector: 'app-home',
@@ -16,8 +17,9 @@ import { LoadingComponent } from '../../shared/loading/loading.component';
     BandejaComponent,
     // ModalproductComponent,
     RouterModule,
-    LoadingComponent
-  ],
+    LoadingComponent,
+    MenuComponent
+],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })

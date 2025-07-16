@@ -1,6 +1,10 @@
 <header class="header">
   <div class="header-left">
-    <i class="fa fa-bars icon-small"></i>
+    <a href="javascript:void(0)" (click)="openMenu()" class="sidemenu-toggler">
+      <i class="fa fa-bars icon-small" ></i>
+
+    </a>
+   
     <div class="location">
       <i class="fa fa-map-pin icon-small"></i>
       <span>Grand City, MI</span>
@@ -12,8 +16,8 @@
   </div>
   <div class="header-right">
     <i class="fa fa-user icon-small"></i>
-    <span class="cart-count-badge"> {{totalList}}</span>
-    <i class="fa fa-shopping-cart icon-small cursor" routerLink="/review"></i>
+    <span class="cart-count-badge" *ngIf="bandejaList.length > 0 && bandejaList.length <= 10"> {{totalList}}</span>
+    <i class="fa fa-shopping-cart icon-small cursor" *ngIf="bandejaList.length > 0 && bandejaList.length <= 10" routerLink="/review"></i>
 
 
     <!-- <div *ngIf="bandejaList > 0">
@@ -24,6 +28,10 @@
         </span>
       </a>
     </div> -->
+
+    
   </div>
 
 </header>
+
+<app-menu></app-menu>
