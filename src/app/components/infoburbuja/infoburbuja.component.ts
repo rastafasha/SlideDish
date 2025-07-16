@@ -14,6 +14,7 @@ import { CommonModule, NgIf } from '@angular/common';
 export class InfoburbujaComponent implements OnInit {
     @Input() itemSelected!:Producto;
     @Input() items: Producto[] = [];
+    bandejaList: Producto[] = [];
   @Output() itemsChange: EventEmitter<any[]> = new EventEmitter<any[]>();
   @Output() itemRemoved: EventEmitter<any> = new EventEmitter<any>();
     constructor () {}
@@ -53,12 +54,44 @@ export class InfoburbujaComponent implements OnInit {
   }
 
   removeMostrarinfo(){
-    //mostramos la info del producto cambiando el nombre de la clase bandeja-item-info-hide por bandeja-item-info
-    //si pulso la cambio entre bandeja-item-info-hide y bandeja-item-info
     const bandejaItemInfo = document.querySelector('.bandeja-item-info');
     bandejaItemInfo?.classList.remove('bandeja-item-info');
 
     
+  }
+
+  addItem(item:Producto){
+    const index = this.items.findIndex(i => i._id === item._id);
+    if(index !== -1){
+      this.items[index].quantity = (this.items[index].quantity || 0) + 1;
+    } else {
+      item.quantity = 1;
+      this.items.push(item);
+    }
+    this.itemsChange.emit(this.items);
+    this.saveBandejaListToLocalStorage();
+  }
+
+  removeItem(item:Producto){
+    const index = this.items.findIndex(i => i._id === item._id);
+    if(index !== -1){
+      if(this.items[index].quantity && this.items[index].quantity > 1){
+        this.items[index].quantity -= 1;
+      } else {
+        this.items.splice(index, 1);
+      }
+      this.itemsChange.emit(this.items);
+      this.saveItemsToLocalStorage();
+      
+    }
+  }
+
+  saveBandejaListToLocalStorage() {
+    try {
+      localStorage.setItem('bandejaItems', JSON.stringify(this.bandejaList));
+    } catch (e) {
+      console.error('Error saving bandejaList to localStorage', e);
+    }
   }
 
 }

@@ -67,27 +67,27 @@ export class ReviewOrderComponent {
   }
 
   total() {
-  //   const total = this.bandejaList.reduce((sum, item) => 
-      // sum + item.precio_ahora * item.quantity, 0
-  // );
-  // return total;
+    const total = this.bandejaList.reduce((sum, item) => 
+      sum + item.precio_ahora * item.quantity, 0
+  );
+  return total;
   }
 
   addItem(item:Producto, index:any){
-    // if(this.bandejaList[index].quantity){
-    //   this.bandejaList[index].quantity += 1;
-    // } else {
-    //   this.bandejaList[index].quantity = 1;
-    // }
+    if(this.bandejaList[index].quantity){
+      this.bandejaList[index].quantity += 1;
+    } else {
+      this.bandejaList[index].quantity = 1;
+    }
     this.saveBandejaListToLocalStorage();
 
   }
 removeItem(item:Producto, index:any){
-  // if(this.bandejaList[index].quantity && this.bandejaList[index].quantity > 1){
-  //   this.bandejaList[index].quantity -= 1;
-  // } else {
-  //   this.bandejaList.splice(index, 1);
-  // }
+  if(this.bandejaList[index].quantity && this.bandejaList[index].quantity > 1){
+    this.bandejaList[index].quantity -= 1;
+  } else {
+    this.bandejaList.splice(index, 1);
+  }
   this.saveBandejaListToLocalStorage();
 
 }

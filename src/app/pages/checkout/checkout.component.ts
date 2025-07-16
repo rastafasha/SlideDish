@@ -7,6 +7,7 @@ import { PagochequeService } from '../../services/pagocheque.service';
 import { TiposdepagoService } from '../../services/tiposdepago.service';
 import { PaymentMethod } from '../../models/paymenthmethod.model';
 import { TransferenciasService } from '../../services/transferencias.service';
+import { CarritoService } from '../../services/carrito.service';
 
 @Component({
   selector: 'app-checkout',
@@ -23,12 +24,26 @@ export class CheckoutComponent {
   fechaHoy: string = new Date().toISOString().split('T')[0];
   randomNum:number = 0;
   isbandejaList:boolean = false;
-
   iva:number = 12;
-
+  public identity:any;
+  //DATA
+  public radio_postal:any;
+  public medio_postal : any = {};
+  public data_cupon:any;
+  public id_direccion = '';
+  public direccion : any;
+  public data_direccion : any = {};
+  public data_detalle : Array<any> = [];
+  public data_venta : any = {};
+  public info_cupon_string = '';
+  public error_stock = false;
+  public date_string:any;
+  public carrito : Array<any> = [];
+  public subtotal : any = 0;
   public cupon:any;
   public msm_error_cupon=false;
   public msm_success_cupon=false;
+  public precio_envio:any;
 
 
   selectedMethod: string = 'Selecciona un método de pago';
@@ -63,7 +78,8 @@ export class CheckoutComponent {
     constructor(
       private _trasferencias: TransferenciasService,
     private _pagoCheque: PagochequeService,
-    private _tipoPagosService: TiposdepagoService
+    private _tipoPagosService: TiposdepagoService,
+    private _carritoService:CarritoService,
     ) {
       window.scrollTo(0,0);
     }
@@ -71,6 +87,7 @@ export class CheckoutComponent {
       this.loadBandejaListFromLocalStorage();
       // this.geneardorOrdeneNumero();
       this.obtenerMetodosdePago();
+      this.total();
 
     }
 
@@ -87,7 +104,7 @@ export class CheckoutComponent {
 
   total() {
     const total = this.bandejaList.reduce((sum, item) => 
-      sum + item.price * item.quantity, 0
+      sum + item.precio_ahora * item.quantity, 0
   );
   return total;
   }
@@ -102,9 +119,8 @@ export class CheckoutComponent {
 
   private obtenerMetodosdePago(){
     this._trasferencias.getPaymentsActives().subscribe(data => {
-      // console.log('metodos de pago: ',data.paymentMethods)
       this.paymentMethods = data.paymentMethods;
-      console.log('metodos de pago: ',this.paymentMethods)
+      // console.log('metodos de pago: ',this.paymentMethods)
     });
   }
 
@@ -211,7 +227,7 @@ export class CheckoutComponent {
           // });
 
             // eliminar carrito luego de haber realzado la compra con transferencia exitosa
-            // this.remove_carrito();
+            this.remove_carrito();
           }
           else{
           //   Swal.fire({
@@ -228,6 +244,46 @@ export class CheckoutComponent {
         }
       );
     }
+  }
+
+  remove_carrito(){
+    this.carrito.forEach((element,index) => {
+        this._carritoService.remove_carrito(element._id).subscribe(
+          (response:any) =>{
+            this.listar_carrito();
+          },
+          error=>{
+            console.log(error);
+          }
+        );
+    });
+  }
+
+  listar_carrito(){
+    this._carritoService.preview_carrito(this.identity.uid ?? '').subscribe(
+      (response:any) =>{
+        this.carrito = response;
+        this.subtotal = 0;
+        this.carrito.forEach(element => {
+          this.subtotal = Math.round(this.subtotal + (element.precio * element.cantidad));
+          this.data_detalle.push({
+            producto : element.producto,
+            cantidad: element.cantidad,
+            precio: Math.round(element.precio),
+            color: element.color,
+            selector : element.selector
+          })
+          // console.log(this.carrito);
+
+        });
+        this.subtotal = Math.round(this.subtotal + parseInt(this.precio_envio));
+
+      },
+      error=>{
+        console.log(error);
+
+      }
+    );
   }
 
 

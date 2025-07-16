@@ -27,6 +27,7 @@ export class Producto {
   detalle!: string;
   slug!: string;
   stock!: number;
+  quantity!:number;
   categoria!: string;
   subcategoria!: string;
   isFeatured!: boolean;

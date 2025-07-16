@@ -1,11 +1,14 @@
-
-
-  <div *ngIf="itemSelected" class=" bandeja-item-info-hide animated fadeInUp">
-    <div class="inff">
-      <p class="bandeja-item-name">{{ itemSelected?.titulo }}</p>
-     <p class="bandeja-item-price">${{ itemSelected?.precio_ahora }}</p>
-    </div>
-     <div class="eliminaritem " (click)="onRemoveItem(itemSelected)">
-       <i class="fa fa-trash"></i>
-     </div>
+<div *ngIf="itemSelected" class=" bandeja-item-info-hide animated fadeInUp">
+  <div class="inff">
+    <p class="bandeja-item-name">{{ itemSelected?.titulo }}</p>
+    <p class="bandeja-item-price">${{ itemSelected?.precio_ahora }}</p>
+    <!-- <div class="add-items">
+      <i class="fa fa-minus icon-small" (click)="removeItem(itemSelected )"></i>
+      <span>{{itemSelected.quantity}}</span>
+      <i class="fa fa-plus icon-small" (click)="addItem(itemSelected)"></i>
+    </div> -->
   </div>
+  <div class="eliminaritem " (click)="onRemoveItem(itemSelected)">
+    <i class="fa fa-trash"></i>
+  </div>
+</div>

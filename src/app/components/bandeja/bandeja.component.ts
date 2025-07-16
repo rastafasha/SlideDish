@@ -88,7 +88,7 @@ removeMostrarinfo(){
   onItemRemoved(item: any) {
     // Fix id property name to match item._id
     this.items = this.items.filter(i => i._id !== item._id);
-    console.log('object', this.items);
+    // console.log('object', this.items);
     localStorage.removeItem('bandejaItems');
     this.saveBandejaListToLocalStorage();
     // this.ngOnInit();
