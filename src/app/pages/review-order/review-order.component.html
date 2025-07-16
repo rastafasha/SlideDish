@@ -1,10 +1,10 @@
 <app-header></app-header>
 <main class="container">
     <div class="hero">
-        <h1>Review Order</h1>
+        <h1>Mi Pedido</h1>
     </div>
     <div class="hero" *ngIf="!isbandejaList">
-        <h1>Shopping Bag Empty</h1>
+        <h1>Cesta vacia</h1>
     </div>
 
     
@@ -15,7 +15,7 @@
     <div class="order-list" *ngIf="isbandejaList">
         <div class="order-list-bar"></div>
         <div class="list-box">
-            <h3>My Order</h3>
+            <h3>Pedido</h3>
             <div class="clear"></div>
             <div class="overf">
                 <!-- itemlist -->
@@ -24,7 +24,7 @@
 
                         <span class="burbleinfo">
                             <!-- <i class="fa fa-shopping-bag icon-small" ></i> -->
-                            Order No.{{randomNum}}
+                            Orden No.{{randomNum}}
                         </span>
 
                     </div>
@@ -36,17 +36,16 @@
                 <div class="list-item" *ngFor="let item of bandejaList; let i = index">
                     <div class="clear"></div>
                     <div class="info-item">
-                        <img src="{{item.image}}" alt="">
-                        <h2>{{item.name}}</h2>
-                        <div class="add-items">
+                        <img [src]="item.img | imagenPipe:'productos' " alt="">
+                        <h2>{{item.titulo}}</h2>
+                        <div class="add-items justify-content-center">
                             <i class="fa fa-minus icon-small" (click)="removeItem(item,i )"></i>
                             <span>{{item.quantity}}</span>
                             <i class="fa fa-plus icon-small" (click)="addItem(item, i)"></i>
                         </div>
                         <div class="price">
-                            <p *ngIf="item.price * item.quantity > 0">Price: {{item.price * item.quantity | currency}}
-                            </p>
-                            <p *ngIf="item.price * item.quantity == 0">Price: {{item.price | currency}}</p>
+                            <p >{{item.precio_ahora * item.quantity | currency}}</p>
+                            <!-- <p >{{item.precio_ahora | currency}}</p> -->
                         </div>
                     </div>
                 </div>
@@ -60,34 +59,6 @@
                     </p>
                 </div>
 
-                <!-- itemlist -->
-                <!-- <div class="list-item">
-                <div class="top-item">
-                    <div class="list-item-left">
-                        <i data-lucide="shopping-bag" class="icon"></i>
-                        <span>Order #12345</span>
-                        
-                    </div>
-                    <div class="list-item-right">
-                        <span>2022-01-01 12:00:00</span>
-                        
-                    </div>
-                </div>
-                <div class="clear"></div>
-                <div class="info-item">
-                    <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=1000&auto=format&fit=crop" alt="">
-                    <h2>Item Name</h2>
-                    <div class="add-items">
-                        <i data-lucide="minus" class="icon"></i>
-                        <span>1</span>
-                        <i data-lucide="plus" class="icon"></i>
-                    </div>
-                    <div class="price">
-                        <p>$15.00</p>
-                    </div>
-                </div>
-            </div> -->
-                <!-- itemlist -->
 
 
             </div>
@@ -96,7 +67,7 @@
     <div class="order-button-container">
         <button class="check-button" routerLink="/">
             <i class="fa fa-chevron-left icon-small"></i>
-            Back
+            Volver
         </button>
         <button class="check-button" routerLink="/checkout" *ngIf="isbandejaList">
             Checkout

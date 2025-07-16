@@ -1,24 +1,30 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { CommonModule, NgFor } from '@angular/common';
-import { Product } from '../../models/product';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
+import { Producto } from '../../models/product';
+import { ImagenPipe } from '../../pipes/imagen-pipe.pipe';
+import { InfoburbujaComponent } from '../infoburbuja/infoburbuja.component';
+import { LoadingComponent } from '../../shared/loading/loading.component';
 
 @Component({
   selector: 'app-bandeja',
   imports: [
     RouterModule,
     CdkDropList, CdkDrag,
-    CommonModule, NgFor
+    CommonModule, NgFor,
+    ImagenPipe, InfoburbujaComponent,
+    LoadingComponent, NgIf
   ],
   templateUrl: './bandeja.component.html',
   styleUrls: ['./bandeja.component.scss']
 })
 export class BandejaComponent {
-  @Input() items: any[] = [];
+  @Input() items: Producto[] = [];
   @Output() itemsChange: EventEmitter<any[]> = new EventEmitter<any[]>();
   @Output() itemRemoved: EventEmitter<any> = new EventEmitter<any>();
-  itemSelected!:Product;
+  itemSelected!:Producto;
+  isLoading:boolean= false;
 
 
   drop(event:CdkDragDrop<any[]>){
@@ -38,6 +44,7 @@ export class BandejaComponent {
   }
 
   removeItem(item: any) {
+    // const index = this.items.findIndex(i => i._id === item._id);
     const index = this.items.indexOf(item);
     if (index > -1) {
       this.items.splice(index, 1);
@@ -49,31 +56,49 @@ export class BandejaComponent {
   }
 
   saveItemsToLocalStorage(): void {
+    this.isLoading=true
     try {
       localStorage.setItem('bandejaItems', JSON.stringify(this.items));
     } catch (e) {
       console.error('Error saving items to localStorage', e);
     }
+    this.isLoading=false;
   }
 
+  
 
-  mostrarinfo(item:Product){
-    console.log(item);
-    this.itemSelected =item;
-    //mostramos la info del producto cambiando el nombre de la clase bandeja-item-info-hide por bandeja-item-info
-    //si pulso la cambio entre bandeja-item-info-hide y bandeja-item-info
-    const bandejaItemInfo = document.querySelector('.bandeja-item-info-hide');
-    bandejaItemInfo?.classList.toggle('bandeja-item-info');
 
-    
+
+  mostrarinfo(item:Producto){
+  // console.log(item);
+  this.itemSelected =item;
+  const bandejaItemInfo = document.querySelector('.bandeja-item-info-hide');
+  bandejaItemInfo?.classList.toggle('bandeja-item-info');
+
+  
+}
+
+removeMostrarinfo(){
+  const bandejaItemInfo = document.querySelector('.bandeja-item-info');
+  bandejaItemInfo?.classList.remove('bandeja-item-info');
+
+  
+}
+
+  onItemRemoved(item: any) {
+    // Fix id property name to match item._id
+    this.items = this.items.filter(i => i._id !== item._id);
+    // console.log('object', this.items);
+    localStorage.removeItem('bandejaItems');
+    this.saveBandejaListToLocalStorage();
+    // this.ngOnInit();
   }
 
-  removeMostrarinfo(){
-    //mostramos la info del producto cambiando el nombre de la clase bandeja-item-info-hide por bandeja-item-info
-    //si pulso la cambio entre bandeja-item-info-hide y bandeja-item-info
-    const bandejaItemInfo = document.querySelector('.bandeja-item-info');
-    bandejaItemInfo?.classList.remove('bandeja-item-info');
-
-    
+  saveBandejaListToLocalStorage() {
+    try {
+      localStorage.setItem('bandejaItems', JSON.stringify(this.items));
+    } catch (e) {
+      console.error('Error saving bandejaList to localStorage', e);
+    }
   }
 }

@@ -3,7 +3,8 @@ import { HeaderComponent } from '../../shared/header/header.component';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { BandejaComponent } from '../../components/bandeja/bandeja.component';
-import { Product } from '../../models/product';
+import { Producto } from '../../models/product';
+import { ImagenPipe } from '../../pipes/imagen-pipe.pipe';
 
 
 @Component({
@@ -12,14 +13,15 @@ import { Product } from '../../models/product';
     HeaderComponent,
     CommonModule,
     BandejaComponent,
-    RouterModule
+    RouterModule,
+    ImagenPipe
 
   ],
   templateUrl: './review-order.component.html',
   styleUrl: './review-order.component.scss'
 })
 export class ReviewOrderComponent {
-  bandejaList: any[] = [];
+  bandejaList: Producto[] = [];
   fechaHoy: string = new Date().toISOString().split('T')[0];
   randomNum:number = 0;
   isbandejaList:boolean = false;
@@ -49,7 +51,7 @@ export class ReviewOrderComponent {
   }
 
   onItemRemoved(item: any) {
-    this.bandejaList = this.bandejaList.filter(i => i.id !== item.id);
+    this.bandejaList = this.bandejaList.filter(i => i._id !== item.id);
 
    localStorage.removeItem('bandejaItems');
     this.saveBandejaListToLocalStorage();
@@ -66,12 +68,12 @@ export class ReviewOrderComponent {
 
   total() {
     const total = this.bandejaList.reduce((sum, item) => 
-      sum + item.price * item.quantity, 0
+      sum + item.precio_ahora * item.quantity, 0
   );
   return total;
   }
 
-  addItem(item:Product, index:any){
+  addItem(item:Producto, index:any){
     if(this.bandejaList[index].quantity){
       this.bandejaList[index].quantity += 1;
     } else {
@@ -80,7 +82,7 @@ export class ReviewOrderComponent {
     this.saveBandejaListToLocalStorage();
 
   }
-removeItem(item:Product, index:any){
+removeItem(item:Producto, index:any){
   if(this.bandejaList[index].quantity && this.bandejaList[index].quantity > 1){
     this.bandejaList[index].quantity -= 1;
   } else {

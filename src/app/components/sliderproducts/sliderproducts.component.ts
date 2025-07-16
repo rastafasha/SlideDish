@@ -1,12 +1,14 @@
 import { Component, ElementRef, ViewChild, AfterViewInit, Output, EventEmitter, Input, OnChanges, SimpleChanges, inject } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { ProductItemComponent } from '../product-item/product-item.component';
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ModalproductComponent } from '../modalproduct/modalproduct.component';
-import { Product } from '../../models/product';
-import { Category } from '../../models/category';
-import { ProductoService } from '../../services/producto.service';
+// import { ProductoService } from '../../services/producto.service'; // solo para probar
 import { CategoryService } from '../../services/category.service';
+import { Categoria } from '../../models/categoria.model';
+import { Producto } from '../../models/product';
+import { ProductoService } from '../../services/product.service';
+import { LoadingComponent } from '../../shared/loading/loading.component';
 
 @Component({
   selector: 'app-sliderproducts',
@@ -14,43 +16,50 @@ import { CategoryService } from '../../services/category.service';
     NgFor,
     ProductItemComponent,
     CdkDropList, CdkDrag,
-    ModalproductComponent
+    ModalproductComponent,
+    LoadingComponent, NgIf
   ],
   templateUrl: './sliderproducts.component.html',
   styleUrls: ['./sliderproducts.component.scss']
 })
 export class SliderproductsComponent implements AfterViewInit, OnChanges {
-  @Input() productsList: Product[] = [];
+  @Input() productsList: Producto[] = [];
+  isLoading:boolean = false;
+  
+  selectedProduct: Producto | null = null;
 
-  selectedProduct: Product | null = null;
+  categories: Categoria[] = [];
+  subcategories: any[] = [];
 
-  categories: Category[] = [];
-
-  products: Product[] = [];
+  products: Producto[] = [];
 
   activeCategory: string = 'all';
 
-  todo: Product[] = [];
+  todo: Producto[] = [];
+  
 
-  @Output() productDropped: EventEmitter<Product> = new EventEmitter<Product>();
+  @Output() productDropped: EventEmitter<Producto> = new EventEmitter<Producto>();
 
   @ViewChild('carouselContainer', { static: false }) carouselContainer!: ElementRef<HTMLDivElement>;
 
   private productoService = inject(ProductoService);
   private categoryService = inject(CategoryService);
 
+  catname:string = 'Panaderia'
+
   constructor() {
     this.todo = this.products.slice();
   }
 
   ngAfterViewInit() {
-    this.getProductos();
+    // this.getProductos();
+    this.getProductosCatName();
     this.getCategories();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['productsList']) {
-      this.updateTodoFromInput();
+      this.updateTodo();
     }
   }
 
@@ -65,38 +74,56 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
       }
     );
   }
-
-  getCategories() {
-    this.categoryService.getCategories().subscribe(
-      (categories) => {
-        this.categories = categories;
+  getProductosCatName() {
+    this.isLoading = true
+    this.categoryService.find_by_nombre(this.catname).subscribe(
+      (resp:any) => {
+        this.products = resp.productos;
+        this.updateTodo();
+        this.isLoading = false
       },
       (error) => {
-        console.error('Error al obtener las categorías', error);
+        console.error('Error al obtener los productos', error);
       }
     );
   }
+  //obtenemos las subcategorias de los productos
+  getCategories() {
+    this.isLoading = true
+    this.productoService.getProductosActivos().subscribe((resp:any)=>{
+      //filtramos los productos donde sea igual a la categoria Panaderia
+      const productos = resp.filter((producto: any) => producto.categoria.nombre ===  this.catname);
+      //extraemos el campo subcategoria
+      const subcategorias = productos.map((producto: any) => producto.subcategoria);
+      //eliminamos los duplicados
+      const subcategoriasUnicas = [...new Set(subcategorias)];
+      //creamos un arreglo de objetos con el nombre de la subcategoria y el arreglo de productos
+      const categorias = subcategoriasUnicas.map((subcategoria: any) => ({
+        nombre: subcategoria,
+        products: productos.filter((product: any) => product.subcategoria === subcategoria),
+        }));
+        this.subcategories = categorias;
+    })
+    this.isLoading = false
+  }
 
-  selectCategory(categoryId: string) {
-    this.activeCategory = categoryId;
+  selectCategory(category: string) {
+    this.activeCategory = category;
     this.updateTodo();
   }
 
   updateTodo() {
+    this.isLoading = true
     if (this.activeCategory === 'all') {
       this.todo = this.products.slice();
     } else {
-      this.todo = this.products.filter(product => product.category === this.activeCategory);
+      const selectedCategory = this.subcategories.find(subcat => subcat.nombre === this.activeCategory);
+      this.todo = selectedCategory ? selectedCategory.products : [];
     }
+    this.isLoading = false
   }
 
-  updateTodoFromInput() {
-    if (this.activeCategory === 'all') {
-      this.todo = this.productsList.slice();
-    } else {
-      this.todo = this.productsList.filter(product => product.category === this.activeCategory);
-    }
-  }
+  
 
   scrollLeft() {
     if (this.carouselContainer) {
@@ -110,7 +137,7 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  drop(event:CdkDragDrop<Product[]>){
+  drop(event:CdkDragDrop<Producto[]>){
     if(event.previousContainer === event.container){
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex)
     }else{
@@ -121,7 +148,7 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  openModal(product: Product) {
+  openModal(product: Producto) {
     this.selectedProduct = product;
     // Use Bootstrap's modal method to show modal programmatically
     const modalElement = document.getElementById('exampleModal');

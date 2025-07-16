@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { MenuComponent } from '../menu/menu.component';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, MenuComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
@@ -36,5 +37,14 @@ export class HeaderComponent {
     }
     return '';
   }
+
+  openMenu() {
+    const menuLateral = document.getElementsByClassName("sidemenu");
+    for (let i = 0; i < menuLateral.length; i++) {
+      menuLateral[i].classList.add("active");
+    }
+  }
+
+ 
 
 }

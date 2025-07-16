@@ -1,15 +1,24 @@
-<div class="category-filter">
+<div class="category-filter" *ngIf="!isLoading">
   <button
-    *ngFor="let category of categories"
     class="category-button"
-    [class.active]="activeCategory === category.id"
-    (click)="selectCategory(category.id)"
+    [class.active]="activeCategory === 'all'"
+    (click)="selectCategory('all')"
   >
-    {{ category.name }}
+    Todo
+  </button>
+  <button
+    *ngFor="let category of subcategories"
+    class="category-button"
+    [class.active]="activeCategory === category.nombre"
+    (click)="selectCategory(category.nombre)"
+  >
+    {{ category.nombre }}
   </button>
 </div>
 
-<div class="product-carousel">
+<app-loading *ngIf="isLoading"></app-loading>
+
+<div class="product-carousel" *ngIf="!isLoading">
   <div class="carousel-container" #carouselContainer>
     <div class="carousel-track"
     cdkDropList #todoList="cdkDropList" id="todoList"
@@ -29,5 +38,4 @@
   </button>
 </div>
 
-<app-modalproduct [product]="selectedProduct"></app-modalproduct>
-
+<app-modalproduct [product]="selectedProduct" *ngIf="!isLoading"></app-modalproduct>
