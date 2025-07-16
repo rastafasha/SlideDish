@@ -48,6 +48,7 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
   catname:string = 'Panaderia'
 
   constructor() {
+    this.products = this.products || [];
     this.todo = this.products.slice();
   }
 
@@ -58,7 +59,8 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['productsList']) {
+    if (changes['productsList'] && this.productsList) {
+      this.products = this.productsList;
       this.updateTodo();
     }
   }
@@ -66,7 +68,7 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
   getProductos() {
     this.productoService.getProductos().subscribe(
       (productos) => {
-        this.products = productos;
+        this.products = productos || [];
         this.updateTodo();
       },
       (error) => {
@@ -78,7 +80,7 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
     this.isLoading = true
     this.categoryService.find_by_nombre(this.catname).subscribe(
       (resp:any) => {
-        this.products = resp.productos;
+        this.products = resp.productos || [];
         this.updateTodo();
         this.isLoading = false
       },
@@ -102,7 +104,7 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
         nombre: subcategoria,
         products: productos.filter((product: any) => product.subcategoria === subcategoria),
         }));
-        this.subcategories = categorias;
+        this.subcategories = categorias || [];
     })
     this.isLoading = false
   }
@@ -115,9 +117,9 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
   updateTodo() {
     this.isLoading = true
     if (this.activeCategory === 'all') {
-      this.todo = this.products.slice();
+      this.todo = this.products ? this.products.slice() : [];
     } else {
-      const selectedCategory = this.subcategories.find(subcat => subcat.nombre === this.activeCategory);
+      const selectedCategory = this.subcategories ? this.subcategories.find(subcat => subcat.nombre === this.activeCategory) : null;
       this.todo = selectedCategory ? selectedCategory.products : [];
     }
     this.isLoading = false
