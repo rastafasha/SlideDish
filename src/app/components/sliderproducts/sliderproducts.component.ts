@@ -51,9 +51,15 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
     this.products = this.products || [];
     this.todo = this.products.slice();
   }
+  
+  ngOnInit(){
+    
+    this.updateTodo();
+  }
 
   ngAfterViewInit() {
     // this.getProductos();
+    
     this.getProductosCatName();
     this.getCategories();
   }
@@ -110,11 +116,13 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
   }
 
   selectCategory(category: string) {
+    // console.log('selectCategory called with:', category);
     this.activeCategory = category;
     this.updateTodo();
   }
 
   updateTodo() {
+    console.log('updateTodo called. activeCategory:', this.activeCategory, 'products:', this.products, 'subcategories:', this.subcategories);
     this.isLoading = true
     if (this.activeCategory === 'all') {
       this.todo = this.products ? this.products.slice() : [];
@@ -122,6 +130,7 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
       const selectedCategory = this.subcategories ? this.subcategories.find(subcat => subcat.nombre === this.activeCategory) : null;
       this.todo = selectedCategory ? selectedCategory.products : [];
     }
+    // console.log('todo updated:', this.todo);
     this.isLoading = false
   }
 
