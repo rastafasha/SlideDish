@@ -31,11 +31,12 @@
 }
 
 .product-image {
-  width: 5rem;
-  height: 5rem;
-  border-radius: 50%;
-  overflow: hidden;
-  margin-bottom: 0.5rem;
+      width: 7rem;
+    height: 7rem;
+    /* border-radius: 50%; */
+    /* overflow: hidden; */
+    margin-bottom: 0.5rem;
+    
 }
 
 .product-image img {

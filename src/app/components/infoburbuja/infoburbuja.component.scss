@@ -75,13 +75,13 @@
     }
 }
 
-@media (max-width:380px) {
+@media (max-width:768px) {
     
 
     .bandeja-item-info {
-        bottom: 0;
-        height: 50px;
-        position: fixed;
-        top: 80vh;
+        position: absolute;
+        left: calc(27vw);
+        top: -50px;
     }
+
 }
