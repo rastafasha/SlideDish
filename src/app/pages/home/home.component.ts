@@ -18,7 +18,6 @@ import { MenuComponent } from "../../shared/menu/menu.component";
     // ModalproductComponent,
     RouterModule,
     LoadingComponent,
-    MenuComponent
 ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
