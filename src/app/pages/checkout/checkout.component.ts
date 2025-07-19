@@ -304,7 +304,7 @@ export class CheckoutComponent {
    // Método que se llama cuando cambia el select
   onPaymentMethodChange(event: any) {
     this.selectedMethod = event.target.value;
-    console.log('metodo de pago seleccionado: ',this.selectedMethod._id)
+    console.log('metodo de pago seleccionado: ',this.selectedMethod)
     this.getPaymentMbyName(this.selectedMethod);
     
     if(this.selectedMethod==='paypal' || this.selectedMethod==='card'){
