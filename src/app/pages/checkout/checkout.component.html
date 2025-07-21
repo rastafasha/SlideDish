@@ -99,18 +99,20 @@
         <div class="card" id="card-pay">
           <label class="form-label p-3">Seleccione el Método de Pago</label>
           <!-- select metodo de pago -->
-          <div class="p-3">
-            <select id="paymentMethod" class="form-control" name="metodo_pago" (change)="onPaymentMethodChange($event)"
-              [(ngModel)]="selectedMethod">
-              <option [value]="">
-                Seleccione
-              </option>
-              <option [value]="metodo_pago.tipo" *ngFor="let metodo_pago of paymentMethods ">
-                {{metodo_pago.tipo}}
-              </option>
+          <form [formGroup]="formTransferencia">
+            <div class="p-3">
+              <select id="paymentMethod" class="form-control"  formControlName="metodo_pago" (change)="onPaymentMethodChange($event)"
+                >
+                <option [value]="">
+                  Seleccione
+                </option>
+                <option [value]="metodo_pago.tipo" *ngFor="let metodo_pago of paymentMethods ">
+                  {{metodo_pago.tipo}}
+                </option>
 
-            </select>
-          </div>
+              </select>
+            </div>
+          </form>
 
           <!-- metodo de pago -->
           <!-- <div class="p-3">

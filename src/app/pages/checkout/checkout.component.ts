@@ -22,7 +22,7 @@ declare var $:any;
   selector: 'app-checkout',
   imports: [
     HeaderComponent, CommonModule, RouterModule,
-    ReactiveFormsModule, FormsModule, PagosFilterPipe
+    ReactiveFormsModule, FormsModule
   ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss'
@@ -64,6 +64,7 @@ export class CheckoutComponent {
 
   public url!:string;
   public postales:any;
+  public tienda: any;
 
   selectedMethod: string = 'Selecciona un método de pago';
   public clienteSeleccionado: any;
@@ -108,7 +109,7 @@ export class CheckoutComponent {
     ) {
       window.scrollTo(0,0);
       // obtenemos el cliente del localstorage
-    const cliente = localStorage.getItem('cliente');
+    const cliente = localStorage.getItem('user');
        // Si el cliente existe, lo parseamos de JSON a un objeto
     if (cliente) {
         this.clienteSeleccionado = JSON.parse(cliente);
@@ -122,6 +123,7 @@ export class CheckoutComponent {
       this.loadBandejaListFromLocalStorage();
       // this.geneardorOrdeneNumero();
       this.obtenerMetodosdePago();
+      
       this.total();
       let USER = localStorage.getItem('user');
       if(USER){
@@ -129,7 +131,38 @@ export class CheckoutComponent {
         console.log(this.identity);
       }
 
-       this.direccionTienda();
+      let TIENDA = localStorage.getItem('tiendaSelected');
+      if(TIENDA){
+        this.tienda = JSON.parse(TIENDA);
+        console.log(this.tienda);
+
+        this.data_direccionLocal = this.tienda;
+        this.localId = this.tienda._id;
+
+      }
+
+      //  this.direccionTienda();
+
+    // this.listar_postal();
+    
+    
+    this.listar_carrito();
+    if(this.identity){
+      this.socket.on('new-stock', function (data: any) {
+
+      }.bind(this));
+
+      $('#card-pay').hide();
+      $('#btn-back-data').hide();
+      $('#card-data-envio').hide();
+
+      // this.renderPayPalButton();
+      this.url = environment.baseUrl;
+      this.carrito_real_time();
+
+    }else{
+      this._router.navigate(['/']);
+    }
       
 
     }

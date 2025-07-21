@@ -28,16 +28,30 @@ export class HeaderComponent {
     private tiendaService: TiendaService,
   ) {
       this.loadBandejaListFromLocalStorage();
+      this.loadTiendaFromLocalStorage();
       this.getTiendas();
     }
 
-    loadBandejaListFromLocalStorage() {
+  loadBandejaListFromLocalStorage() {
     const storedItems = localStorage.getItem('bandejaItems');
     if (storedItems) {
       this.bandejaList = JSON.parse(storedItems);
       //contamos el total de items
       this.totalList = this.bandejaList.length;
 
+    }
+  }
+
+
+
+   loadTiendaFromLocalStorage() {
+    const store = localStorage.getItem('tiendaSelected');
+    if (store) {
+      let TIENDA = localStorage.getItem('tiendaSelected');
+      if (TIENDA !== null) {
+        this.tiendaSelected = JSON.parse(TIENDA);
+        this.tiendaService.setSelectedTienda(this.tiendaSelected);
+      }
     }
   }
 
@@ -52,10 +66,13 @@ export class HeaderComponent {
   onSelectStore(tienda:any){
     this.tiendaSelected = tienda;
     this.tiendaService.setSelectedTienda(this.tiendaSelected);
+    
     this.tiendaService.getTiendaById(this.tiendaSelected._id).subscribe((resp:any)=>{
-      console.log(this.tiendaSelected);
-
+      // console.log(this.tiendaSelected);
+      
     })
+    //guardamos la tienda en el localstorage
+    localStorage.setItem('tiendaSelected', JSON.stringify(this.tiendaSelected));
   }
 
 
