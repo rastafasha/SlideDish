@@ -116,7 +116,6 @@ export class CheckoutComponent {
         this.clienteSeleccionado = null; // O maneja el caso en que no hay cliente
     }
 
-    // console.log('identidad cliente: ',this.clienteSeleccionado);
 
     }
     ngOnInit(){
@@ -338,7 +337,7 @@ export class CheckoutComponent {
     })
   }
 
-  sendFormTransfer(){debugger
+  sendFormTransfer(){
     if(this.formTransferencia.valid){
       // llamo al servicio
       this._trasferencias.createTransfer(this.formTransferencia.value).subscribe(resultado => {

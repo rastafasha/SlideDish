@@ -73,6 +73,13 @@ export class CategoryService {
       map((resp:{ok: boolean, categoria:any}) => resp)
       );
   }
+   find_by_subcategory(id:string):Observable<any>{
+    const url = `${base_url}/categorias/category_by_subcategoria/${id}`;
+    return this.http.get<any>(url)
+    .pipe(
+      map((resp:{ok: boolean, categoria:any}) => resp)
+      );
+  }
 
 
 

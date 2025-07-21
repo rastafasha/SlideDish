@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, Observable, BehaviorSubject } from 'rxjs';
 import { Tienda } from '../models/tienda.model';
 import { environment } from '../../environments/environment';
 
@@ -11,7 +11,9 @@ const base_url = environment.baseUrl;
 })
 export class TiendaService {
 
-  
+  private selectedTiendaSubject = new BehaviorSubject<Tienda | null>(null);
+  selectedTiendaObservable$ = this.selectedTiendaSubject.asObservable();
+
   constructor(
     private http: HttpClient
   ) { }
@@ -19,7 +21,6 @@ export class TiendaService {
   get token():string{
     return localStorage.getItem('token') || '';
   }
-
 
   get headers(){
     return{
@@ -29,27 +30,21 @@ export class TiendaService {
     }
   }
 
-
   cargarTiendas(){
-
     const url = `${base_url}/tiendas`;
     return this.http.get<any>(url, this.headers)
       .pipe(
         map((resp:{ok: boolean, tiendas: Tienda[]}) => resp.tiendas)
       )
-
   }
 
-
-  getTiendaById(_id: string){
+  getTiendaById(_id: any){
     const url = `${base_url}/tiendas/${_id}`;
     return this.http.get<any>(url, this.headers)
       .pipe(
         map((resp:{ok: boolean, tienda: Tienda}) => resp.tienda)
         );
-
   }
-
 
   crearTienda(tienda: Tienda){
     const url = `${base_url}/tiendas/store`;
@@ -76,7 +71,6 @@ export class TiendaService {
     return this.http.get(url, this.headers);
   }
 
-
   desactivar(id:string):Observable<any>{
     const url = `${base_url}/tiendas/admin/desactivar/`+id;
     return this.http.get(url,  this.headers);
@@ -87,4 +81,7 @@ export class TiendaService {
     return this.http.get(url,  this.headers);
   }
 
+  setSelectedTienda(tienda: Tienda | null) {
+    this.selectedTiendaSubject.next(tienda);
+  }
 }
