@@ -2,6 +2,14 @@ import { Routes } from '@angular/router';
 import { ReviewOrderComponent } from './pages/review-order/review-order.component';
 import { HomeComponent } from './pages/home/home.component';
 import { CheckoutComponent } from './pages/checkout/checkout.component';
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
+import { RecoveryComponent } from './auth/recovery/recovery.component';
+import { CartCheckoutComponent } from './pages/myaccount/cart-checkout/cart-checkout.component';
+import { MyaccountComponent } from './pages/myaccount/myaccount.component';
+import { DetalleOrdenComponent } from './pages/myaccount/ordenes/detalle-orden/detalle-orden.component';
+import { IndexOrdenesComponent } from './pages/myaccount/ordenes/index-ordenes/index-ordenes.component';
+import { PerfilComponent } from './pages/myaccount/perfil/perfil.component';
 
 export const routes: Routes = [
     {
@@ -16,4 +24,18 @@ export const routes: Routes = [
         path:'checkout',
         component: CheckoutComponent
     },
+    {
+        path:'login',
+        component: LoginComponent
+    },
+    {
+        path:'registro',
+        component: RegisterComponent
+    },
+    {path: 'recovery-password', component: RecoveryComponent },
+    {path: 'my-account', component: MyaccountComponent },
+    {path: 'my-account/perfil/:id', component: PerfilComponent },
+    { path: 'my-account/ordenes', component: IndexOrdenesComponent},
+    { path: 'my-account/ordenes/detalles/:id', component: DetalleOrdenComponent},
+    {path: 'my-account/cart', component: CartCheckoutComponent },
 ];

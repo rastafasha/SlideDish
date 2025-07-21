@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Router, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Tienda } from '../../models/tienda.model';
-import { TiendaService } from '../../services/tienda.service';
 import { UsuarioService } from '../../services/usuario.service';
 import { NgIf } from '@angular/common';
 
@@ -31,7 +30,7 @@ export class RegisterComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private usuarioService: UsuarioService,
-    private tiendaService: TiendaService,
+    // private tiendaService: TiendaService,
   ) {
     this.registerForm = this.fb.group({
       first_name: ['', Validators.required],
@@ -52,18 +51,18 @@ export class RegisterComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.getTiendas();
+    // this.getTiendas();
   }
 
   getTiendas(){
-    this.tiendaService.cargarTiendas().subscribe((resp:any)=>{
-      this.tiendas = resp;
-      //filtramos las tiendas y buscamos la que se llama web
-      this.tiendas = this.tiendas.filter((tienda:Tienda) => tienda.nombre === 'Web');
-      //mostramos la info de la tienda con el nombre web
-      this.tienda = this.tiendas[0];
+    // this.tiendaService.cargarTiendas().subscribe((resp:any)=>{
+    //   this.tiendas = resp;
+    //   //filtramos las tiendas y buscamos la que se llama web
+    //   this.tiendas = this.tiendas.filter((tienda:Tienda) => tienda.nombre === 'Web');
+    //   //mostramos la info de la tienda con el nombre web
+    //   this.tienda = this.tiendas[0];
 
-    })
+    // })
   }
 
   crearUsuario(){

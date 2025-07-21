@@ -2,12 +2,20 @@
   <div class="header-left">
     <a href="javascript:void(0)" (click)="openMenu()" class="sidemenu-toggler">
       <i class="fa fa-bars text-black" ></i>
-
     </a>
    
     <div class="location">
       <i class="fa fa-map-pin "></i>
-      <span>Grand City, MI</span>
+      <!-- <span>Grand City, MI</span> -->
+      <select id="paymentMethod" class="form-control" name="tienda" (change)="onSelectStore(tiendaSelected)"
+              [(ngModel)]="tiendaSelected">
+        <option [ngValue]="null">
+          Seleccione
+        </option>
+        <option [ngValue]="tienda" *ngFor="let tienda of tiendas">
+          {{tienda.nombre}}
+        </option>
+      </select>
     </div>
   </div>
   <div class="logo cursor" routerLink="/">
@@ -18,20 +26,7 @@
     <i class="fa fa-user "></i>
     <span class="cart-count-badge" *ngIf="bandejaList.length > 0 && bandejaList.length <= 10"> {{totalList}}</span>
     <i class="fa fa-shopping-cart  cursor" *ngIf="bandejaList.length > 0 && bandejaList.length <= 10" routerLink="/review"></i>
-
-
-    <!-- <div *ngIf="bandejaList > 0">
-      <a routerLink="/cart">
-        <span class="cart-count-badge" *ngIf="bandejaList > 0 && bandejaList <= 10">{{bandejaList}}</span>
-        <span class="cart-count-badge" *ngIf="bandejaList > 10">
-          <i class="fa fa-shopping-cart icon-small"></i>
-        </span>
-      </a>
-    </div> -->
-
-    
   </div>
-
 </header>
 
 <app-menu></app-menu>

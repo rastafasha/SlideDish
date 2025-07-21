@@ -3,7 +3,6 @@ import { Router, RouterModule } from '@angular/router';
 import { UsuarioService } from '../../services/usuario.service';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../shared/header/header.component';
-import { FooterComponent } from '../../shared/footer/footer.component';
 import { NgIf } from '@angular/common';
 
 @Component({
@@ -12,7 +11,6 @@ import { NgIf } from '@angular/common';
     RouterModule,
     FormsModule,
     HeaderComponent,
-    FooterComponent,
     NgIf
   ],
   templateUrl: './recovery.component.html',

@@ -5,7 +5,6 @@ import { Router, RouterModule } from '@angular/router';
 import { UsuarioService } from '../../services/usuario.service';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../shared/header/header.component';
-import { FooterComponent } from '../../shared/footer/footer.component';
 
 // declare const gapi: any;
 
@@ -19,7 +18,7 @@ import { FooterComponent } from '../../shared/footer/footer.component';
     ReactiveFormsModule,
     FormsModule,
     HeaderComponent,
-    FooterComponent,
+    // FooterComponent,
     RouterModule
 ],
   templateUrl: './login.component.html',

@@ -1,19 +1,28 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { HeaderComponent } from '../../shared/header/header.component';
 import { PagochequeService } from '../../services/pagocheque.service';
 import { TiposdepagoService } from '../../services/tiposdepago.service';
 import { PaymentMethod } from '../../models/paymenthmethod.model';
 import { TransferenciasService } from '../../services/transferencias.service';
 import { CarritoService } from '../../services/carrito.service';
+import Swal from 'sweetalert2';
+import { environment } from '../../../environments/environment';
+import io from "socket.io-client";
+import { TiendaService } from '../../services/tienda.service';
+import { VentaService } from '../../services/venta.service';
+import { ProductoService } from '../../services/product.service';
+import { PostalService } from '../../services/postal.service';
+import { PagosFilterPipe } from '../../pipes/pagos-filter.pipe';
 
+declare var $:any;
 @Component({
   selector: 'app-checkout',
   imports: [
     HeaderComponent, CommonModule, RouterModule,
-    ReactiveFormsModule, FormsModule,
+    ReactiveFormsModule, FormsModule, PagosFilterPipe
   ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss'
@@ -26,6 +35,7 @@ export class CheckoutComponent {
   isbandejaList:boolean = false;
   iva:number = 12;
   public identity:any;
+   public localId!:string;
   //DATA
   public radio_postal:any;
   public medio_postal : any = {};
@@ -44,9 +54,19 @@ export class CheckoutComponent {
   public msm_error_cupon=false;
   public msm_success_cupon=false;
   public precio_envio:any;
+  public msm_error = '';
 
+  public socket = io(environment.soketServer);
+  public data_direccionLocal : any = {};
+
+  public no_direccion = 'no necesita direccion';
+  public paypal:any;
+
+  public url!:string;
+  public postales:any;
 
   selectedMethod: string = 'Selecciona un método de pago';
+  public clienteSeleccionado: any;
 
    habilitacionFormTransferencia:boolean = false;
   habilitacionFormCheque:boolean = false;
@@ -80,16 +100,163 @@ export class CheckoutComponent {
     private _pagoCheque: PagochequeService,
     private _tipoPagosService: TiposdepagoService,
     private _carritoService:CarritoService,
+    private _tiendaService :TiendaService,
+     private _ventaService :VentaService,
+     private _productoService : ProductoService,
+     private _router : Router,
+     private _postalService :PostalService,
     ) {
       window.scrollTo(0,0);
+      // obtenemos el cliente del localstorage
+    const cliente = localStorage.getItem('cliente');
+       // Si el cliente existe, lo parseamos de JSON a un objeto
+    if (cliente) {
+        this.clienteSeleccionado = JSON.parse(cliente);
+    } else {
+        this.clienteSeleccionado = null; // O maneja el caso en que no hay cliente
+    }
+
+
     }
     ngOnInit(){
       this.loadBandejaListFromLocalStorage();
       // this.geneardorOrdeneNumero();
       this.obtenerMetodosdePago();
       this.total();
+      let USER = localStorage.getItem('user');
+      if(USER){
+        this.identity = JSON.parse(USER);
+        console.log(this.identity);
+      }
+
+       this.direccionTienda();
+      
 
     }
+
+    private listAndIdentify(){
+    // this.listar_direcciones();
+    this.listar_postal();
+    this.listar_carrito();
+    this.obtenerMetodosdePago();
+    
+    if(this.clienteSeleccionado){
+      this.socket.on('new-carrito', (data: any) => {
+        this.listar_carrito();
+      });
+
+      $('#card-pay').hide();
+      $('#btn-back-data').hide();
+      $('#card-data-envio').hide();
+      
+
+        // paypal.Buttons({
+
+        //   createOrder: (data: any,actions: { order: { create: (arg0: { purchase_units: { description: string; amount: { currency_code: string; value: number; }; }[]; }) => any; }; })=>{
+        //     //VALIR STOCK DE PRODUCTOS
+        //     this.data_venta.detalles.forEach((element: { producto: { stock: number; }; }) => {
+        //         if(element.producto.stock == 0){
+        //           this.error_stock = true;
+        //         }else{
+        //           this.error_stock = false;
+        //         }
+
+        //     });
+
+        //     if(!this.error_stock){
+        //       return actions.order.create({
+        //         purchase_units : [{
+        //           description : 'Compra en Linea',
+        //           amount : {
+        //             currency_code : 'USD',
+        //             value: Math.round(this.subtotal),
+        //           }
+
+        //         }]
+        //       });
+        //     }else{
+        //       this.error_stock = true;
+        //       this.listar_carrito();
+        //     }
+        //   },
+        //   onApprove : async (data: any,actions: { order: { capture: () => any; }; })=>{
+        //     const order = await actions.order.capture();
+        //     console.log(order);
+        //     this.data_venta.idtransaccion = order.purchase_units[0].payments.captures[0].id;
+        //     this._ventaService.registro(this.data_venta).subscribe(
+        //       response =>{
+        //         this.data_venta.detalles.forEach((element: { producto: { _id: any; }; cantidad: any; }) => {
+        //           console.log(element);
+        //           this._productoService.aumentar_ventas(element.producto._id).subscribe(
+        //             response =>{
+        //             },
+        //             error=>{
+        //               console.log(error);
+
+        //             }
+        //           );
+        //             this._productoService.reducir_stock(element.producto._id,element.cantidad).subscribe(
+        //               response =>{
+        //                 this.remove_carrito();
+        //                 this.listar_carrito();
+        //                 this.socket.emit('save-carrito', {new:true});
+        //                 this.socket.emit('save-stock', {new:true});
+        //                 this._router.navigate(['/app/cuenta/ordenes']);
+        //               },
+        //               error=>{
+        //                 console.log(error);
+
+        //               }
+        //             );
+        //         });
+
+        //       },
+        //       error=>{
+        //         console.log(error);
+
+        //       }
+        //     );
+        //   },
+        //   onError : err =>{
+        //     console.log(err);
+
+        //   }
+        // }).render(this.paypalElement.nativeElement);
+      //
+      this.url = environment.baseUrl;
+
+      this.carrito_real_time();
+
+    }
+    else{
+      this._router.navigate(['/']);
+    }
+  }
+
+
+  listar_postal(){
+    this._postalService.listar().subscribe(
+      response =>{
+        this.postales = response.postales
+        this.postales.forEach((element: { _id: any; titulo: any; precio: any; tiempo: any; dias: any; },index: number) => {
+          if(index == 0){
+            this.radio_postal = element._id;
+            this.medio_postal = {
+              tipo_envio : element.titulo,
+              precio: element.precio,
+              tiempo: element.tiempo,
+              dias : element.dias
+            };
+            this.precio_envio = element.precio;
+          }
+        });
+
+      },
+      error=>{
+
+      }
+    );
+  }
 
     loadBandejaListFromLocalStorage() {
     const storedItems = localStorage.getItem('bandejaItems');
@@ -175,18 +342,18 @@ export class CheckoutComponent {
       // llamo al servicio
       this._trasferencias.createTransfer(this.formTransferencia.value).subscribe(resultado => {
         // console.log('resultado: ',resultado);
-        // this.verify_dataComplete();
+        this.verify_dataComplete();
         if(resultado.ok){
           // transferencia registrada con exito
           // console.log(resultado.payment);
           // alert('Transferencia registrada con exito');
-          // Swal.fire({
-          //   position: 'top-end',
-          //   icon: 'success',
-          //   title: 'Transferencia registrada con exito',
-          //   showConfirmButton: false,
-          //   timer: 1500,
-          // });
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Transferencia registrada con exito',
+            showConfirmButton: false,
+            timer: 1500,
+          });
         }
         else{
           // error al registar la transferencia
@@ -194,14 +361,14 @@ export class CheckoutComponent {
           // console.log(resultado.msg);
 
           
-          // Swal.fire({
-          //   position: 'top-end',
-          //   icon: 'warning',
-          //   title: 'Error al registrar la transferencia' ,  
-          //   text: resultado.msg,
-          //   showConfirmButton: false,
-          //   timer: 1500,
-          // });
+          Swal.fire({
+            position: 'top-end',
+            icon: 'warning',
+            title: 'Error al registrar la transferencia' ,  
+            text: resultado.msg,
+            showConfirmButton: false,
+            timer: 1500,
+          });
         }
       });
     }
@@ -217,27 +384,27 @@ export class CheckoutComponent {
 
           if(resultado.ok){
             // console.log(resultado.pago_efectivo);
-            // this.verify_dataComplete();
-          //   Swal.fire({
-          //   position: 'top-end',
-          //   icon: 'success',
-          //   title: 'pago Cheque registrada con exito',
-          //   showConfirmButton: false,
-          //   timer: 1500,
-          // });
+            this.verify_dataComplete();
+            Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'pago Cheque registrada con exito',
+            showConfirmButton: false,
+            timer: 1500,
+          });
 
             // eliminar carrito luego de haber realzado la compra con transferencia exitosa
             this.remove_carrito();
           }
           else{
-          //   Swal.fire({
-          //   position: 'top-end',
-          //   icon: 'warning',
-          //   title: 'Error al registrar pago Cheque' ,  
-          //   text: resultado.msg,
-          //   showConfirmButton: false,
-          //   timer: 1500,
-          // });
+            Swal.fire({
+            position: 'top-end',
+            icon: 'warning',
+            title: 'Error al registrar pago Cheque' ,  
+            text: resultado.msg,
+            showConfirmButton: false,
+            timer: 1500,
+          });
             console.log(resultado.msg);
           }
           
@@ -284,6 +451,128 @@ export class CheckoutComponent {
 
       }
     );
+  }
+
+  carrito_real_time(){
+    // this.socket.on('new-carrito', function (data:any) {
+    //   this.subtotal = 0;
+
+    //   this._carritoService.preview_carrito(this.clienteSeleccionado.uid).subscribe(
+    //     response =>{
+    //       this.carrito = response;
+
+    //       this.carrito.forEach(element => {
+    //         this.subtotal = Math.round(this.subtotal + (element.precio * element.cantidad));
+    //       });
+
+    //     },
+    //     error=>{
+    //       console.log(error);
+
+    //     }
+    //   );
+
+    // }.bind(this));
+  }
+
+  direccionTienda(){
+    this._tiendaService.getTiendaById(this.localId).subscribe(
+      tienda =>{
+        this.data_direccionLocal = tienda;
+        console.log('direccion del local', this.data_direccionLocal);
+      }
+    );
+
+  }
+
+   verify_dataComplete(){debugger
+    if(this.localId){
+      this.msm_error = '';
+      $('#btn-verify-data').animate().hide();
+      $('#btn-back-data').animate().show();
+
+      $('#card-data-envio').animate().show();
+
+      $('#card-pay').animate().show('fast');
+      $('.cart-data-venta').animate().hide('fast');
+
+
+
+      if(this.data_cupon){
+        if(this.data_cupon.categoria){
+          this.info_cupon_string = this.data_cupon.descuento + '% de descuento en ' + this.data_cupon.categoria.nombre;
+        }else if(this.data_cupon.subcategoria){
+          this.info_cupon_string = this.data_cupon.descuento + '% de descuento en ' + this.data_cupon.subcategoria;
+        }
+      }
+
+      var fecha = new Date();
+
+      var months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Deciembre"];
+      fecha.setDate(fecha.getDate() + parseInt(this.medio_postal.dias));
+      this.date_string =  fecha.getDate() +' de ' + months[fecha.getMonth()] + ' del ' + fecha.getFullYear();
+
+
+      this.data_venta = {
+        user : this.clienteSeleccionado.uid,
+        total_pagado : this.subtotal,
+        codigo_cupon : this.cupon,
+        info_cupon :  this.info_cupon_string,
+        idtransaccion : null,
+        metodo_pago : this.selectedMethod,
+        // metodo_pago : 'Paypal',
+
+        tipo_envio: this.medio_postal.tipo_envio,
+        precio_envio: this.medio_postal.precio,
+        tiempo_estimado: this.date_string,
+
+        direccion: this.data_direccionLocal.direccion,
+        destinatario: this.clienteSeleccionado.first_name +''+ this.clienteSeleccionado.last_name,
+        detalles:this.data_detalle,
+        referencia: this.data_direccionLocal.local,
+        pais: this.data_direccionLocal.pais,
+        ciudad: this.data_direccionLocal.ciudad,
+        zip: this.data_direccionLocal.zip,
+      }
+
+      console.log(this.data_venta);
+
+      this.saveVenta();
+
+    }else{
+      this.msm_error = "Seleccione una dirección de envio.";
+    }
+
+  }
+
+  saveVenta(){
+    this._ventaService.registro(this.data_venta).subscribe(response =>{
+      this.data_venta.detalles.forEach((element: { producto: { _id: any; }; cantidad: any; }) => {
+        console.log(element);
+        this._productoService.aumentar_ventas(element.producto._id).subscribe(
+          response =>{
+          },
+          error=>{
+            console.log(error);
+
+          }
+        );
+          this._productoService.reducir_stock(element.producto._id,element.cantidad).subscribe(
+            response =>{
+              this.remove_carrito();
+              this.listar_carrito();
+              this.socket.emit('save-carrito', {new:true});
+              this.socket.emit('save-stock', {new:true});
+              // this._router.navigate(['/dashboard/ventas/modulo']);
+            },
+            error=>{
+              console.log(error);
+
+            }
+          );
+      });
+
+    },)
   }
 
 
@@ -369,5 +658,8 @@ export class CheckoutComponent {
     // }
 
   }
+
+
+  
 
 }

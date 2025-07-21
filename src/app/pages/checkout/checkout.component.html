@@ -85,15 +85,22 @@
 
 
       </div>
+      <div class="col-12 alert-warning text-center pt-3" *ngIf="!identity">
+        <p>Debes registrarte ó iniciar sesión para poder procesar el pago</p>
+      </div>
+      <button class="check-button pt-2 text-center" *ngIf="!identity" routerLink="/login">
+        <i class="fa fa-user icon-small"></i>
+        Ingresar
+      </button>
 
-      <div class="col-12">
+      <div class="col-12" *ngIf="identity">
 
         <!-- <span>Metodos de Pago</span> -->
         <div class="card" id="card-pay">
           <label class="form-label p-3">Seleccione el Método de Pago</label>
           <!-- select metodo de pago -->
           <div class="p-3">
-            <select id="paymentMethod" class="form-control" (change)="onPaymentMethodChange($event)"
+            <select id="paymentMethod" class="form-control" name="metodo_pago" (change)="onPaymentMethodChange($event)"
               [(ngModel)]="selectedMethod">
               <option [value]="">
                 Seleccione
@@ -104,23 +111,28 @@
 
             </select>
           </div>
+
+          <!-- metodo de pago -->
+          <!-- <div class="p-3">
+            <form [formGroup]="formTransferencia">
+              <select formControlName="metodo_pago" (change)="onPaymentMethodChange($event)" class="form-control"
+                name="metodo_pago" id="metodo_pago">
+                <option [value]="">
+                  Seleccione
+                </option>
+                <option [value]="metodo_pago._id" *ngFor="let metodo_pago of paymentMethods  ">
+                  {{metodo_pago.tipo}}
+                </option>
+              </select>
+            </form>
+          </div> -->
           <!-- Contenedor para el botón de PayPal -->
           <div #paypal></div>
           <!-- Contenedor para el botón de transferencia-->
           <div *ngIf="habilitacionFormTransferencia" class="mt-1 mb-1 p-3">
             <form [formGroup]="formTransferencia" (ngSubmit)="sendFormTransfer()">
 
-              <!-- metodo de pago -->
-              <div class="mb-1 mt-2">
-                <!-- <label form="metodo_pago" class="form-label">Tipo de Transferencia</label>
 
-                                    <select formControlName="metodo_pago" (change)="onChangePayment($event)"
-                                        class="form-control" name="metodo_pago" id="metodo_pago">
-                                        <option [value]="metodo_pago._id" *ngFor="let metodo_pago of paymentMethods | pagosFilter ">
-                                            {{metodo_pago.tipo}}
-                                        </option>
-                                    </select> -->
-              </div>
               <div class="card">
                 <div class="card-body alert-warning" *ngIf="paymentMethodinfo">
                   <p>Entre a su Aplicación Bancaria y realice el pago con la siguiente información:</p>
@@ -130,7 +142,7 @@
                     Cuenta:&nbsp;{{paymentMethodinfo.bankAccount}}</p>
                   <p *ngIf="paymentMethodinfo.phone">Número de Teléfono:&nbsp;{{paymentMethodinfo.phone}}</p>
                   <p *ngIf="paymentMethodinfo.email">Email:&nbsp;{{paymentMethodinfo.email}}</p>
-                  <p *ngIf="paymentMethodinfo?.ciorif">CI o rif:&nbsp;{{paymentSelected.ciorif}}</p>
+                  <p *ngIf="paymentMethodinfo?.ciorif">CI o rif:&nbsp;{{paymentMethodinfo.ciorif}}</p>
                 </div>
               </div>
 

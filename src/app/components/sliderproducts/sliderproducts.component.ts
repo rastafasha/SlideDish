@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, Output, EventEmitter, Input, OnChanges, SimpleChanges, inject } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, Output, EventEmitter, OnChanges, SimpleChanges, OnDestroy, inject, Input } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { ProductItemComponent } from '../product-item/product-item.component';
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -9,6 +9,9 @@ import { Categoria } from '../../models/categoria.model';
 import { Producto } from '../../models/product';
 import { ProductoService } from '../../services/product.service';
 import { LoadingComponent } from '../../shared/loading/loading.component';
+import { TiendaService } from '../../services/tienda.service';
+import { Tienda } from '../../models/tienda.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-sliderproducts',
@@ -22,8 +25,11 @@ import { LoadingComponent } from '../../shared/loading/loading.component';
   templateUrl: './sliderproducts.component.html',
   styleUrls: ['./sliderproducts.component.scss']
 })
-export class SliderproductsComponent implements AfterViewInit, OnChanges {
+export class SliderproductsComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() productsList: Producto[] = [];
+  tiendaSelected: Tienda | null = null;
+  @Output() productDropped: EventEmitter<Producto> = new EventEmitter<Producto>();
+  @ViewChild('carouselContainer', { static: false }) carouselContainer!: ElementRef<HTMLDivElement>;
   isLoading:boolean = false;
   
   selectedProduct: Producto | null = null;
@@ -36,16 +42,15 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
   activeCategory: string = 'all';
 
   todo: Producto[] = [];
+  catname!:string;
   
-
-  @Output() productDropped: EventEmitter<Producto> = new EventEmitter<Producto>();
-
-  @ViewChild('carouselContainer', { static: false }) carouselContainer!: ElementRef<HTMLDivElement>;
-
   private productoService = inject(ProductoService);
   private categoryService = inject(CategoryService);
+  private tiendasService = inject(TiendaService);
 
-  catname:string = 'Panaderia'
+  private tiendaSubscription: Subscription | undefined;
+
+  
 
   constructor() {
     this.products = this.products || [];
@@ -53,15 +58,17 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
   }
   
   ngOnInit(){
-    
-    this.updateTodo();
+    this.tiendaSubscription = this.tiendasService.selectedTiendaObservable$.subscribe(tienda => {
+      this.tiendaSelected = tienda;
+      this.updateTodo();
+      this.getProductosCatName();
+      this.getCategories();
+    });
   }
 
   ngAfterViewInit() {
-    // this.getProductos();
-    
     this.getProductosCatName();
-    this.getCategories();
+    
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -71,18 +78,14 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  getProductos() {
-    this.productoService.getProductos().subscribe(
-      (productos) => {
-        this.products = productos || [];
-        this.updateTodo();
-      },
-      (error) => {
-        console.error('Error al obtener los productos', error);
-      }
-    );
+  ngOnDestroy() {
+    if (this.tiendaSubscription) {
+      this.tiendaSubscription.unsubscribe();
+    }
   }
+
   getProductosCatName() {
+    this.catname = this.tiendaSelected?.subcategoria ?? ''
     this.isLoading = true
     this.categoryService.find_by_nombre(this.catname).subscribe(
       (resp:any) => {
@@ -122,7 +125,7 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges {
   }
 
   updateTodo() {
-    console.log('updateTodo called. activeCategory:', this.activeCategory, 'products:', this.products, 'subcategories:', this.subcategories);
+    // console.log('updateTodo called. activeCategory:', this.activeCategory, 'products:', this.products, 'subcategories:', this.subcategories);
     this.isLoading = true
     if (this.activeCategory === 'all') {
       this.todo = this.products ? this.products.slice() : [];

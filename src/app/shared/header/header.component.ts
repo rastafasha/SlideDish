@@ -2,10 +2,16 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MenuComponent } from '../menu/menu.component';
+import { TiendaService } from '../../services/tienda.service';
+import { Tienda } from '../../models/tienda.model';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterModule, CommonModule, MenuComponent],
+  imports: [RouterModule, CommonModule, 
+    MenuComponent, ReactiveFormsModule,
+    FormsModule
+  ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
@@ -14,9 +20,15 @@ export class HeaderComponent {
   bandejaList: any[] = [];
   // public bandejaList: number = 0;
   totalList : number = 0;
+  tiendas: Tienda[] = [];
+  tienda!:Tienda;
+  tiendaSelected!:Tienda;
 
-  constructor() {
+  constructor(
+    private tiendaService: TiendaService,
+  ) {
       this.loadBandejaListFromLocalStorage();
+      this.getTiendas();
     }
 
     loadBandejaListFromLocalStorage() {
@@ -27,6 +39,23 @@ export class HeaderComponent {
       this.totalList = this.bandejaList.length;
 
     }
+  }
+
+  getTiendas(){
+    this.tiendaService.cargarTiendas().subscribe((resp: Tienda[]) => {
+      // Asignamos el array filtrado directamente
+      this.tiendas = resp.filter((tienda: Tienda) => tienda.categoria && tienda.categoria.nombre=== 'Alimentos');
+      // console.log(this.tiendas);
+    })
+  }
+
+  onSelectStore(tienda:any){
+    this.tiendaSelected = tienda;
+    this.tiendaService.setSelectedTienda(this.tiendaSelected);
+    this.tiendaService.getTiendaById(this.tiendaSelected._id).subscribe((resp:any)=>{
+      console.log(this.tiendaSelected);
+
+    })
   }
 
 
