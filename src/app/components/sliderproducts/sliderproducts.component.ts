@@ -62,14 +62,13 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges, OnDest
       this.tiendaSelected = tienda;
       this.updateTodo();
       this.getProductosCatName();
+      this.getCategories();
     });
   }
 
   ngAfterViewInit() {
-    // this.getProductos();
-    
     this.getProductosCatName();
-    this.getCategories();
+    
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -85,17 +84,6 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges, OnDest
     }
   }
 
-  getProductos() {
-    this.productoService.getProductos().subscribe(
-      (productos) => {
-        this.products = productos || [];
-        this.updateTodo();
-      },
-      (error) => {
-        console.error('Error al obtener los productos', error);
-      }
-    );
-  }
   getProductosCatName() {
     this.catname = this.tiendaSelected?.subcategoria ?? ''
     this.isLoading = true
