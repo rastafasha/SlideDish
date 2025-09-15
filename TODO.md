@@ -1,0 +1,5 @@
+- [x] Modify verify_dataComplete method to accept total_pagado as a parameter (number)
+- [x] In verify_dataComplete, set this.data_venta.total_pagado = total_pagado
+- [x] In sendFormTransfer, pass Number(this.formTransferencia.value.amount) to verify_dataComplete
+- [x] In sendFormCheque, pass Number(this.formCheque.value.amount) to verify_dataComplete
+- [ ] Test the changes to ensure total_pagado is set correctly from the form amount

@@ -15,8 +15,9 @@ import { TiendaService } from '../../services/tienda.service';
 import { VentaService } from '../../services/venta.service';
 import { ProductoService } from '../../services/product.service';
 import { PostalService } from '../../services/postal.service';
+import { Tienda } from '../../models/tienda.model';
 
-declare var $:any;
+
 @Component({
   selector: 'app-checkout',
   imports: [
@@ -63,6 +64,8 @@ export class CheckoutComponent {
 
   public url!:string;
   public postales:any;
+
+  tienda!:any;
 
   selectedMethod: string = 'Selecciona un método de pago';
   public clienteSeleccionado: any;
@@ -125,7 +128,17 @@ export class CheckoutComponent {
       let USER = localStorage.getItem('user');
       if(USER){
         this.identity = JSON.parse(USER);
-        console.log(this.identity);
+        // console.log(this.identity);
+      }
+
+      let TIENDA = localStorage.getItem('tiendaSelected');
+      if(TIENDA){
+        this.tienda = JSON.parse(TIENDA);
+        console.log(this.tienda);
+
+        this.data_direccionLocal = this.tienda;
+        this.localId = this.tienda._id;
+
       }
 
        this.direccionTienda();
@@ -135,7 +148,7 @@ export class CheckoutComponent {
 
     private listAndIdentify(){
     // this.listar_direcciones();
-    this.listar_postal();
+    // this.listar_postal();
     this.listar_carrito();
     this.obtenerMetodosdePago();
     
@@ -144,9 +157,7 @@ export class CheckoutComponent {
         this.listar_carrito();
       });
 
-      $('#card-pay').hide();
-      $('#btn-back-data').hide();
-      $('#card-data-envio').hide();
+
       
 
         // paypal.Buttons({
@@ -233,30 +244,6 @@ export class CheckoutComponent {
   }
 
 
-  listar_postal(){
-    this._postalService.listar().subscribe(
-      response =>{
-        this.postales = response.postales
-        this.postales.forEach((element: { _id: any; titulo: any; precio: any; tiempo: any; dias: any; },index: number) => {
-          if(index == 0){
-            this.radio_postal = element._id;
-            this.medio_postal = {
-              tipo_envio : element.titulo,
-              precio: element.precio,
-              tiempo: element.tiempo,
-              dias : element.dias
-            };
-            this.precio_envio = element.precio;
-          }
-        });
-
-      },
-      error=>{
-
-      }
-    );
-  }
-
     loadBandejaListFromLocalStorage() {
     const storedItems = localStorage.getItem('bandejaItems');
     if (storedItems) {
@@ -338,19 +325,22 @@ export class CheckoutComponent {
     })
   }
 
-  sendFormTransfer(){debugger
+  sendFormTransfer(){
     
     if(this.formTransferencia.valid){
 
       const data = {
         localId: this.localId,
+        
+
         ...this.formTransferencia.value
       }
+
 
       // llamo al servicio
       this._trasferencias.createTransfer(data).subscribe(resultado => {
         // console.log('resultado: ',resultado);
-        this.verify_dataComplete();
+        this.verify_dataComplete(Number(this.formTransferencia.value.amount));
         if(resultado.ok){
           // transferencia registrada con exito
           // console.log(resultado.payment);
@@ -362,16 +352,13 @@ export class CheckoutComponent {
             showConfirmButton: false,
             timer: 1500,
           });
+          // eliminar carrito luego de haber realzado la compra con transferencia exitosa
+            this.remove_carrito();
         }
         else{
           // error al registar la transferencia
-          alert('Error al registrar la transferencia');
+          // alert('Error al registrar la transferencia');
           // console.log(resultado.msg);
-
-          // eliminar carrito luego de haber realzado la compra con transferencia exitosa
-            this.remove_carrito();
-
-          
           Swal.fire({
             position: 'top-end',
             icon: 'warning',
@@ -395,7 +382,7 @@ export class CheckoutComponent {
 
           if(resultado.ok){
             // console.log(resultado.pago_efectivo);
-            this.verify_dataComplete();
+            this.verify_dataComplete(Number(this.formCheque.value.amount));
             Swal.fire({
             position: 'top-end',
             icon: 'success',
@@ -496,16 +483,9 @@ export class CheckoutComponent {
 
   }
 
-   verify_dataComplete(){debugger
+   verify_dataComplete(total_pagado: number){debugger
     if(this.localId){
       this.msm_error = '';
-      $('#btn-verify-data').animate().hide();
-      $('#btn-back-data').animate().show();
-
-      $('#card-data-envio').animate().show();
-
-      $('#card-pay').animate().show('fast');
-      $('.cart-data-venta').animate().hide('fast');
 
 
 
@@ -525,8 +505,8 @@ export class CheckoutComponent {
 
 
       this.data_venta = {
-        user : this.clienteSeleccionado.uid,
-        total_pagado : this.subtotal,
+        user : this.identity.uid,
+        total_pagado : total_pagado,
         codigo_cupon : this.cupon,
         info_cupon :  this.info_cupon_string,
         idtransaccion : null,
@@ -538,7 +518,7 @@ export class CheckoutComponent {
         tiempo_estimado: 'al momento',
 
         direccion: this.data_direccionLocal.direccion,
-        destinatario: this.clienteSeleccionado.first_name +''+ this.clienteSeleccionado.last_name,
+        destinatario: this.identity.first_name +''+ this.identity.last_name,
         detalles:this.data_detalle,
         referencia: this.data_direccionLocal.local,
         pais: this.data_direccionLocal.pais,
