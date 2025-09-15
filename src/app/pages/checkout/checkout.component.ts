@@ -15,14 +15,13 @@ import { TiendaService } from '../../services/tienda.service';
 import { VentaService } from '../../services/venta.service';
 import { ProductoService } from '../../services/product.service';
 import { PostalService } from '../../services/postal.service';
-import { PagosFilterPipe } from '../../pipes/pagos-filter.pipe';
 
 declare var $:any;
 @Component({
   selector: 'app-checkout',
   imports: [
     HeaderComponent, CommonModule, RouterModule,
-    ReactiveFormsModule, FormsModule, PagosFilterPipe
+    ReactiveFormsModule, FormsModule, 
   ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss'
@@ -77,7 +76,7 @@ export class CheckoutComponent {
 
 
    formTransferencia = new FormGroup({
-    metodo_pago: new FormControl('',Validators.required),
+    metodo_pago: new FormControl(this.paymentMethodinfo,Validators.required),
     bankName: new FormControl('', Validators.required),
     amount: new FormControl('', Validators.required),
     referencia: new FormControl('',Validators.required),
@@ -333,14 +332,23 @@ export class CheckoutComponent {
     this.selectedMethod = selectedMethod
     this._tipoPagosService.getPaymentMethodByName(selectedMethod).subscribe((resp:any)=>{
       this.paymentMethodinfo = resp[0];
-      // console.log(this.paymentMethodinfo);
+      console.log(this.paymentMethodinfo);
+      // Update the form control value with the selected payment method info
+      this.formTransferencia.get('metodo_pago')?.setValue(this.paymentMethodinfo);
     })
   }
 
-  sendFormTransfer(){
+  sendFormTransfer(){debugger
+    
     if(this.formTransferencia.valid){
+
+      const data = {
+        localId: this.localId,
+        ...this.formTransferencia.value
+      }
+
       // llamo al servicio
-      this._trasferencias.createTransfer(this.formTransferencia.value).subscribe(resultado => {
+      this._trasferencias.createTransfer(data).subscribe(resultado => {
         // console.log('resultado: ',resultado);
         this.verify_dataComplete();
         if(resultado.ok){
@@ -359,6 +367,9 @@ export class CheckoutComponent {
           // error al registar la transferencia
           alert('Error al registrar la transferencia');
           // console.log(resultado.msg);
+
+          // eliminar carrito luego de haber realzado la compra con transferencia exitosa
+            this.remove_carrito();
 
           
           Swal.fire({
@@ -522,9 +533,9 @@ export class CheckoutComponent {
         metodo_pago : this.selectedMethod,
         // metodo_pago : 'Paypal',
 
-        tipo_envio: this.medio_postal.tipo_envio,
-        precio_envio: this.medio_postal.precio,
-        tiempo_estimado: this.date_string,
+        tipo_envio: 'local',
+        precio_envio: 0,
+        tiempo_estimado: 'al momento',
 
         direccion: this.data_direccionLocal.direccion,
         destinatario: this.clienteSeleccionado.first_name +''+ this.clienteSeleccionado.last_name,
