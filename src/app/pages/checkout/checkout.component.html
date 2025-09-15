@@ -101,7 +101,7 @@
           <!-- select metodo de pago -->
           <div class="p-3">
             <!-- [(ngModel)]="selectedMethod" -->
-            <select id="paymentMethod" class="form-control" name="metodo_pago" formControlName="metodo_pago" (change)="onPaymentMethodChange($event)"
+            <select id="paymentMethod" class="form-control" name="metodo_pago" [(ngModel)]="selectedMethod" (change)="onPaymentMethodChange($event)"
               >
               <option [value]="">
                 Seleccione

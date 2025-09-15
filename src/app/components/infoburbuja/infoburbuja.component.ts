@@ -63,9 +63,9 @@ export class InfoburbujaComponent implements OnInit {
   addItem(item:Producto){
     const index = this.items.findIndex(i => i._id === item._id);
     if(index !== -1){
-      this.items[index].quantity = (this.items[index].quantity || 0) + 1;
+      this.items[index].cantidad = (this.items[index].cantidad || 0) + 1;
     } else {
-      item.quantity = 1;
+      item.cantidad = 1;
       this.items.push(item);
     }
     this.itemsChange.emit(this.items);
@@ -75,8 +75,8 @@ export class InfoburbujaComponent implements OnInit {
   removeItem(item:Producto){
     const index = this.items.findIndex(i => i._id === item._id);
     if(index !== -1){
-      if(this.items[index].quantity && this.items[index].quantity > 1){
-        this.items[index].quantity -= 1;
+      if(this.items[index].cantidad && this.items[index].cantidad > 1){
+        this.items[index].cantidad -= 1;
       } else {
         this.items.splice(index, 1);
       }

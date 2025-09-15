@@ -135,7 +135,7 @@ export class CheckoutComponent {
       let TIENDA = localStorage.getItem('tiendaSelected');
       if(TIENDA){
         this.tienda = JSON.parse(TIENDA);
-        console.log(this.tienda);
+        // console.log(this.tienda);
 
         this.data_direccionLocal = this.tienda;
         this.localId = this.tienda._id;
@@ -144,7 +144,7 @@ export class CheckoutComponent {
 
        this.direccionTienda();
       
-
+      // this.listar_carrito();
     }
 
     private listAndIdentify(){
@@ -254,6 +254,21 @@ export class CheckoutComponent {
     if(this.bandejaList.length > 0){
       this.isbandejaList = true;
     }
+
+    this.bandejaList ;
+        this.subtotal = 0;
+        this.bandejaList.forEach(element => {
+          this.subtotal = Math.round(this.subtotal + (element.precio_ahora * element.cantidad));
+          this.data_detalle.push({
+            producto : element,
+            cantidad: element.cantidad,
+            precio: Math.round(element.precio_ahora),
+            color: '#fff',
+            selector : 'unico'
+          })
+          // console.log(this.carrito);
+
+        });
   }
 
   total() {
@@ -327,7 +342,7 @@ export class CheckoutComponent {
     })
   }
 
-  sendFormTransfer(){debugger
+  sendFormTransfer(){
     
     if(this.formTransferencia.valid){
 
@@ -341,31 +356,32 @@ export class CheckoutComponent {
       this._trasferencias.createTransfer(data).subscribe(resultado => {
         // console.log('resultado: ',resultado);
         this.verify_dataComplete(Number(this.formTransferencia.value.amount));
-        if(resultado.ok){
+        if(resultado.ok || resultado.status === 200){
           // transferencia registrada con exito
           // console.log(resultado.payment);
           // alert('Transferencia registrada con exito');
-          // Swal.fire({
-          //   position: 'top-end',
-          //   icon: 'success',
-          //   title: 'Transferencia registrada con exito',
-          //   showConfirmButton: false,
-          //   timer: 1500,
-          // });
-         
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Transferencia registrada con exito',
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          this.onItemRemoved();
+          this._router.navigate(['/myaccount/ordenes']);
         }
         else{
           // error al registar la transferencia
           // alert('Error al registrar la transferencia');
           // console.log(resultado.msg);
-          // Swal.fire({
-          //   position: 'top-end',
-          //   icon: 'warning',
-          //   title: 'Error al registrar la transferencia' ,  
-          //   text: resultado.msg,
-          //   showConfirmButton: false,
-          //   timer: 1500,
-          // });
+          Swal.fire({
+            position: 'top-end',
+            icon: 'warning',
+            title: 'Error al registrar la transferencia' ,  
+            text: resultado.msg,
+            showConfirmButton: false,
+            timer: 1500,
+          });
         }
       });
     }
@@ -442,12 +458,13 @@ export class CheckoutComponent {
   listar_carrito(){
     this._carritoService.preview_carrito(this.identity.uid ?? '').subscribe(
       (response:any) =>{
+        console.log(response)
         this.carrito = response;
         this.subtotal = 0;
         this.carrito.forEach(element => {
           this.subtotal = Math.round(this.subtotal + (element.precio * element.cantidad));
           this.data_detalle.push({
-            producto : element.producto,
+            producto : element,
             cantidad: element.cantidad,
             precio: Math.round(element.precio),
             color: element.color,
@@ -465,6 +482,8 @@ export class CheckoutComponent {
       }
     );
   }
+
+ 
 
   carrito_real_time(){
     // this.socket.on('new-carrito', function (data:any) {
@@ -534,7 +553,7 @@ export class CheckoutComponent {
 
         direccion: this.data_direccionLocal.direccion,
         destinatario: this.identity.first_name +''+ this.identity.last_name,
-        detalles:this.bandejaList,
+        detalles:this.data_detalle,
         referencia: this.data_direccionLocal.local,
         pais: this.data_direccionLocal.pais,
         ciudad: this.data_direccionLocal.ciudad,
@@ -577,37 +596,7 @@ export class CheckoutComponent {
             }
           );
 
-           // eliminar carrito luego de haber realzado la compra con transferencia exitosa
-            // this.remove_carrito();
-
-            if(response.ok){
-          // transferencia registrada con exito
-          // console.log(resultado.payment);
-          // alert('Transferencia registrada con exito');
-          Swal.fire({
-            position: 'top-end',
-            icon: 'success',
-            title: 'Transferencia registrada con exito',
-            showConfirmButton: false,
-            timer: 1500,
-          });
-         
-        }
-        else{
-          // error al registar la transferencia
-          // alert('Error al registrar la transferencia');
-          // console.log(resultado.msg);
-          Swal.fire({
-            position: 'top-end',
-            icon: 'warning',
-            title: 'Error al registrar la transferencia' ,  
-            text: response.msg,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        }
-            localStorage.removeItem('bandejaItems');
-    this.saveBandejaListToLocalStorage();
+           
       });
 
     },)
