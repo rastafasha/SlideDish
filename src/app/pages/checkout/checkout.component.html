@@ -147,44 +147,50 @@
                 </div>
               </div>
 
-              <!-- nombre del banco -->
-              <div class="mb-3">
+              <div class="row">
+                <!-- nombre del banco -->
+              <div class="mb-3 col-xs-12 col-sm-6">
                 <label for="bankName" class="form-label">Nombre del Banco</label>
                 <input type="text" formControlName="bankName" class="form-control" name="bankName" id="bankName">
               </div>
 
               <!-- numero de referencia -->
-              <div class="mb-3">
+              <div class="mb-3 col-xs-12 col-sm-6">
                 <label for="referencia" class="form-label">Num. referencia</label>
                 <input type="text" formControlName="referencia" class="form-control" name="referencia" id="referencia">
               </div>
+              </div>
 
 
-              <!-- monto -->
-              <div class="mb-3">
+              <div class="row">
+                <!-- monto -->
+              <div class="mb-3 col-xs-12 col-sm-6">
                 <label for="amount" class="form-label">Monto</label>
                 <input type="number" formControlName="amount" class="form-control" name="amount" id="amount">
               </div>
 
               <!-- teléfono de la persona que hace la transferencia -->
-              <div class="mb-3">
+              <div class="mb-3 col-xs-12 col-sm-6">
                 <label for="phone" class="form-label">Num. teléfono</label>
                 <input type="number" formControlName="phone" class="form-control" name="phone" id="phone">
               </div>
+              </div>
 
-              <!-- nombre de la persona que hace la transferencia -->
-              <div class="mb-3">
+              <div class="row">
+                <!-- nombre de la persona que hace la transferencia -->
+              <!-- <div class="mb-3 col-xs-12 col-sm-6">
                 <label for="name_person" class="form-label">
                   Nombre y Apellido(en cuenta pagadora)
                 </label>
                 <input type="text" formControlName="name_person" class="form-control" name="name_person"
                   id="name_person">
-              </div>
+              </div> -->
 
               <!-- fecha de pago -->
-              <div class="mb-3">
+              <div class="mb-3 col-xs-12 col-sm-6">
                 <label for="paymentday" class="form-label">Fecha de Pago</label>
                 <input type="date" formControlName="paymentday" class="form-control" name="paymentday" id="paymentday">
+              </div>
               </div>
 
               <!-- botones -->
@@ -208,9 +214,10 @@
               </div>
             </div>
             <!-- formulario -->
-            <form [formGroup]="formCheque" (ngSubmit)="sendFormCheque()" class="mt-4">
-              <!-- nombre de la persona que paga -->
-              <div class="mb-3 mt-2">
+            <form [formGroup]="formCheque" (ngSubmit)="sendFormCheque()" class="mt-4 ">
+              <div class="row">
+                <!-- nombre de la persona que paga -->
+              <div class="mb-3 col-xs-12 col-sm-6 mt-2">
                 <label for="name_person" class="form-label">
                   Nombre y Apellido
                 </label>
@@ -219,24 +226,27 @@
               </div>
 
               <!-- monto -->
-              <div class="mb-3">
+              <div class="mb-3 col-xs-12 col-sm-6">
                 <label for="amount" class="form-label">Monto</label>
                 <input type="number" formControlName="amount" class="form-control" name="amount" id="amount">
               </div>
-              <!-- numero de cheque -->
-              <div class="mb-3">
+              </div>
+              <div class="row">
+                <!-- numero de cheque -->
+              <div class="mb-3 col-xs-12 col-sm-6">
                 <label for="ncheck" class="form-label">N. Cheque</label>
                 <input type="number" formControlName="ncheck" class="form-control" name="ncheck" id="ncheck">
               </div>
 
               <!-- teléfono de la persona que paga -->
-              <div class="mb-3">
+              <div class="mb-3 col-xs-12 col-sm-6">
                 <label for="phone" class="form-label">Num. teléfono</label>
                 <input type="number" formControlName="phone" class="form-control" name="phone" id="phone">
               </div>
+              </div>
 
               <!-- fecha de pago -->
-              <div class="mb-3">
+              <div class="mb-3 col-xs-12 col-sm-6">
                 <label for="paymentday" class="form-label">Fecha de Pago</label>
                 <input type="date" formControlName="paymentday" class="form-control" name="paymentday" id="paymentday">
               </div>

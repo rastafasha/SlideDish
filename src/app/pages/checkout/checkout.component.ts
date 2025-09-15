@@ -16,6 +16,7 @@ import { VentaService } from '../../services/venta.service';
 import { ProductoService } from '../../services/product.service';
 import { PostalService } from '../../services/postal.service';
 import { Tienda } from '../../models/tienda.model';
+import { Producto } from '../../models/product';
 
 
 @Component({
@@ -29,7 +30,7 @@ import { Tienda } from '../../models/tienda.model';
 })
 export class CheckoutComponent {
 
-  bandejaList: any[] = [];
+  bandejaList: Producto[] = [];
   fechaHoy: string = new Date().toISOString().split('T')[0];
   randomNum:number = 0;
   isbandejaList:boolean = false;
@@ -90,7 +91,7 @@ export class CheckoutComponent {
 
   formCheque = new FormGroup({
     amount: new FormControl('', Validators.required),
-    name_person: new FormControl('', Validators.required),
+    name_person: new FormControl(''),
     ncheck: new FormControl('', Validators.required),
     phone: new FormControl('',Validators.required),
     paymentday: new FormControl('', Validators.required)
@@ -257,7 +258,7 @@ export class CheckoutComponent {
 
   total() {
     const total = this.bandejaList.reduce((sum, item) => 
-      sum + item.precio_ahora * item.quantity, 0
+      sum + item.precio_ahora * item.cantidad, 0
   );
   return total;
   }
@@ -322,17 +323,16 @@ export class CheckoutComponent {
       console.log(this.paymentMethodinfo);
       // Update the form control value with the selected payment method info
       this.formTransferencia.get('metodo_pago')?.setValue(this.paymentMethodinfo);
+      this.formTransferencia.get('name_person')?.setValue(this.identity.first_name +''+ this.identity.last_name,);
     })
   }
 
-  sendFormTransfer(){
+  sendFormTransfer(){debugger
     
     if(this.formTransferencia.valid){
 
       const data = {
         localId: this.localId,
-        
-
         ...this.formTransferencia.value
       }
 
@@ -345,28 +345,27 @@ export class CheckoutComponent {
           // transferencia registrada con exito
           // console.log(resultado.payment);
           // alert('Transferencia registrada con exito');
-          Swal.fire({
-            position: 'top-end',
-            icon: 'success',
-            title: 'Transferencia registrada con exito',
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          // eliminar carrito luego de haber realzado la compra con transferencia exitosa
-            this.remove_carrito();
+          // Swal.fire({
+          //   position: 'top-end',
+          //   icon: 'success',
+          //   title: 'Transferencia registrada con exito',
+          //   showConfirmButton: false,
+          //   timer: 1500,
+          // });
+         
         }
         else{
           // error al registar la transferencia
           // alert('Error al registrar la transferencia');
           // console.log(resultado.msg);
-          Swal.fire({
-            position: 'top-end',
-            icon: 'warning',
-            title: 'Error al registrar la transferencia' ,  
-            text: resultado.msg,
-            showConfirmButton: false,
-            timer: 1500,
-          });
+          // Swal.fire({
+          //   position: 'top-end',
+          //   icon: 'warning',
+          //   title: 'Error al registrar la transferencia' ,  
+          //   text: resultado.msg,
+          //   showConfirmButton: false,
+          //   timer: 1500,
+          // });
         }
       });
     }
@@ -422,6 +421,22 @@ export class CheckoutComponent {
           }
         );
     });
+
+    this.onItemRemoved()
+  }
+
+  onItemRemoved() {
+   localStorage.removeItem('bandejaItems');
+    this.saveBandejaListToLocalStorage();
+    this.ngOnInit();
+  }
+
+  saveBandejaListToLocalStorage() {
+    try {
+      localStorage.setItem('bandejaItems', JSON.stringify(this.bandejaList));
+    } catch (e) {
+      console.error('Error saving bandejaList to localStorage', e);
+    }
   }
 
   listar_carrito(){
@@ -513,13 +528,13 @@ export class CheckoutComponent {
         metodo_pago : this.selectedMethod,
         // metodo_pago : 'Paypal',
 
-        tipo_envio: 'local',
-        precio_envio: 0,
-        tiempo_estimado: 'al momento',
+        tipo_envio: "Pickup",
+        precio_envio: "0",
+        tiempo_estimado: this.fechaHoy,
 
         direccion: this.data_direccionLocal.direccion,
         destinatario: this.identity.first_name +''+ this.identity.last_name,
-        detalles:this.data_detalle,
+        detalles:this.bandejaList,
         referencia: this.data_direccionLocal.local,
         pais: this.data_direccionLocal.pais,
         ciudad: this.data_direccionLocal.ciudad,
@@ -561,6 +576,38 @@ export class CheckoutComponent {
 
             }
           );
+
+           // eliminar carrito luego de haber realzado la compra con transferencia exitosa
+            // this.remove_carrito();
+
+            if(response.ok){
+          // transferencia registrada con exito
+          // console.log(resultado.payment);
+          // alert('Transferencia registrada con exito');
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Transferencia registrada con exito',
+            showConfirmButton: false,
+            timer: 1500,
+          });
+         
+        }
+        else{
+          // error al registar la transferencia
+          // alert('Error al registrar la transferencia');
+          // console.log(resultado.msg);
+          Swal.fire({
+            position: 'top-end',
+            icon: 'warning',
+            title: 'Error al registrar la transferencia' ,  
+            text: response.msg,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+            localStorage.removeItem('bandejaItems');
+    this.saveBandejaListToLocalStorage();
       });
 
     },)
