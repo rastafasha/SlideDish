@@ -60,6 +60,16 @@ export class HeaderComponent {
       // Asignamos el array filtrado directamente
       this.tiendas = resp.filter((tienda: Tienda) => tienda.categoria && tienda.categoria.nombre=== 'Alimentos');
       // console.log(this.tiendas);
+
+      // Set default tiendaSelected to "Panaderia SlideDish" if not already set
+      if (!this.tiendaSelected) {
+        const defaultTienda = this.tiendas.find(tienda => tienda.nombre === 'Panaderia SlideDish');
+        if (defaultTienda) {
+          this.tiendaSelected = defaultTienda;
+          this.tiendaService.setSelectedTienda(this.tiendaSelected);
+          localStorage.setItem('tiendaSelected', JSON.stringify(this.tiendaSelected));
+        }
+      }
     })
   }
 

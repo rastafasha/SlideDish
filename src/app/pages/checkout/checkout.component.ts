@@ -16,6 +16,7 @@ import { VentaService } from '../../services/venta.service';
 import { ProductoService } from '../../services/product.service';
 import { PostalService } from '../../services/postal.service';
 import { PagosFilterPipe } from '../../pipes/pagos-filter.pipe';
+import { PagoEfectivoService } from '../../services/pago-efectivo.service';
 
 declare var $:any;
 @Component({
@@ -71,6 +72,7 @@ export class CheckoutComponent {
 
    habilitacionFormTransferencia:boolean = false;
   habilitacionFormCheque:boolean = false;
+  habilitacionFormEfectivo:boolean = false;
 
   paymentMethods:PaymentMethod[] = []; //array metodos de pago para transferencia (dolares, bolivares, movil)
   paymentSelected!:PaymentMethod; //metodo de pago seleccionado por el usuario para transferencia
@@ -94,6 +96,12 @@ export class CheckoutComponent {
     phone: new FormControl('',Validators.required),
     paymentday: new FormControl('', Validators.required)
   });
+  formEfectivo = new FormGroup({
+    amount: new FormControl('', Validators.required),
+    name_person: new FormControl('', Validators.required),
+    phone: new FormControl('',Validators.required),
+    paymentday: new FormControl('', Validators.required)
+  });
 
   
     constructor(
@@ -104,6 +112,7 @@ export class CheckoutComponent {
     private _tiendaService :TiendaService,
      private _ventaService :VentaService,
      private _productoService : ProductoService,
+     private _pagoEfectivo: PagoEfectivoService,
      private _router : Router,
      private _postalService :PostalService,
     ) {
@@ -128,13 +137,13 @@ export class CheckoutComponent {
       let USER = localStorage.getItem('user');
       if(USER){
         this.identity = JSON.parse(USER);
-        console.log(this.identity);
+        // console.log(this.identity);
       }
 
       let TIENDA = localStorage.getItem('tiendaSelected');
       if(TIENDA){
         this.tienda = JSON.parse(TIENDA);
-        console.log(this.tienda);
+        // console.log(this.tienda);
 
         this.data_direccionLocal = this.tienda;
         this.localId = this.tienda._id;
@@ -346,16 +355,25 @@ export class CheckoutComponent {
       this.habilitacionFormCheque = false;
     }
     if(this.selectedMethod==='Transferencia Dólares' || this.selectedMethod==='Transferencia Bolivares'
+      || this.selectedMethod==='transferencia'
       || this.selectedMethod==='pagomovil' || this.selectedMethod==='zelle'
     ){
       // transferencia bancaria => abrir formulario (en un futuro un modal con formulario)
       this.habilitacionFormTransferencia = true;
       this.habilitacionFormCheque = false;
+      this.habilitacionFormEfectivo = false;
+      
+    }
+    else if(this.selectedMethod==='efectivo'){
+      // efectivo
+      this.habilitacionFormEfectivo = true;
+      this.habilitacionFormTransferencia = false;
+      this.habilitacionFormCheque = false;
     }
     else if(this.selectedMethod==='cheque'){
       // cheque
       this.habilitacionFormCheque = true;
-      
+      this.habilitacionFormEfectivo = false;
       this.habilitacionFormTransferencia = false;
       
       
@@ -372,14 +390,21 @@ export class CheckoutComponent {
 
   sendFormTransfer(){
     if(this.formTransferencia.valid){
+      console.log(this.formCheque.value)
+
+      const data = {
+        localId :this.localId,
+        uid: this.identity.uid,
+        
+        ...this.formTransferencia.value
+      }
+      
       // llamo al servicio
-      this._trasferencias.createTransfer(this.formTransferencia.value).subscribe(resultado => {
-        // console.log('resultado: ',resultado);
+      this._trasferencias.createTransfer(data).subscribe(
+        resultado => {
+        console.log('resultado: ',resultado);
         this.verify_dataComplete();
         if(resultado.ok){
-          // transferencia registrada con exito
-          // console.log(resultado.payment);
-          // alert('Transferencia registrada con exito');
           Swal.fire({
             position: 'top-end',
             icon: 'success',
@@ -387,13 +412,10 @@ export class CheckoutComponent {
             showConfirmButton: false,
             timer: 1500,
           });
+          // eliminar carrito luego de haber realzado la compra con transferencia exitosa
+            this.remove_carrito();
         }
         else{
-          // error al registar la transferencia
-          alert('Error al registrar la transferencia');
-          // console.log(resultado.msg);
-
-          
           Swal.fire({
             position: 'top-end',
             icon: 'warning',
@@ -411,13 +433,19 @@ export class CheckoutComponent {
     if(this.formCheque.valid){
       console.log(this.formCheque.value)
 
-      this._pagoCheque.registro(this.formCheque.value).subscribe(
+      const data = {
+        localId :this.localId,
+        uid: this.identity.uid,
+        
+        ...this.formCheque.value
+      }
+
+      this._pagoCheque.registro(data).subscribe(
         resultado => {
           console.log('resultado: ',resultado);
 
+          this.verify_dataComplete();
           if(resultado.ok){
-            // console.log(resultado.pago_efectivo);
-            this.verify_dataComplete();
             Swal.fire({
             position: 'top-end',
             icon: 'success',
@@ -445,6 +473,47 @@ export class CheckoutComponent {
       );
     }
   }
+
+
+  sendFormEffective(){
+    if(this.formEfectivo.valid){
+      console.log(this.formEfectivo.value)
+
+      this._pagoEfectivo.registro(this.formEfectivo.value).subscribe(
+        resultado => {
+          console.log('resultado: ',resultado);
+
+          if(resultado.ok){
+            // console.log(resultado.pago_efectivo);
+            this.verify_dataComplete();
+            Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Pago en efectivo registrada con exito',
+            showConfirmButton: false,
+            timer: 1500,
+          });
+
+            // eliminar carrito luego de haber realzado la compra con transferencia exitosa
+            this.remove_carrito();
+          }
+          else{
+            Swal.fire({
+            position: 'top-end',
+            icon: 'warning',
+            title: 'Error al registrar Pago en efectivo' ,  
+            text: resultado.msg,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+            console.log(resultado.msg);
+          }
+          
+        }
+      );
+    }
+  }
+
 
   remove_carrito(){
     this.carrito.forEach((element,index) => {
@@ -518,7 +587,7 @@ export class CheckoutComponent {
 
   }
 
-   verify_dataComplete(){debugger
+   verify_dataComplete(){
     if(this.localId){
       this.msm_error = '';
       $('#btn-verify-data').animate().hide();

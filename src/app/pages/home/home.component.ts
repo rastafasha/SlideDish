@@ -8,6 +8,7 @@ import { BandejaComponent } from "../../components/bandeja/bandeja.component";
 import { ModalproductComponent } from '../../components/modalproduct/modalproduct.component';
 import { LoadingComponent } from '../../shared/loading/loading.component';
 import { MenuComponent } from "../../shared/menu/menu.component";
+import { Usuario } from '../../models/usuario.model';
 
 @Component({
   selector: 'app-home',
@@ -27,10 +28,17 @@ export class HomeComponent {
   isbandejaList:boolean= false;
   @Input() product:any;
   isLoading:boolean=false;
+  identity!:Usuario;
 
   constructor() {
     this.loadBandejaListFromLocalStorage();
     window.scroll(0,0);
+
+     let USER = localStorage.getItem('user');
+    if(USER){
+      this.identity = JSON.parse(USER);
+      console.log(this.identity);
+    }
   }
 
   onProductDropped(product: any) {
