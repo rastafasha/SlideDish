@@ -1,2 +1,3 @@
-- [ ] Modify the if condition in sendFormTransfer to check for resultado.ok || resultado.status === 200
-- [ ] Add this._router.navigate(['/myaccount/perfil']); after this.onItemRemoved(); in the success block
+- [x] Modify setTiendaDefault() in header.component.ts to check localStorage flag 'defaultTiendaSet' and only set default tienda if not already set.
+- [x] Call setTiendaDefault() in getTiendas() after loading tiendas.
+- [ ] Test that setTiendaDefault() is called only once on first app load.

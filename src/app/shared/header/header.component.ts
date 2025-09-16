@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MenuComponent } from '../menu/menu.component';
 import { TiendaService } from '../../services/tienda.service';
@@ -15,7 +15,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent {
+export class HeaderComponent  implements OnInit{
 
   bandejaList: any[] = [];
   // public bandejaList: number = 0;
@@ -28,6 +28,9 @@ export class HeaderComponent {
     private tiendaService: TiendaService,
   ) {
       this.loadBandejaListFromLocalStorage();
+      
+    }
+    ngOnInit(): void {
       this.getTiendas();
     }
 
@@ -47,16 +50,27 @@ export class HeaderComponent {
       this.tiendas = resp.filter((tienda: Tienda) => tienda.categoria && tienda.categoria.nombre=== 'Alimentos');
       // console.log(this.tiendas);
 
-      // Set default tiendaSelected to "Panaderia SlideDish" if not already set
-      if (!this.tiendaSelected) {
-        const defaultTienda = this.tiendas.find(tienda => tienda.nombre === 'Panaderia SlideDish');
-        if (defaultTienda) {
-          this.tiendaSelected = defaultTienda;
-          this.tiendaService.setSelectedTienda(this.tiendaSelected);
-          localStorage.setItem('tiendaSelected', JSON.stringify(this.tiendaSelected));
-        }
-      }
+      this.setTiendaDefault();
+
     })
+  }
+
+ 
+
+  setTiendaDefault(){
+    // Check if default tienda has already been set
+    if (localStorage.getItem('defaultTiendaSet')) return;
+
+    // Set default tiendaSelected to "Panaderia SlideDish" if not already set
+    if (!this.tiendaSelected) {
+      const defaultTienda = this.tiendas.find(tienda => tienda.nombre === 'Panaderia SlideDish');
+      if (defaultTienda) {
+        this.tiendaSelected = defaultTienda;
+        this.tiendaService.setSelectedTienda(this.tiendaSelected);
+        localStorage.setItem('tiendaSelected', JSON.stringify(this.tiendaSelected));
+        localStorage.setItem('defaultTiendaSet', 'true');
+      }
+    }
   }
 
   onSelectStore(tienda:any){
@@ -64,6 +78,7 @@ export class HeaderComponent {
     this.tiendaService.setSelectedTienda(this.tiendaSelected);
     this.tiendaService.getTiendaById(this.tiendaSelected._id).subscribe((resp:any)=>{
       console.log(this.tiendaSelected);
+      localStorage.setItem('tiendaSelected', JSON.stringify(this.tiendaSelected));
 
     })
   }

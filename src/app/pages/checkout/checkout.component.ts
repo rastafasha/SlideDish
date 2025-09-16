@@ -65,6 +65,7 @@ export class CheckoutComponent {
 
   public url!:string;
   public postales:any;
+  tiendaSelect:any;
 
   tienda!:any;
 
@@ -143,6 +144,7 @@ export class CheckoutComponent {
       }
 
        this.direccionTienda();
+       this.loadTiendaFromLocalStorage();
       
       // this.listar_carrito();
     }
@@ -508,6 +510,15 @@ export class CheckoutComponent {
     // }.bind(this));
   }
 
+   loadTiendaFromLocalStorage() {
+    const storedLocal = localStorage.getItem('tiendaSelected');
+    if (storedLocal) {
+      this.tiendaSelect = JSON.parse(storedLocal);
+      console.log(this.tiendaSelect)
+
+    }
+  }
+
   direccionTienda(){
     this._tiendaService.getTiendaById(this.localId).subscribe(
       tienda =>{
@@ -541,7 +552,7 @@ export class CheckoutComponent {
 
       this.data_venta = {
         user : this.identity.uid,
-        local : this.localId,
+        local : this.data_direccionLocal._id,
         total_pagado : total_pagado,
         codigo_cupon : this.cupon,
         info_cupon :  this.info_cupon_string,
