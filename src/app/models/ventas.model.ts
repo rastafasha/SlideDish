@@ -3,6 +3,7 @@ export class Venta {
   _id!: string;
   createdAt!: string;
   user!: string;
+  local!: string;
   total_pagado!: number;
   info_cupon!: string;
   idtransaccion!: string;

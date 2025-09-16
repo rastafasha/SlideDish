@@ -541,6 +541,7 @@ export class CheckoutComponent {
 
       this.data_venta = {
         user : this.identity.uid,
+        local : this.localId,
         total_pagado : total_pagado,
         codigo_cupon : this.cupon,
         info_cupon :  this.info_cupon_string,
