@@ -123,7 +123,7 @@ export class CheckoutComponent {
     }
     ngOnInit(){
       this.loadBandejaListFromLocalStorage();
-      // this.geneardorOrdeneNumero();
+      this.geneardorOrdeneNumero();
       this.obtenerMetodosdePago();
       this.total();
       let USER = localStorage.getItem('user');
@@ -368,7 +368,7 @@ export class CheckoutComponent {
             timer: 1500,
           });
           this.onItemRemoved();
-          this._router.navigate(['/myaccount/ordenes']);
+          this._router.navigate(['/my-account/ordenes']);
         }
         else{
           // error al registar la transferencia
@@ -431,6 +431,7 @@ export class CheckoutComponent {
         this._carritoService.remove_carrito(element._id).subscribe(
           (response:any) =>{
             this.listar_carrito();
+            this.onItemRemoved();
           },
           error=>{
             console.log(error);
@@ -438,12 +439,12 @@ export class CheckoutComponent {
         );
     });
 
-    this.onItemRemoved()
+    
   }
 
   onItemRemoved() {
    localStorage.removeItem('bandejaItems');
-    this.saveBandejaListToLocalStorage();
+    // this.saveBandejaListToLocalStorage();
     this.ngOnInit();
   }
 
@@ -596,8 +597,15 @@ export class CheckoutComponent {
             }
           );
 
-           
+
       });
+
+      // Enviar mensaje de WhatsApp a la tienda
+      // if(this.tienda && this.tienda.telefono){
+      //   const message = `Haz recibido una compra ${this.randomNum}, favor verifica y, procesala pronto !`;
+      //   const url = `https://wa.me/${this.tienda.telefono}?text=${encodeURIComponent(message)}`;
+      //   window.open(url, '_blank');
+      // }
 
     },)
   }
@@ -686,7 +694,13 @@ export class CheckoutComponent {
 
   }
 
-
-  
+  geneardorOrdeneNumero(){
+    //creamos una suma de 1 a 1000 para ordenes nuevas
+    const max = 1000;
+    const min = 1;
+    const random = Math.floor(Math.random() * (max - min + 1)) + min
+    this.randomNum = random;
+    // return random;
+  }
 
 }
