@@ -19,11 +19,15 @@
     </div>
   </div>
   <div class="logo cursor" routerLink="/">
-    <i class="fa fa-shopping-bag "></i>
-    <span>SlideDish </span>
+    <!-- <i class="fa fa-shopping-bag "></i> -->
+    <img class="isotipo" src="./assets/svg/slideDish_logo_tipo.svg" alt="">
+    <!-- <img class="tipologo" src="./assets/svg/slideDish_tipo.svg" alt=""> -->
+    <!-- <span>SlideDish </span> -->
   </div>
   <div class="header-right">
-    <i class="fa fa-user "></i>
+    <a routerLink="/my-account" style="color: var(--black);">
+      <i class="fa fa-user " ></i>
+    </a>
     <span class="cart-count-badge" *ngIf="bandejaList.length > 0 && bandejaList.length <= 10"> {{totalList}}</span>
     <i class="fa fa-shopping-cart  cursor" *ngIf="bandejaList.length > 0 && bandejaList.length <= 10" routerLink="/review"></i>
   </div>

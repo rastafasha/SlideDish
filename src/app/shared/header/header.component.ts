@@ -63,11 +63,11 @@ export class HeaderComponent  implements OnInit{
 
     // Set default tiendaSelected to "Panaderia SlideDish" if not already set
     if (!this.tiendaSelected) {
-      const defaultTienda = this.tiendas.find(tienda => tienda.nombre === 'Panaderia SlideDish');
+      const defaultTienda = this.tiendas.find(tienda => tienda.nombre === 'SlideDish');
       if (defaultTienda) {
         this.tiendaSelected = defaultTienda;
         this.tiendaService.setSelectedTienda(this.tiendaSelected);
-        localStorage.setItem('tiendaSelected', JSON.stringify(this.tiendaSelected));
+        localStorage.setItem('tiendaSelected', JSON.stringify(this.tiendaSelected.subcategoria));
         localStorage.setItem('defaultTiendaSet', 'true');
       }
     }
@@ -77,8 +77,8 @@ export class HeaderComponent  implements OnInit{
     this.tiendaSelected = tienda;
     this.tiendaService.setSelectedTienda(this.tiendaSelected);
     this.tiendaService.getTiendaById(this.tiendaSelected._id).subscribe((resp:any)=>{
-      console.log(this.tiendaSelected);
-      localStorage.setItem('tiendaSelected', JSON.stringify(this.tiendaSelected));
+      // console.log(this.tiendaSelected.subcategoria);
+      localStorage.setItem('tiendaSelected', JSON.stringify(this.tiendaSelected.subcategoria));
 
     })
   }
