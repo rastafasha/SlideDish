@@ -17,13 +17,18 @@ import { ProductoService } from '../../services/product.service';
 import { PostalService } from '../../services/postal.service';
 import { Tienda } from '../../models/tienda.model';
 import { Producto } from '../../models/product';
+import { ICreateOrderRequest, IPayPalConfig } from 'ngx-paypal';
+import { NgxPayPalModule } from 'ngx-paypal';
+import { CartItemModel } from '../../models/cart-item-model';
 
+declare var $:any;
+// declare var paypal;
 
 @Component({
   selector: 'app-checkout',
   imports: [
     HeaderComponent, CommonModule, RouterModule,
-    ReactiveFormsModule, FormsModule, 
+    ReactiveFormsModule, FormsModule, NgxPayPalModule
   ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss'
@@ -37,6 +42,7 @@ export class CheckoutComponent {
   iva:number = 12;
   public identity:any;
    public localId!:string;
+   paypal: boolean = false;
   //DATA
   public radio_postal:any;
   public medio_postal : any = {};
@@ -61,7 +67,9 @@ export class CheckoutComponent {
   public data_direccionLocal : any = {};
 
   public no_direccion = 'no necesita direccion';
-  public paypal:any;
+  
+  public payPalConfig ? : IPayPalConfig;
+  cartItems: any[] = [];
 
   public url!:string;
   public postales:any;
@@ -298,39 +306,47 @@ export class CheckoutComponent {
   // metodo para el cambio del select 'tipo de transferencia'
   onChangePayment(event:Event){
     const target = event.target as HTMLSelectElement; //obtengo el valor
-    // console.log(target.value)
+    console.log(target.value)
 
     // guardo el metodo seleccionado en la variable de clase paymentSelected
     this.paymentSelected = this.paymentMethods.filter(method => method._id===target.value)[0]
+    console.log(this.paymentSelected)
   }
+
+
+   // Método que se llama cuando cambia el select
+  // onPaymentMethodChange(event: any) {
+  //   this.selectedMethod = event.target.value;
+  //   console.log('metodo de pago seleccionado: ',this.selectedMethod)
+  //   this.getPaymentMbyName(this.selectedMethod);
+    
+  //   if(this.selectedMethod==='paypal' || this.selectedMethod==='card'){
+  //     // transferencia bancaria => abrir formulario (en un futuro un modal con formulario)
+  //     // this.renderPayPalButton(); // Renderiza el botón de nuevo según la opción seleccionada
+  //     this.habilitacionFormTransferencia = false;
+  //     this.habilitacionFormCheque = false;
+  //   }
+  //   if(this.selectedMethod==='Transferencia Dólares' || this.selectedMethod==='Transferencia Bolivares'
+  //     || this.selectedMethod==='pagomovil' || this.selectedMethod==='zelle'
+  //   ){
+  //     // transferencia bancaria => abrir formulario (en un futuro un modal con formulario)
+  //     this.habilitacionFormTransferencia = true;
+  //     this.habilitacionFormCheque = false;
+  //   }
+  //   else if(this.selectedMethod==='cheque'){
+  //     // cheque
+  //     this.habilitacionFormCheque = true;
+      
+  //     this.habilitacionFormTransferencia = false;
+      
+      
+  //   }
+  // }
 
    // Método que se llama cuando cambia el select
   onPaymentMethodChange(event: any) {
     this.selectedMethod = event.target.value;
-    console.log('metodo de pago seleccionado: ',this.selectedMethod)
-    this.getPaymentMbyName(this.selectedMethod);
-    
-    if(this.selectedMethod==='paypal' || this.selectedMethod==='card'){
-      // transferencia bancaria => abrir formulario (en un futuro un modal con formulario)
-      // this.renderPayPalButton(); // Renderiza el botón de nuevo según la opción seleccionada
-      this.habilitacionFormTransferencia = false;
-      this.habilitacionFormCheque = false;
-    }
-    if(this.selectedMethod==='Transferencia Dólares' || this.selectedMethod==='Transferencia Bolivares'
-      || this.selectedMethod==='pagomovil' || this.selectedMethod==='zelle'
-    ){
-      // transferencia bancaria => abrir formulario (en un futuro un modal con formulario)
-      this.habilitacionFormTransferencia = true;
-      this.habilitacionFormCheque = false;
-    }
-    else if(this.selectedMethod==='cheque'){
-      // cheque
-      this.habilitacionFormCheque = true;
-      
-      this.habilitacionFormTransferencia = false;
-      
-      
-    }
+    this.renderPayPalButton(); // Renderiza el botón de nuevo según la opción seleccionada
   }
 
   getPaymentMbyName(selectedMethod:string){
@@ -446,7 +462,7 @@ export class CheckoutComponent {
 
   onItemRemoved() {
    localStorage.removeItem('bandejaItems');
-    // this.saveBandejaListToLocalStorage();
+    this.saveBandejaListToLocalStorage();
     this.ngOnInit();
   }
 
@@ -624,88 +640,6 @@ export class CheckoutComponent {
 
 
 
-  get_data_cupon(event: Event, cupon: string): void {
-    // this.data_keyup = this.data_keyup + 1;
-
-    // if (cupon) {
-    //   if (cupon.length == 13) {
-    //     console.log('siii');
-
-    //     this._cuponService.get_cuponCode(cupon).subscribe(
-    //       (response: CuponResponse) => {
-    //         this.data_cupon = response;
-    //         console.log(this.data_cupon);
-
-    //         this.msm_error_cupon = false;
-    //         this.msm_success_cupon = true;
-
-    //         this.carrito.forEach((element: CarritoProducto, indice: number) => {
-    //           if (response.tipo == 'subcategoria') {
-    //             if (response.subcategoria == element.producto.subcategoria) {
-
-    //               if (this.data_keyup == 0 || this.data_keyup == 1) {
-
-    //                 let new_subtotal = element.precio - ((element.precio * response.descuento) / 100);
-    //                 console.log(new_subtotal);
-    //                 element.precio = new_subtotal;
-
-    //                 this.subtotal = 0;
-    //                 this.carrito.forEach((element: CarritoProducto) => {
-    //                   this.subtotal = Math.round(this.subtotal + (element.precio * element.cantidad));
-    //                 });
-
-    //               }
-    //             }
-    //           }
-    //           if (response.tipo == 'categoria') {
-    //             if (response.categoria == element.producto.categoria) {
-
-    //               if (this.data_keyup == 0 || this.data_keyup == 1) {
-
-    //                 let new_subtotal = element.precio - ((element.precio * response.descuento) / 100);
-    //                 console.log(new_subtotal);
-    //                 element.precio = new_subtotal;
-
-    //                 this.subtotal = 0;
-    //                 this.carrito.forEach((element: CarritoProducto) => {
-    //                   this.subtotal = Math.round(this.subtotal + (element.precio * element.cantidad));
-    //                 });
-
-    //               }
-
-    //             }
-    //           }
-    //         });
-
-    //       },
-    //       (error: any) => {
-    //         this.data_keyup = 0;
-    //         this.msm_error_cupon = true;
-
-    //         this.msm_success_cupon = false;
-    //         this.listar_carrito();
-    //         this.listar_postal();
-    //       }
-    //     );
-    //   } else {
-    //     console.log('nooo');
-
-    //     this.data_keyup = 0;
-    //     this.msm_error_cupon = false;
-    //     this.msm_success_cupon = false;
-    //     this.listar_carrito();
-
-    //   }
-    // } else {
-    //   this.data_keyup = 0;
-    //   this.msm_error_cupon = false;
-    //   this.msm_success_cupon = false;
-    //   this.listar_carrito();
-
-    // }
-
-  }
-
   geneardorOrdeneNumero(){
     //creamos una suma de 1 a 1000 para ordenes nuevas
     const max = 1000;
@@ -713,6 +647,98 @@ export class CheckoutComponent {
     const random = Math.floor(Math.random() * (max - min + 1)) + min
     this.randomNum = random;
     // return random;
+  }
+
+
+  private renderPayPalButton(){
+    // Primero, limpiar el contenedor anterior
+    // this.paypalElement.nativeElement.innerHTML = '';
+
+    if(this.selectedMethod==='card' || this.selectedMethod==='paypal'){
+      // deshabilitar el formulario de pago con transferencia
+      this.habilitacionFormTransferencia = false;
+      this.paypal = true;
+      // Cargar el botón de PayPal con las opciones seleccionadas
+    this.initPayPalConfig();
+    }
+    else if(this.selectedMethod==='transferencia'){
+      // transferencia bancaria => abrir formulario (en un futuro un modal con formulario)
+      this.habilitacionFormTransferencia = true;
+      this.paypal = false;
+    }
+    else {
+      this.paypal = false;
+      this.habilitacionFormTransferencia = false;
+    }
+  }
+
+  private initPayPalConfig(): void {
+    this.payPalConfig = {
+      currency: 'USD',
+      clientId: environment.clientIdPaypal,
+      createOrderOnClient: (data) => <ICreateOrderRequest>{
+        intent: 'CAPTURE',
+        purchase_units: [{
+          amount: {
+            currency_code: 'USD',
+            value: Math.round(this.subtotal).toString(),
+            breakdown: {
+              item_total: {
+                currency_code: 'USD',
+                value: Math.round(this.subtotal).toString(),
+              }
+            }
+          },
+          items: this.getItemsList()
+        }]
+      },
+      advanced: {
+        commit: 'true'
+      },
+      style: {
+        label: 'paypal',
+        layout: 'vertical'
+      },
+      onApprove: (data, actions) => {
+        console.log('onApprove - transaction was approved, but not authorized', data, actions);
+        actions.order.get().then((details: any) => {
+          console.log('onApprove - you can get full order details inside onApprove: ', details);
+        });
+      },
+      onClientAuthorization: (data) => {
+        console.log('onClientAuthorization - you should probably inform your server about completed transaction at this point', data);
+        this.data_venta.idtransaccion = data.id;
+        this.saveVenta();
+      },
+      onCancel: (data, actions) => {
+        console.log('OnCancel', data, actions);
+      },
+      onError: err => {
+        console.log('OnError', err);
+      },
+      onClick: (data, actions) => {
+        console.log('onClick', data, actions);
+      },
+    };
+  }
+
+  getItemsList(): any[]{
+
+    const items: any[] = [];
+    let item = {};
+    this.cartItems.forEach((it: CartItemModel)=>{
+      item = {
+        name: it.productName,
+        unit_amount: {
+          currency_code: 'USD',
+          value: it.productPrice,
+        },
+        quantity: it.quantity,
+        category: it.category,
+      };
+      items.push(item);
+    });
+    return items;
   }
 
 }

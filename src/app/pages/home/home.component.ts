@@ -63,6 +63,10 @@ export class HomeComponent {
     if(this.bandejaList.length > 0){
       this.isbandejaList = true;
     }
+    if(this.bandejaList.length = 0){
+      this.isbandejaList = false;
+      this.saveBandejaListToLocalStorage();
+    }
   }
 
   saveBandejaListToLocalStorage() {

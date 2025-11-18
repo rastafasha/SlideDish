@@ -33,8 +33,8 @@
                                 </li>
                                 <li class="recipe-details-item servings">
                                     <i class="fa fa-users icon-small"></i>
-                                    <span class="value" style="text-decoration: line-through;">{{product.precio_antes | currency}}</span>
-                                    <span class="value">{{product.precio_ahora | currency}}</span>
+                                    <span class="value" style="text-decoration: line-through;">{{product.precio_antes |number:'1.2-2'|currency}}</span>
+                                    <span class="value">{{product.precio_ahora |number:'1.2-2'|currency}}</span>
                                 </li>
                             </ul>
                         </header>

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { HeaderComponent } from '../../shared/header/header.component';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Route, Router, RouterModule } from '@angular/router';
 import { BandejaComponent } from '../../components/bandeja/bandeja.component';
 import { Producto } from '../../models/product';
 import { ImagenPipe } from '../../pipes/imagen-pipe.pipe';
@@ -26,7 +26,9 @@ export class ReviewOrderComponent {
   randomNum:number = 0;
   isbandejaList:boolean = false;
   
-    constructor() {
+    constructor(
+      private router: Router
+    ) {
       window.scrollTo(0,0);
     }
     ngOnInit(){
@@ -56,6 +58,15 @@ export class ReviewOrderComponent {
    localStorage.removeItem('bandejaItems');
     this.saveBandejaListToLocalStorage();
     this.ngOnInit();
+    this.removeItem(item, this.bandejaList.indexOf(item));
+    //si la bandejaList queda vacia, cambiar isbandejaList a false
+    if(this.bandejaList.length === 0){
+      this.isbandejaList = false;
+    }
+    //si es falso enviar al home
+    if(!this.isbandejaList){
+     this.router.navigate(['/home']);
+    }
   }
 
   saveBandejaListToLocalStorage() {
@@ -89,6 +100,14 @@ removeItem(item:Producto, index:any){
     this.bandejaList.splice(index, 1);
   }
   this.saveBandejaListToLocalStorage();
+
+  if(this.bandejaList.length === 0){
+      this.isbandejaList = false;
+    }
+    //si es falso enviar al home
+    if(!this.isbandejaList){
+     this.router.navigate(['/home']);
+    }
 
 }
 

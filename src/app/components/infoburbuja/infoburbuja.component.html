@@ -1,7 +1,7 @@
 <div *ngIf="itemSelected" class=" bandeja-item-info-hide animated fadeInUp">
   <div class="inff">
     <p class="bandeja-item-name">{{ itemSelected?.titulo }}</p>
-    <p class="bandeja-item-price">${{ itemSelected?.precio_ahora }}</p>
+    <p class="bandeja-item-price">{{ itemSelected?.precio_ahora |number:'1.2-2'|currency }}</p>
     <!-- <div class="add-items">
       <i class="fa fa-minus icon-small" (click)="removeItem(itemSelected )"></i>
       <span>{{itemSelected.quantity}}</span>
