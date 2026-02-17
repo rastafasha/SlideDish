@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { Producto } from '../../models/product';
@@ -25,6 +25,12 @@ export class BandejaComponent {
   @Output() itemRemoved: EventEmitter<any> = new EventEmitter<any>();
   itemSelected!:Producto;
   isLoading:boolean= false;
+
+  constructor(
+    private router:Router
+  ){
+
+  }
 
 
   drop(event:CdkDragDrop<any[]>){
@@ -88,9 +94,12 @@ removeMostrarinfo(){
   onItemRemoved(item: any) {
     // Fix id property name to match item._id
     this.items = this.items.filter(i => i._id !== item._id);
-    // console.log('object', this.items);
+    console.log('object', this.items);
     localStorage.removeItem('bandejaItems');
     this.saveBandejaListToLocalStorage();
+    if(!this.items ){
+      this.router.navigate(['/home']);
+    }
     // this.ngOnInit();
   }
 

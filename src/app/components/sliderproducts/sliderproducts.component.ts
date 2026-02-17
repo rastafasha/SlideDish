@@ -34,6 +34,8 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges, OnDest
   
   selectedProduct: Producto | null = null;
 
+  
+
   categories: Categoria[] = [];
   subcategories: any[] = [];
 
@@ -65,6 +67,8 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges, OnDest
       this.getCategories();
     });
   }
+
+
 
   ngAfterViewInit() {
     this.getProductosCatName();

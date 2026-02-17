@@ -1,4 +1,4 @@
-import { Component, Input, input } from '@angular/core';
+import { Component, Input, input, Output } from '@angular/core';
 import { SliderproductsComponent } from "../../components/sliderproducts/sliderproducts.component";
 import { HeroComponent } from "../../components/hero/hero.component";
 import { HeaderComponent } from '../../shared/header/header.component';
@@ -28,6 +28,8 @@ export class HomeComponent {
   @Input() product:any;
   isLoading:boolean=false;
 
+ @Output() tiendaSelected: string = 'Panadería'
+
   constructor() {
     this.loadBandejaListFromLocalStorage();
     window.scroll(0,0);
@@ -51,6 +53,7 @@ export class HomeComponent {
 
    localStorage.removeItem('bandejaItems');
     this.saveBandejaListToLocalStorage();
+
     
   }
 

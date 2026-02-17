@@ -62,7 +62,11 @@ export class ReviewOrderComponent {
     //si la bandejaList queda vacia, cambiar isbandejaList a false
     if(this.bandejaList.length === 0){
       this.isbandejaList = false;
+      
     }
+    setTimeout(()=>{
+      this.router.navigate(['/home']);
+    }, 500)
     //si es falso enviar al home
     if(!this.isbandejaList){
      this.router.navigate(['/home']);
@@ -100,13 +104,14 @@ removeItem(item:Producto, index:any){
     this.bandejaList.splice(index, 1);
   }
   this.saveBandejaListToLocalStorage();
+  this.ngOnInit()
 
   if(this.bandejaList.length === 0){
       this.isbandejaList = false;
     }
     //si es falso enviar al home
     if(!this.isbandejaList){
-     this.router.navigate(['/home']);
+     this.router.navigate(['/']);
     }
 
 }

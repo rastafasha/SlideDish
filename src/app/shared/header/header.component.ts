@@ -51,7 +51,9 @@ export class HeaderComponent  implements OnInit{
       this.tiendas = resp.filter((tienda: Tienda) => tienda.categoria && tienda.categoria.nombre=== 'Alimentos');
       // console.log(this.tiendas);
 
-      this.setTiendaDefault();
+      setTimeout(()=>{
+        this.setTiendaDefault();
+      },1000)
 
     })
   }
