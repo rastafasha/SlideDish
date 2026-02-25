@@ -20,6 +20,7 @@ import { Producto } from '../../models/product';
 import { ICreateOrderRequest, IPayPalConfig } from 'ngx-paypal';
 import { NgxPayPalModule } from 'ngx-paypal';
 import { CartItemModel } from '../../models/cart-item-model';
+import { debounce } from 'rxjs';
 
 declare var $:any;
 // declare var paypal;
@@ -88,25 +89,8 @@ export class CheckoutComponent {
   paymentMethodinfo!:PaymentMethod; //metodo de pago seleccionado por el usuario para transferencia
 
 
-   formTransferencia = new FormGroup({
-    metodo_pago: new FormControl(this.paymentMethodinfo,Validators.required),
-    bankName: new FormControl('', Validators.required),
-    amount: new FormControl('', Validators.required),
-    referencia: new FormControl('',Validators.required),
-    name_person: new FormControl('', Validators.required),
-    phone: new FormControl('',Validators.required),
-    paymentday: new FormControl('', Validators.required)
-  });
+   
 
-  formCheque = new FormGroup({
-    amount: new FormControl('', Validators.required),
-    name_person: new FormControl(''),
-    ncheck: new FormControl('', Validators.required),
-    phone: new FormControl('',Validators.required),
-    paymentday: new FormControl('', Validators.required)
-  });
-
-  
     constructor(
       private _trasferencias: TransferenciasService,
     private _pagoCheque: PagochequeService,
@@ -144,16 +128,27 @@ export class CheckoutComponent {
       let TIENDA = localStorage.getItem('tiendaSelected');
       if(TIENDA){
         this.tienda = JSON.parse(TIENDA);
-        // console.log(this.tienda);
+        console.log(this.tienda);
 
         this.data_direccionLocal = this.tienda;
-        this.localId = this.tienda._id;
+        this.localId = '68752e382f5855586a14b20f';
 
       }
 
-       this.direccionTienda();
-       this.loadTiendaFromLocalStorage();
-      
+      // Initialize formTransferencia after identity is set
+      this.formTransferencia = new FormGroup({
+        metodo_pago: new FormControl(this.paymentMethodinfo, Validators.required),
+        bankName: new FormControl('', Validators.required),
+        amount: new FormControl('', Validators.required),
+        referencia: new FormControl('', Validators.required),
+        name_person: new FormControl(this.identity ? (this.identity.first_name + ' ' + this.identity.last_name) : '', Validators.required),
+        phone: new FormControl(this.identity ? this.identity.telefono : '', Validators.required),
+        paymentday: new FormControl('', Validators.required)
+      });
+
+      this.direccionTienda();
+      this.loadTiendaFromLocalStorage();
+
       // this.listar_carrito();
     }
 
@@ -167,9 +162,6 @@ export class CheckoutComponent {
       this.socket.on('new-carrito', (data: any) => {
         this.listar_carrito();
       });
-
-
-      
 
         // paypal.Buttons({
 
@@ -253,6 +245,8 @@ export class CheckoutComponent {
       this._router.navigate(['/']);
     }
   }
+
+  formTransferencia!: FormGroup;
 
 
     loadBandejaListFromLocalStorage() {
@@ -356,15 +350,17 @@ export class CheckoutComponent {
       console.log(this.paymentMethodinfo);
       // Update the form control value with the selected payment method info
       this.formTransferencia.get('metodo_pago')?.setValue(this.paymentMethodinfo);
-      this.formTransferencia.get('name_person')?.setValue(this.identity.first_name +''+ this.identity.last_name,);
+      // Auto-fill name_person and phone from identity if available
+      if (this.identity) {
+        this.formTransferencia.get('name_person')?.setValue(this.identity.first_name + ' ' + this.identity.last_name);
+        this.formTransferencia.get('phone')?.setValue(this.identity.telefono);
+      }
     })
   }
 
-  sendFormTransfer(){
+  sendFormTransfer(){debugger
     
-    if(this.formTransferencia.valid){
-
-      const data = {
+    const data = {
         localId: this.localId,
         ...this.formTransferencia.value
       }
@@ -402,47 +398,9 @@ export class CheckoutComponent {
           });
         }
       });
-    }
   }
 
-  sendFormCheque(){
-    if(this.formCheque.valid){
-      console.log(this.formCheque.value)
-
-      this._pagoCheque.registro(this.formCheque.value).subscribe(
-        resultado => {
-          console.log('resultado: ',resultado);
-
-          if(resultado.ok){
-            // console.log(resultado.pago_efectivo);
-            this.verify_dataComplete(Number(this.formCheque.value.amount));
-            Swal.fire({
-            position: 'top-end',
-            icon: 'success',
-            title: 'pago Cheque registrada con exito',
-            showConfirmButton: false,
-            timer: 1500,
-          });
-
-            // eliminar carrito luego de haber realzado la compra con transferencia exitosa
-            this.remove_carrito();
-          }
-          else{
-            Swal.fire({
-            position: 'top-end',
-            icon: 'warning',
-            title: 'Error al registrar pago Cheque' ,  
-            text: resultado.msg,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-            console.log(resultado.msg);
-          }
-          
-        }
-      );
-    }
-  }
+  
 
   remove_carrito(){
     this.carrito.forEach((element,index) => {
@@ -530,7 +488,6 @@ export class CheckoutComponent {
     const storedLocal = localStorage.getItem('tiendaSelected');
     if (storedLocal) {
       this.tiendaSelect = JSON.parse(storedLocal);
-      console.log(this.tiendaSelect)
 
     }
   }

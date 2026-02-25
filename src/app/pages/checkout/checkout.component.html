@@ -109,6 +109,10 @@
                   <input type="text" formControlName="referencia" class="form-control" name="referencia"
                     id="referencia">
                 </div>
+                 <div class="mb-3 col-xs-12 col-sm-6">
+                  <label for="paymentday" class="form-label">fecha del pago</label>
+                  <input type="date" formControlName="paymentday" class="form-control" name="paymentday" id="paymentday">
+                </div>
                 <!-- botones -->
               <div class="d-flex justify-content-center gap-2">
 
@@ -136,6 +140,10 @@
                 <div class="mb-3 col-xs-12 col-sm-6">
                   <label for="phone" class="form-label">Teléfono</label>
                   <input type="number" formControlName="phone" class="form-control" name="phone" id="phone">
+                </div>
+                 <div class="mb-3 col-xs-12 col-sm-6">
+                  <label for="paymentday" class="form-label">fecha del pago</label>
+                  <input type="date" formControlName="paymentday" class="form-control" name="paymentday" id="paymentday">
                 </div>
                 <!-- botones -->
               <div class="d-flex justify-content-center gap-2">
@@ -175,6 +183,10 @@
                   <label for="amount" class="form-label">Monto</label>
                   <input type="number" formControlName="amount" class="form-control" name="amount" id="amount">
                 </div>
+                <div class="mb-3 col-xs-12 col-sm-6">
+                  <label for="paymentday" class="form-label">fecha del pago</label>
+                  <input type="date" formControlName="paymentday" class="form-control" name="paymentday" id="paymentday">
+                </div>
                 </div>
                 <!-- botones -->
               <div class="d-flex justify-content-center gap-2">
@@ -189,67 +201,10 @@
 
               </div>
 
-              
-
-
-
             </form>
           </div>
 
-          <!-- Contenedor para el botón de cheque-->
-          <div *ngIf="habilitacionFormCheque" class="mt-2 p-3">
-            <div class="card">
-              <div class="card-body alert-warning" *ngIf="paymentMethodinfo">
-                <p>Entre a su Aplicación Bancaria y realice el pago con la siguiente información:</p>
-                <p *ngIf="paymentMethodinfo.username">Cheque a nombre de:&nbsp;{{paymentMethodinfo.username}}</p>
-              </div>
-            </div>
-            <!-- formulario -->
-            <form [formGroup]="formCheque" (ngSubmit)="sendFormCheque()" class="mt-4 ">
-              <div class="row">
-                <!-- nombre de la persona que paga -->
-                <div class="mb-3 col-xs-12 col-sm-6 mt-2">
-                  <label for="name_person" class="form-label">
-                    Nombre y Apellido
-                  </label>
-                  <input type="text" formControlName="name_person" class="form-control" name="name_person"
-                    id="name_person">
-                </div>
-
-                <!-- monto -->
-                <div class="mb-3 col-xs-12 col-sm-6">
-                  <label for="amount" class="form-label">Monto</label>
-                  <input type="number" formControlName="amount" class="form-control" name="amount" id="amount">
-                </div>
-              </div>
-              <div class="row">
-                <!-- numero de cheque -->
-                <div class="mb-3 col-xs-12 col-sm-6">
-                  <label for="ncheck" class="form-label">N. Cheque</label>
-                  <input type="number" formControlName="ncheck" class="form-control" name="ncheck" id="ncheck">
-                </div>
-
-                <!-- teléfono de la persona que paga -->
-                <div class="mb-3 col-xs-12 col-sm-6">
-                  <label for="phone" class="form-label">Num. teléfono</label>
-                  <input type="number" formControlName="phone" class="form-control" name="phone" id="phone">
-                </div>
-              </div>
-
-              <!-- fecha de pago -->
-              <div class="mb-3 col-xs-12 col-sm-6">
-                <label for="paymentday" class="form-label">Fecha de Pago</label>
-                <input type="date" formControlName="paymentday" class="form-control" name="paymentday" id="paymentday">
-              </div>
-
-              <!-- botones -->
-              <div class="d-grid gap-2">
-                <button class="btn btn-primary" type="submit">
-                  Enviar
-                </button>
-              </div>
-            </form>
-          </div>
+          
         </div>
 
       </div>
