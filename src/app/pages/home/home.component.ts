@@ -49,12 +49,18 @@ export class HomeComponent {
   }
 
   onItemRemoved(item: any) {
-    this.bandejaList = this.bandejaList.filter(i => i.id !== item.id);
-
-   localStorage.removeItem('bandejaItems');
+    this.bandejaList = this.bandejaList.filter(i => i._id !== item._id);
+    localStorage.removeItem('bandejaItems');
     this.saveBandejaListToLocalStorage();
-
     
+    // Use setTimeout to avoid ExpressionChangedAfterItHasBeenCheckedError
+    setTimeout(() => {
+      if(this.bandejaList.length > 0){
+        this.isbandejaList = true;
+      } else {
+        this.isbandejaList = false;
+      }
+    });
   }
 
   loadBandejaListFromLocalStorage() {

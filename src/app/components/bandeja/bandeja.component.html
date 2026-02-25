@@ -14,7 +14,7 @@ cdkDropList #doneList="cdkDropList" id="doneList"
   </div>
  
 </div>
-<app-infoburbuja [itemSelected]="itemSelected" (itemRemoved)="onItemRemoved($event)" ></app-infoburbuja>
+<app-infoburbuja [items]="items" [itemSelected]="itemSelected" (itemsChange)="onItemsChange($event)" (itemRemoved)="onItemRemoved($event)" ></app-infoburbuja>
  <!-- <div class=" bandeja-item-info-hide animated fadeInUp">
     <div class="inff">
       <p class="bandeja-item-name">{{ item?.titulo }}</p>

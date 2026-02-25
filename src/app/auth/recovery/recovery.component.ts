@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { UsuarioService } from '../../services/usuario.service';
 import { FormsModule } from '@angular/forms';
-import { HeaderComponent } from '../../shared/header/header.component';
 import { NgIf } from '@angular/common';
 
 @Component({
@@ -10,7 +9,6 @@ import { NgIf } from '@angular/common';
   imports:[
     RouterModule,
     FormsModule,
-    HeaderComponent,
     NgIf
   ],
   templateUrl: './recovery.component.html',

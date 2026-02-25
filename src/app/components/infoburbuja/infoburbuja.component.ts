@@ -32,16 +32,14 @@ export class InfoburbujaComponent implements OnInit {
     }
 
     onRemoveItem(item: any) {
-      // console.log('object', item);
-      // const index = this.items.indexOf(item);
+      console.log('object', item);
       const index = this.items.findIndex(i => i._id === item._id);
       if (index > -1) {
         this.items.splice(index, 1);
         this.itemsChange.emit(this.items);
         this.itemRemoved.emit(item);
         this.saveItemsToLocalStorage();
-        this.removeMostrarinfo()
-        this.ngOnInit();
+        this.removeMostrarinfo();
       }
   }
 

@@ -79,7 +79,7 @@ export class ProductoService {
   }
 
   findProducto_by_Categorynombre(nombre: any):Observable<any>{
-    const url = `${base_url}/productos/categoria_nombre/${nombre}`;
+    const url = `${base_url}/productos/producto_by_categorynombre/${nombre}`;
     return this.http.get<any>(url)
   }
 

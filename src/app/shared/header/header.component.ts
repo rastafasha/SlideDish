@@ -61,18 +61,12 @@ export class HeaderComponent  implements OnInit{
  
 
   setTiendaDefault(){
-    // Check if default tienda has already been set
-    if (localStorage.getItem('defaultTiendaSet')) return;
-
-    // Set default tiendaSelected to "Panaderia SlideDish" if not already set
-    if (!this.tiendaSelected) {
-      const defaultTienda = this.tiendas.find(tienda => tienda.nombre === 'SlideDish');
-      if (defaultTienda) {
-        this.tiendaSelected = defaultTienda;
-        this.tiendaService.setSelectedTienda(this.tiendaSelected);
-        localStorage.setItem('tiendaSelected', JSON.stringify(this.tiendaSelected.subcategoria));
-        localStorage.setItem('defaultTiendaSet', 'true');
-      }
+    // Always set default tienda to "SlideDish" if available
+    const defaultTienda = this.tiendas.find(tienda => tienda.nombre === 'SlideDish');
+    if (defaultTienda) {
+      this.tiendaSelected = defaultTienda;
+      this.tiendaService.setSelectedTienda(this.tiendaSelected);
+      localStorage.setItem('tiendaSelected', JSON.stringify(this.tiendaSelected.subcategoria));
     }
   }
 

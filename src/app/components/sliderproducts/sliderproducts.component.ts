@@ -41,7 +41,7 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges, OnDest
 
   products: Producto[] = [];
 
-  activeCategory: string = 'all';
+  activeCategory: string = 'Panadería';
 
   todo: Producto[] = [];
   catname!:string;
@@ -89,13 +89,14 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges, OnDest
   }
 
   getProductosCatName() {
-    this.catname = this.tiendaSelected?.subcategoria ?? ''
+    this.catname = this.tiendaSelected?.subcategoria ?? 'Panadería'
     this.isLoading = true
-    this.categoryService.find_by_nombre(this.catname).subscribe(
+    this.productoService.findProducto_by_Categorynombre(this.catname).subscribe(
       (resp:any) => {
         this.products = resp.productos || [];
         this.updateTodo();
-        this.isLoading = false
+        console.log(this.products)
+        this.isLoading = false;
       },
       (error) => {
         console.error('Error al obtener los productos', error);
@@ -123,7 +124,7 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges, OnDest
   }
 
   selectCategory(category: string) {
-    // console.log('selectCategory called with:', category);
+    console.log('selectCategory called with:', category);
     this.activeCategory = category;
     this.updateTodo();
   }
@@ -131,7 +132,7 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges, OnDest
   updateTodo() {
     // console.log('updateTodo called. activeCategory:', this.activeCategory, 'products:', this.products, 'subcategories:', this.subcategories);
     this.isLoading = true
-    if (this.activeCategory === 'all') {
+    if (this.activeCategory === 'Panadería') {
       this.todo = this.products ? this.products.slice() : [];
     } else {
       const selectedCategory = this.subcategories ? this.subcategories.find(subcat => subcat.nombre === this.activeCategory) : null;

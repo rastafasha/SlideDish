@@ -61,6 +61,12 @@ export class BandejaComponent {
     }
   }
 
+  onItemsChange(items: any[]) {
+    this.items = items;
+    this.itemsChange.emit(this.items);
+    this.saveItemsToLocalStorage();
+  }
+
   saveItemsToLocalStorage(): void {
     this.isLoading=true
     try {
@@ -92,15 +98,21 @@ removeMostrarinfo(){
 }
 
   onItemRemoved(item: any) {
-    // Fix id property name to match item._id
     this.items = this.items.filter(i => i._id !== item._id);
     console.log('object', this.items);
+    
+    // Emit the updated items to refresh the UI
+    this.itemsChange.emit(this.items);
+    
     localStorage.removeItem('bandejaItems');
     this.saveBandejaListToLocalStorage();
-    if(!this.items ){
-      this.router.navigate(['/home']);
-    }
-    // this.ngOnInit();
+    
+    // Use setTimeout to avoid ExpressionChangedAfterItHasBeenCheckedError
+    setTimeout(() => {
+      if(!this.items || this.items.length === 0){
+        this.router.navigate(['/home']);
+      }
+    });
   }
 
   saveBandejaListToLocalStorage() {

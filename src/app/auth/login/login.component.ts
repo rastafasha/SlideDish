@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import { Router, RouterModule } from '@angular/router';
 import { UsuarioService } from '../../services/usuario.service';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from '../../shared/header/header.component';
+// import { HeaderComponent } from '../../shared/header/header.component';
 
 // declare const gapi: any;
 
@@ -17,10 +17,10 @@ import { HeaderComponent } from '../../shared/header/header.component';
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    HeaderComponent,
+    // HeaderComponent,
     // FooterComponent,
     RouterModule
-],
+  ],
   templateUrl: './login.component.html',
   styleUrls: [ './login.component.scss' ]
 })

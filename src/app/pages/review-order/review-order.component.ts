@@ -53,23 +53,14 @@ export class ReviewOrderComponent {
   }
 
   onItemRemoved(item: any) {
-    this.bandejaList = this.bandejaList.filter(i => i._id !== item.id);
-
-   localStorage.removeItem('bandejaItems');
+    this.bandejaList = this.bandejaList.filter(i => i._id !== item._id);
+    localStorage.removeItem('bandejaItems');
     this.saveBandejaListToLocalStorage();
-    this.ngOnInit();
-    this.removeItem(item, this.bandejaList.indexOf(item));
-    //si la bandejaList queda vacia, cambiar isbandejaList a false
+    
+    // Update isbandejaList to reflect the current state
     if(this.bandejaList.length === 0){
       this.isbandejaList = false;
-      
-    }
-    setTimeout(()=>{
       this.router.navigate(['/home']);
-    }, 500)
-    //si es falso enviar al home
-    if(!this.isbandejaList){
-     this.router.navigate(['/home']);
     }
   }
 
