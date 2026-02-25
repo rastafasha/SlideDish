@@ -23,6 +23,7 @@ export class HeaderComponent  implements OnInit{
   tiendas: Tienda[] = [];
   tienda!:Tienda;
   tiendaSelected!:Tienda;
+    public identity:any;
 
   constructor(
     private tiendaService: TiendaService,
@@ -33,6 +34,12 @@ export class HeaderComponent  implements OnInit{
     ngOnInit(): void {
       this.getTiendas();
       this.setTiendaDefault();
+
+      let USER = localStorage.getItem('user');
+      if(USER){
+        this.identity = JSON.parse(USER);
+        // console.log(this.identity);
+      }
     }
 
     loadBandejaListFromLocalStorage() {

@@ -87,11 +87,17 @@ export class UsuarioService {
     // localStorage.removeItem('menu');
     this.router.navigateByUrl('/home');
 
-    this.auth2.signOut().then(() => {
-      this.ngZone.run(() => {
-        this.router.navigateByUrl('/login');
+    // Only call signOut if auth2 is initialized (Google sign-in)
+    if (this.auth2) {
+      this.auth2.signOut().then(() => {
+        this.ngZone.run(() => {
+          this.router.navigateByUrl('/login');
+        });
       });
-    });
+    } else {
+      // If auth2 is not initialized, just navigate to login
+      this.router.navigateByUrl('/login');
+    }
   }
 
   validarToken(): Observable<boolean> {

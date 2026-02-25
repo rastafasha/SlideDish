@@ -8,7 +8,7 @@
         <!-- <img *ngIf="!identity" src="./assets/svg/user-login.svg" alt="Mall Connect"> -->
         <!-- <img *ngIf="identity && identity.img" [src]="(identity.img || '') | imagenPipe: 'usuarios'" alt="Mall Connect"> -->
         <div class="sidemenu">
-          <a href="javascript:void(0)" (click)="closeMenu()" class="close"></a>
+          <a  (click)="closeMenu()" class="close"></a>
           <nav>
             <ul>
               <li><a routerLink="/">Home</a></li>
@@ -17,7 +17,7 @@
               <!-- <li><a routerLink="/tiendas">Tiendas</a></li> -->
               <!-- <li><a href="homeindividual.html">Promociones</a></li> -->
               <li *ngIf="identity"><a [routerLink]="['/my-account/',]">Mi perfil</a></li>
-              <li *ngIf="identity"><a href="javascript:void(0)" (click)="logout()">Salir</a></li>
+              <li *ngIf="identity"><button  (click)="logout()">Salir</button></li>
               <li *ngIf="!identity"><a routerLink="/login">Login</a></li>
               <li *ngIf="!identity"><a routerLink="/registro">Registro</a></li>
               <!-- <li><a href="">Contacto</a></li> -->

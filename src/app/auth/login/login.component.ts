@@ -55,7 +55,7 @@ ngOnInit(){
 
 this.usuarioService.login(this.loginForm.value).subscribe(
       resp =>{
-        console.log('Login response:', resp);
+        // console.log('Login response:', resp);
         if(this.loginForm.get('remember')?.value){
           localStorage.setItem('email', this.loginForm.get('email')?.value);
         }else{

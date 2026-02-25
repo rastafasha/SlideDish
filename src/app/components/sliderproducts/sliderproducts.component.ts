@@ -95,7 +95,7 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges, OnDest
       (resp:any) => {
         this.products = resp.productos || [];
         this.updateTodo();
-        console.log(this.products)
+        // console.log(this.products)
         this.isLoading = false;
       },
       (error) => {
@@ -124,7 +124,7 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges, OnDest
   }
 
   selectCategory(category: string) {
-    console.log('selectCategory called with:', category);
+    // console.log('selectCategory called with:', category);
     this.activeCategory = category;
     this.updateTodo();
   }
