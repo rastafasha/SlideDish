@@ -11,7 +11,7 @@ cdkDropList #doneList="cdkDropList" id="doneList"
  
   <div class="item-bandeja" (click)="mostrarinfo(item)">
       <img [src]="item.img | imagenPipe:'productos' " [alt]="item.titulo" class="bandeja-item-image" />
-      <div class="item-color" *ngIf="item.color" [style.background-color]="item.color"></div>
+      <!-- <div class="item-color" *ngIf="item.color" [style.background-color]="item.color"></div> -->
   </div>
  
 </div>
