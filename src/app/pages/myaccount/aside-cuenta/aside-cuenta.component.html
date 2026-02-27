@@ -24,11 +24,11 @@
             <!-- <a class="nav-link-style d-flex align-items-center px-4 py-3" [routerLink]="['/my-account/cart']" routerLinkActive="active">
                 <i class="czi-cart opacity-60 mr-2"></i>Mi carrito
             </a> -->
-            <a class="nav-link-style d-flex align-items-center px-4 py-3" [routerLink]="['/cart']" routerLinkActive="active">
+            <!-- <a class="nav-link-style d-flex align-items-center px-4 py-3" [routerLink]="['/cart']" routerLinkActive="active">
                 <i class="czi-cart opacity-60 mr-2"></i>Mi carrito
-            </a>
+            </a> -->
         </li>
         
-        <li class="d-lg-none border-top mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"><i class="czi-sign-out opacity-60 mr-2"></i>Sign out</a></li>
+        <li class="d-lg-none border-top mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" (click)="logout()"><i class="czi-sign-out opacity-60 mr-2"></i>Sign out</a></li>
     </ul>
 </div>

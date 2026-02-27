@@ -23,21 +23,21 @@ export class BandejaComponent {
   @Input() items: Producto[] = [];
   @Output() itemsChange: EventEmitter<any[]> = new EventEmitter<any[]>();
   @Output() itemRemoved: EventEmitter<any> = new EventEmitter<any>();
-  itemSelected!:Producto;
-  isLoading:boolean= false;
+  itemSelected!: Producto;
+  isLoading: boolean = false;
 
   constructor(
-    private router:Router
-  ){
+    private router: Router
+  ) {
 
   }
 
 
-  drop(event:CdkDragDrop<any[]>){
-    if(event.previousContainer === event.container){
+  drop(event: CdkDragDrop<any[]>) {
+    if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       this.itemsChange.emit(this.items);
-    }else{
+    } else {
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -68,49 +68,40 @@ export class BandejaComponent {
   }
 
   saveItemsToLocalStorage(): void {
-    this.isLoading=true
+    this.isLoading = true
     try {
       localStorage.setItem('bandejaItems', JSON.stringify(this.items));
     } catch (e) {
       console.error('Error saving items to localStorage', e);
     }
-    this.isLoading=false;
+    this.isLoading = false;
   }
 
-  
+  mostrarinfo(item: Producto) {
+    // console.log(item);
+    this.itemSelected = item;
+    const bandejaItemInfo = document.querySelector('.bandeja-item-info-hide');
+    bandejaItemInfo?.classList.toggle('bandeja-item-info');
+  }
 
-
-
-  mostrarinfo(item:Producto){
-  // console.log(item);
-  this.itemSelected =item;
-  const bandejaItemInfo = document.querySelector('.bandeja-item-info-hide');
-  bandejaItemInfo?.classList.toggle('bandeja-item-info');
-
-  
-}
-
-removeMostrarinfo(){
-  const bandejaItemInfo = document.querySelector('.bandeja-item-info');
-  bandejaItemInfo?.classList.remove('bandeja-item-info');
-
-  
-}
+  removeMostrarinfo() {
+    const bandejaItemInfo = document.querySelector('.bandeja-item-info');
+    bandejaItemInfo?.classList.remove('bandeja-item-info');
+  }
 
   onItemRemoved(item: any) {
     this.items = this.items.filter(i => i._id !== item._id);
-    console.log('object', this.items);
-    
+
     // Emit the updated items to refresh the UI
     this.itemsChange.emit(this.items);
-    
+
     localStorage.removeItem('bandejaItems');
     this.saveBandejaListToLocalStorage();
-    
+
     // Use setTimeout to avoid ExpressionChangedAfterItHasBeenCheckedError
     setTimeout(() => {
-      if(!this.items || this.items.length === 0){
-        this.router.navigate(['/home']);
+      if (!this.items || this.items.length === 0) {
+        this.router.navigate(['/']);
       }
     });
   }

@@ -1,32 +1,25 @@
+<app-loading *ngIf="isLoading"></app-loading>
+
 <div class="category-filter" *ngIf="!isLoading">
-  <button
-    class="category-button"
-    [class.active]="activeCategory === 'Panadería'"
-    (click)="selectCategory('Panadería')"
-  >
+  <button class="category-button" [class.active]="activeCategory === 'Panadería'" (click)="selectCategory('Panadería')">
     Todo
   </button>
-  <button
-    *ngFor="let category of subcategories"
-    class="category-button"
-    [class.active]="activeCategory === category.nombre"
-    (click)="selectCategory(category.nombre)"
-  >
+  <button *ngFor="let category of subcategories" class="category-button"
+    [class.active]="activeCategory === category.nombre" (click)="selectCategory(category.nombre)">
     {{ category.nombre }}
   </button>
 </div>
 
-<app-loading *ngIf="isLoading"></app-loading>
 
 <div class="product-carousel" *ngIf="!isLoading">
   <div class="carousel-container" #carouselContainer>
-    <div class="carousel-track"
-    cdkDropList #todoList="cdkDropList" id="todoList"
-    [cdkDropListConnectedTo]="['doneList']"
-    [cdkDropListData]="todo"
-    (cdkDropListDropped)="drop($event)">
+    <div class="carousel-track" cdkDropList #todoList="cdkDropList" id="todoList"
+      [cdkDropListConnectedTo]="['doneList']" [cdkDropListData]="todo" (cdkDropListDropped)="drop($event)">
       <div class="product-card" *ngFor="let product of todo; let i = index" cdkDrag>
-       <app-product-item [product]="product" (productSelected)="openModal($event)"></app-product-item>
+        <!-- product-item -->
+        <app-product-item [product]="product" (productSelected)="openModal($event)"
+          (addToBandeja)="onAddToBandeja($event)"></app-product-item>
+        <!-- product-item -->
       </div>
     </div>
   </div>

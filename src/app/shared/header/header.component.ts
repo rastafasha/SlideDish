@@ -8,41 +8,40 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterModule, CommonModule, 
+  imports: [RouterModule, CommonModule,
     MenuComponent, ReactiveFormsModule,
     FormsModule
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent  implements OnInit{
+export class HeaderComponent implements OnInit {
 
   bandejaList: any[] = [];
   // public bandejaList: number = 0;
-  totalList : number = 0;
+  totalList: number = 0;
   tiendas: Tienda[] = [];
-  tienda!:Tienda;
-  tiendaSelected!:Tienda;
-    public identity:any;
+  tienda!: Tienda;
+  tiendaSelected!: Tienda;
+  public identity: any;
 
   constructor(
     private tiendaService: TiendaService,
   ) {
-      this.loadBandejaListFromLocalStorage();
-      
-    }
-    ngOnInit(): void {
-      this.getTiendas();
-      this.setTiendaDefault();
+    this.loadBandejaListFromLocalStorage();
 
-      let USER = localStorage.getItem('user');
-      if(USER){
-        this.identity = JSON.parse(USER);
-        // console.log(this.identity);
-      }
-    }
+  }
+  ngOnInit(): void {
+    this.setTiendaDefault();
 
-    loadBandejaListFromLocalStorage() {
+    let USER = localStorage.getItem('user');
+    if (USER) {
+      this.identity = JSON.parse(USER);
+      // console.log(this.identity);
+    }
+  }
+
+  loadBandejaListFromLocalStorage() {
     const storedItems = localStorage.getItem('bandejaItems');
     if (storedItems) {
       this.bandejaList = JSON.parse(storedItems);
@@ -52,22 +51,9 @@ export class HeaderComponent  implements OnInit{
     }
   }
 
-  getTiendas(){
-    this.tiendaService.cargarTiendas().subscribe((resp: Tienda[]) => {
-      // Asignamos el array filtrado directamente
-      this.tiendas = resp.filter((tienda: Tienda) => tienda.categoria && tienda.categoria.nombre=== 'Alimentos');
-      // console.log(this.tiendas);
 
-      setTimeout(()=>{
-        this.setTiendaDefault();
-      },1000)
 
-    })
-  }
-
- 
-
-  setTiendaDefault(){
+  setTiendaDefault() {
     // Always set default tienda to "SlideDish" if available
     const defaultTienda = this.tiendas.find(tienda => tienda.nombre === 'SlideDish');
     if (defaultTienda) {
@@ -77,10 +63,10 @@ export class HeaderComponent  implements OnInit{
     }
   }
 
-  onSelectStore(tienda:any){
+  onSelectStore(tienda: any) {
     this.tiendaSelected = tienda;
     this.tiendaService.setSelectedTienda(this.tiendaSelected);
-    this.tiendaService.getTiendaById(this.tiendaSelected._id).subscribe((resp:any)=>{
+    this.tiendaService.getTiendaById(this.tiendaSelected._id).subscribe((resp: any) => {
       // console.log(this.tiendaSelected.subcategoria);
       localStorage.setItem('tiendaSelected', JSON.stringify(this.tiendaSelected.subcategoria));
 
@@ -90,7 +76,7 @@ export class HeaderComponent  implements OnInit{
 
   get iconBagColorClass(): string {
     const colors = ['icon-bag-red', 'icon-bag-black', 'icon-bag-yellow'];
-    if(this.totalList > 0){
+    if (this.totalList > 0) {
       return colors[this.totalList % colors.length];
     }
     return '';
@@ -103,6 +89,6 @@ export class HeaderComponent  implements OnInit{
     }
   }
 
- 
+
 
 }

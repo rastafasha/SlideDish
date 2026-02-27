@@ -73,10 +73,10 @@
                                 <div class="col-lg-12">
                                     <div class="btn-toolbar" role="toolbar" aria-label="Settings toolbar">
                                         <div class="btn-group mr-2 mb-2" role="group" aria-label="Settings group">
-                                            <button type="button" class="btn btn-danger" *ngIf="venta.estado == 'Venta en proceso' && !btn_cancelar" data-toggle="modal" [attr.data-target]="'#sol_cancelar'">
+                                            <!-- <button type="button" class="btn btn-danger" *ngIf="venta.estado == 'Venta en proceso' && !btn_cancelar" data-toggle="modal" [attr.data-target]="'#sol_cancelar'">
                                               <i class="fa fa-paypal"></i> &nbsp;
                                               Solicitar reembolso
-                                            </button>
+                                            </button> -->
                                             <!-- modal cancelacion -->
                                             <div class="modal fade" [attr.id]="'sol_cancelar'" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
@@ -111,11 +111,11 @@
                                                 </div>
                                             </div>
                                             <!-- modal cancelacion -->
-                                            <ng-container *ngIf="venta.estado == 'Enviado' || venta.estado == 'Venta en proceso' || venta.estado == 'Finalizado'">
+                                            <!-- <ng-container *ngIf="venta.estado == 'Enviado' || venta.estado == 'Venta en proceso' || venta.estado == 'Finalizado'">
                                                 <a [routerLink]="['/my-account/ordenes/tickets/',venta._id]" type="button" class="btn btn-primary">
                                                     <i class="fa fa-help mr-1"></i> Tickets
                                                 </a>
-                                            </ng-container>
+                                            </ng-container> -->
 
 
                                         </div>
@@ -174,9 +174,9 @@
                                 </div>
                                 <div class="col-lg-12 form-group" *ngIf="data_cancelacion">
                                     <div class="card">
-                                        <div class="card-header bg-primary">
+                                        <!-- <div class="card-header bg-primary">
                                             <h6 style="margin-bottom: 0px;color: white">Solicitud de cancelación</h6>
-                                        </div>
+                                        </div> -->
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-lg-6">
@@ -198,10 +198,10 @@
 
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-6">
+                                                <!-- <div class="col-lg-6">
                                                     <h6>Mensaje:</h6>
                                                     <p class="text-justify" style="font-size: 13px;margin-bottom: 0px;">{{data_cancelacion.mensaje}}</p>
-                                                </div>
+                                                </div> -->
                                             </div>
                                         </div>
                                     </div>

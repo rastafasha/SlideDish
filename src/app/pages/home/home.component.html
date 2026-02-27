@@ -2,20 +2,20 @@
 <!-- <app-menu></app-menu> -->
 <app-hero></app-hero>
 <div class="container">
-    <app-sliderproducts (productDropped)="onProductDropped($event)" ></app-sliderproducts>
 
   <app-loading *ngIf="isLoading"></app-loading>
-<app-bandeja 
-*ngIf="!isLoading"
-  [items]="bandejaList" 
-  (itemsChange)="onItemsChange($event)" 
-  (itemRemoved)="onItemRemoved($event)">
-</app-bandeja>
-<div class="order-button-container" *ngIf="bandejaList.length > 0">
-  <button class="order-button" routerLink="/review" >
-    Revisar Orden
-    <i class="fa fa-chevron-right icon-small"></i>
-  </button>
-</div>
-</div>
 
+  <app-sliderproducts (productDropped)="onProductDropped($event)"
+    (addToBandeja)="onProductDropped($event)"></app-sliderproducts>
+
+  <app-bandeja *ngIf="!isLoading && isbandejaList" [items]="bandejaList" (itemsChange)="onItemsChange($event)"
+    (itemRemoved)="onItemRemoved($event)">
+  </app-bandeja>
+  <!-- *ngIf="bandejaList.length > 0" -->
+  <div class="order-button-container">
+    <button class="order-button" routerLink="/review">
+      Revisar Orden
+      <i class="fa fa-chevron-right icon-small"></i>
+    </button>
+  </div>
+</div>

@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { HeaderComponent } from '../../shared/header/header.component';
 import { CommonModule } from '@angular/common';
 import { Route, Router, RouterModule } from '@angular/router';
 import { BandejaComponent } from '../../components/bandeja/bandeja.component';
 import { Producto } from '../../models/product';
 import { ImagenPipe } from '../../pipes/imagen-pipe.pipe';
+import { CarritoService } from '../../services/carrito.service';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class ReviewOrderComponent {
   fechaHoy: string = new Date().toISOString().split('T')[0];
   randomNum:number = 0;
   isbandejaList:boolean = false;
+  private carritoService = inject(CarritoService);
   
     constructor(
       private router: Router
@@ -55,12 +57,13 @@ export class ReviewOrderComponent {
   onItemRemoved(item: any) {
     this.bandejaList = this.bandejaList.filter(i => i._id !== item._id);
     localStorage.removeItem('bandejaItems');
+    this.carritoService.removeItem(item);
     this.saveBandejaListToLocalStorage();
     
     // Update isbandejaList to reflect the current state
     if(this.bandejaList.length === 0){
       this.isbandejaList = false;
-      this.router.navigate(['/home']);
+      this.router.navigate(['/']);
     }
   }
 
@@ -94,6 +97,7 @@ removeItem(item:Producto, index:any){
   } else {
     this.bandejaList.splice(index, 1);
   }
+  this.carritoService.removeItem(item);
   this.saveBandejaListToLocalStorage();
   this.ngOnInit()
 

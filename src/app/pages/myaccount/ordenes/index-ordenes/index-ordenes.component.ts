@@ -56,7 +56,7 @@ export class IndexOrdenesComponent implements OnInit {
      let USER = localStorage.getItem('user');
     if(USER){
       this.identity = JSON.parse(USER);
-      console.log(this.identity);
+      // console.log(this.identity);
     }
   }
 
@@ -76,7 +76,7 @@ export class IndexOrdenesComponent implements OnInit {
    this.ventaService.listarporUser(this.identity.uid!).subscribe(
       response=>{
         this.ventas = response.ventas;
-        console.log(this.ventas);
+        // console.log(this.ventas);
 
       },
       error=>{
@@ -92,7 +92,7 @@ export class IndexOrdenesComponent implements OnInit {
     this.ventaService.listarCancelacionporUser(this.identity.uid!).subscribe(
       response=>{
         this.cancelacion = response.cancelacion;
-        console.log(this.cancelacion);
+        // console.log(this.cancelacion);
       },
       error=>{
 

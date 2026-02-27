@@ -12,10 +12,12 @@ import { LoadingComponent } from '../../shared/loading/loading.component';
 import { TiendaService } from '../../services/tienda.service';
 import { Tienda } from '../../models/tienda.model';
 import { Subscription } from 'rxjs';
+import { CarritoService } from '../../services/carrito.service';
+import { ColorService } from '../../services/color.service';
 
 @Component({
   selector: 'app-sliderproducts',
-  imports:[
+  imports: [
     NgFor,
     ProductItemComponent,
     CdkDropList, CdkDrag,
@@ -29,42 +31,40 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges, OnDest
   @Input() productsList: Producto[] = [];
   tiendaSelected: Tienda | null = null;
   @Output() productDropped: EventEmitter<Producto> = new EventEmitter<Producto>();
+  @Output() addToBandeja: EventEmitter<any> = new EventEmitter<any>();
   @ViewChild('carouselContainer', { static: false }) carouselContainer!: ElementRef<HTMLDivElement>;
-  isLoading:boolean = false;
-  
+  isLoading: boolean = false;
+
   selectedProduct: Producto | null = null;
-
-  
-
   categories: Categoria[] = [];
   subcategories: any[] = [];
-
   products: Producto[] = [];
-
   activeCategory: string = 'Panadería';
-
   todo: Producto[] = [];
-  catname!:string;
-  
-  private productoService = inject(ProductoService);
-  private categoryService = inject(CategoryService);
-  private tiendasService = inject(TiendaService);
-
+  catname!: string;
   private tiendaSubscription: Subscription | undefined;
 
-  
+  public colores: any = [];
+  public color_to_cart!: string;
+  public productoId!: any;
+
+  private _colorService = inject(ColorService);
+  private carritoService = inject(CarritoService);
+
+  private productoService = inject(ProductoService);
+  private tiendasService = inject(TiendaService);
+
 
   constructor() {
     this.products = this.products || [];
     this.todo = this.products.slice();
   }
-  
-  ngOnInit(){
+
+  ngOnInit() {
     this.tiendaSubscription = this.tiendasService.selectedTiendaObservable$.subscribe(tienda => {
       this.tiendaSelected = tienda;
       this.updateTodo();
       this.getProductosCatName();
-      this.getCategories();
     });
   }
 
@@ -72,7 +72,7 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges, OnDest
 
   ngAfterViewInit() {
     this.getProductosCatName();
-    
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -92,8 +92,23 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges, OnDest
     this.catname = this.tiendaSelected?.subcategoria ?? 'Panadería'
     this.isLoading = true
     this.productoService.findProducto_by_Categorynombre(this.catname).subscribe(
-      (resp:any) => {
+      (resp: any) => {
         this.products = resp.productos || [];
+        //obtenemos las subcategorias de los productos
+        //filtramos los productos donde sea igual a la categoria Panaderia
+        const productos = (resp.productos || []).filter((producto: any) => producto.categoria?.nombre === this.catname);
+        //extraemos el campo subcategoria
+        const subcategorias = productos.map((producto: any) => producto.subcategoria);
+        //eliminamos los duplicados
+        const subcategoriasUnicas = [...new Set(subcategorias)];
+        //creamos un arreglo de objetos con el nombre de la subcategoria y el arreglo de productos
+        const categorias = subcategoriasUnicas.map((subcategoria: any) => ({
+          nombre: subcategoria,
+          products: productos.filter((product: any) => product.subcategoria === subcategoria),
+        }));
+        this.subcategories = categorias || [];
+
+        
         this.updateTodo();
         // console.log(this.products)
         this.isLoading = false;
@@ -103,25 +118,7 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges, OnDest
       }
     );
   }
-  //obtenemos las subcategorias de los productos
-  getCategories() {
-    this.isLoading = true
-    this.productoService.getProductosActivos().subscribe((resp:any)=>{
-      //filtramos los productos donde sea igual a la categoria Panaderia
-      const productos = resp.filter((producto: any) => producto.categoria.nombre ===  this.catname);
-      //extraemos el campo subcategoria
-      const subcategorias = productos.map((producto: any) => producto.subcategoria);
-      //eliminamos los duplicados
-      const subcategoriasUnicas = [...new Set(subcategorias)];
-      //creamos un arreglo de objetos con el nombre de la subcategoria y el arreglo de productos
-      const categorias = subcategoriasUnicas.map((subcategoria: any) => ({
-        nombre: subcategoria,
-        products: productos.filter((product: any) => product.subcategoria === subcategoria),
-        }));
-        this.subcategories = categorias || [];
-    })
-    this.isLoading = false
-  }
+  
 
   selectCategory(category: string) {
     // console.log('selectCategory called with:', category);
@@ -142,7 +139,7 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges, OnDest
     this.isLoading = false
   }
 
-  
+
 
   scrollLeft() {
     if (this.carouselContainer) {
@@ -156,10 +153,10 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges, OnDest
     }
   }
 
-  drop(event:CdkDragDrop<Producto[]>){
-    if(event.previousContainer === event.container){
+  drop(event: CdkDragDrop<Producto[]>) {
+    if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex)
-    }else{
+    } else {
       const product = event.previousContainer.data[event.previousIndex];
       this.productDropped.emit(product);
       // Optionally remove the product from todo if you want it to move rather than copy
@@ -176,4 +173,39 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges, OnDest
       modal.show();
     }
   }
+
+  onAddToBandeja(product: Producto) {
+    this.productoId = product._id;
+
+    // this._colorService.colorByProduct(this.productoId).subscribe(
+    //   response => {
+    //     this.colores = response;
+    //     this.color_to_cart = this.colores[0]?.color || '#333333';
+    //     console.log('color_to_cart: ', this.color_to_cart);
+
+    //     // Create product with color included
+    //     let data = {
+    //       ...product,
+    //       color: this.color_to_cart
+    //     };
+
+    //     // Emit product with color to bandeja
+    //     this.addToBandeja.emit(data);
+
+    //     // Also add to cart service
+    //     this.carritoService.addItem(data);
+    //   },
+    //   error => {
+    //     // If color service fails, emit product without color
+    //     console.error('Error getting color:', error);
+    //     this.addToBandeja.emit(product);
+    //     this.carritoService.addItem(product);
+    //   }
+    // );
+
+  }
+
+
+
+
 }

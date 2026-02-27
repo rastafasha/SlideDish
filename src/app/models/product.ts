@@ -15,7 +15,9 @@
 
 import { environment } from '../../environments/environment';
 import { Categoria } from './categoria.model';
+import { Color } from './color.model';
 import { Marca } from './marca.model';
+import { Selector } from './selector.model';
 
 const base_url = environment.mediaUrlRemoto;
 export class Producto {
@@ -28,11 +30,14 @@ export class Producto {
   slug!: string;
   stock!: number;
   cantidad!:number;
-  categoria!: string;
+  categoria!: Categoria;
   subcategoria!: string;
   isFeatured!: boolean;
   status!: boolean;
   marca!: Marca;
+  color!: Color;
+  selector!: Selector;
+  nombre_selector!: string;
   createdAt!: Date;
   updatedAt!: Date;
   img!: string;

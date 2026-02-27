@@ -64,6 +64,26 @@
     transition: all 1s ease;
 }
 
+.item-color-info {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.color-label {
+    font-size: 12px;
+    color: #666;
+}
+
+.color-value {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+}
+
 
 
 @media (max-width:768px) {
