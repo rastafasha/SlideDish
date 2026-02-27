@@ -2,10 +2,10 @@
   <div class="inff">
     <p class="bandeja-item-name">{{ itemSelected.titulo }}</p>
     <p class="bandeja-item-price">{{ itemSelected.precio_ahora |number:'1.2-2'|currency }}</p>
-    <div class="item-color-info" *ngIf="itemSelected.color">
+    <!-- <div class="item-color-info" *ngIf="itemSelected.color">
       <span class="color-label">Color:</span>
       <span class="color-value" [style.background-color]="itemSelected.color"></span>
-    </div>
+    </div> -->
    
   </div>
   <div class="eliminaritem " (click)="onRemoveItem(itemSelected)">

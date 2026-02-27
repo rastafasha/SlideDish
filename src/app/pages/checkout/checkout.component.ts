@@ -283,10 +283,10 @@ export class CheckoutComponent {
 
     this.bandejaList;
     this.subtotal = 0;
-    
+
     for (const element of this.bandejaList) {
       this.subtotal = Math.round(this.subtotal + (element.precio_ahora * element.cantidad));
-      
+
       // Process color - ensure it's an object with _id
       let colorObj: any = null;
       if (element.color) {
@@ -306,7 +306,7 @@ export class CheckoutComponent {
           }
         }
       }
-      
+
       // Process selector - ensure it's an object with _id
       let selectorObj: any = null;
       if (element.selector) {
@@ -326,7 +326,7 @@ export class CheckoutComponent {
           }
         }
       }
-      
+
       this.data_detalle.push({
         producto: element,
         cantidad: element.cantidad,
@@ -432,9 +432,7 @@ export class CheckoutComponent {
       // console.log('resultado: ',resultado);
       this.verify_dataComplete(Number(this.formTransferencia.value.amount));
       if (resultado.ok || resultado.status === 200) {
-        // transferencia registrada con exito
-        // console.log(resultado.payment);
-        // alert('Transferencia registrada con exito');
+
         Swal.fire({
           position: 'top-end',
           icon: 'success',
@@ -442,13 +440,10 @@ export class CheckoutComponent {
           showConfirmButton: false,
           timer: 1500,
         });
-        this.onItemRemoved();
+        this._carritoService.clearCart(); // Limpia el carrito después de la compra
         this._router.navigate(['/my-account/ordenes']);
       }
       else {
-        // error al registar la transferencia
-        // alert('Error al registrar la transferencia');
-        // console.log(resultado.msg);
         Swal.fire({
           position: 'top-end',
           icon: 'warning',
@@ -498,11 +493,11 @@ export class CheckoutComponent {
       (response: any) => {
         this.carrito = response;
         this.subtotal = 0;
-        
+
         // Process each item and ensure color/selector have _id
         this.carrito.forEach(async (element: any) => {
           this.subtotal = Math.round(this.subtotal + (element.precio * element.cantidad));
-          
+
           // Process color - ensure it's an object with _id
           let colorObj: any = null;
           if (element.color) {
@@ -521,7 +516,7 @@ export class CheckoutComponent {
               }
             }
           }
-          
+
           // Process selector - ensure it's an object with _id
           let selectorObj: any = null;
           if (element.selector) {
@@ -540,7 +535,7 @@ export class CheckoutComponent {
               }
             }
           }
-          
+
           this.data_detalle.push({
             producto: element,
             cantidad: element.cantidad,
@@ -585,10 +580,10 @@ export class CheckoutComponent {
     // }.bind(this));
   }
 
-  
 
-  verify_dataComplete(total_pagado: number) {debugger
-    
+
+  verify_dataComplete(total_pagado: number) {
+
     if (this.localId) {
       this.msm_error = '';
 
@@ -641,12 +636,14 @@ export class CheckoutComponent {
   }
 
   saveVenta() {
-    
+
     this._ventaService.registro(this.data_venta).subscribe(response => {
       this.data_venta.detalles.forEach((element: { producto: { _id: any; }; cantidad: any; }) => {
         console.log(element);
         this._productoService.aumentar_ventas(element.producto._id).subscribe(
           response => {
+
+
           },
           error => {
             console.log(error);
@@ -660,6 +657,8 @@ export class CheckoutComponent {
             this.socket.emit('save-carrito', { new: true });
             this.socket.emit('save-stock', { new: true });
             // this._router.navigate(['/dashboard/ventas/modulo']);
+
+
           },
           error => {
             console.log(error);

@@ -4,6 +4,7 @@ import { ColorService } from '../../services/color.service';
 import { CarritoService } from '../../services/carrito.service';
 import { SelectorService } from '../../services/selector.service';
 import { forkJoin } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-product-item',
@@ -19,10 +20,10 @@ export class ProductItemComponent {
   @Output() productSelected: EventEmitter<any> = new EventEmitter<any>();
   @Output() addToBandeja: EventEmitter<any> = new EventEmitter<any>();
 
-   public colores: any = [];
-  public color_to_cart!:string;
-  public productoId!:any;
-  public selector!:any;
+  public colores: any = [];
+  public color_to_cart!: string;
+  public productoId!: any;
+  public selector!: any;
 
   private _colorService = inject(ColorService);
   private carritoService = inject(CarritoService);
@@ -34,7 +35,7 @@ export class ProductItemComponent {
 
   addProductToBandeja(product: any, event: Event): void {
     event.stopPropagation();
-    
+
     this.productoId = product._id;
 
     // Use forkJoin to wait for both selector and color API calls
@@ -59,20 +60,28 @@ export class ProductItemComponent {
 
         // Emit product with color and selector to bandeja so home component can update
         this.addToBandeja.emit(productWithColor);
-        
+
         // Also add to cart service for backend sync
         this.carritoService.addItem(productWithColor);
+
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: 'Artículo agregado a la bandeja',
+          showConfirmButton: false,
+          timer: 1500,
+        });
       },
       error => {
         // If any service fails, emit product without color/selector
         console.error('Error getting selector or color:', error);
-        
+
         let productBasic = {
           ...product,
           color: null,
           selector: null
         };
-        
+
         this.addToBandeja.emit(productBasic);
         this.carritoService.addItem(productBasic);
       }

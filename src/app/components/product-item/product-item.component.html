@@ -1,10 +1,10 @@
 <div class="example-box" cdkDrag>
     <div class="product-image" (click)="openPaymentsModal(product)">
         <img [src]="product.img" [alt]="product.titulo" />
-        <div *ngIf="product.color" class="product-color-indicator" 
+        <!-- <div *ngIf="product.color" class="product-color-indicator" 
              [style.background-color]="product.color.color"
              [title]="product.color.titulo || 'Color'">
-        </div>
+        </div> -->
     </div>
     <h3 class="product-name">{{ product.titulo }}</h3>
     <p class="product-price">{{ product.precio_ahora.toFixed(2) | currency }}</p>
