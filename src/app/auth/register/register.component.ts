@@ -4,7 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Tienda } from '../../models/tienda.model';
 import { UsuarioService } from '../../services/usuario.service';
-import { NgIf } from '@angular/common';
+import { NgIf, NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-register',
@@ -12,7 +12,8 @@ import { NgIf } from '@angular/common';
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
-    NgIf
+    NgIf,
+    NgClass
   ],
   templateUrl: './register.component.html',
   styleUrls: [ './register.component.scss' ]
@@ -20,6 +21,7 @@ import { NgIf } from '@angular/common';
 export class RegisterComponent implements OnInit {
 
   public formSumitted = false;
+  public currentStep: number = 1;
 
   registerForm:FormGroup;
   tiendas!: Tienda[];
@@ -63,6 +65,24 @@ export class RegisterComponent implements OnInit {
     //   this.tienda = this.tiendas[0];
 
     // })
+  }
+
+  nextStep() {
+    // Validate step 1 fields (first_name, last_name)
+    const firstName = this.registerForm.get('first_name');
+    const lastName = this.registerForm.get('last_name');
+
+    if (firstName?.invalid || lastName?.invalid) {
+      firstName?.markAsTouched();
+      lastName?.markAsTouched();
+      return;
+    }
+
+    this.currentStep = 2;
+  }
+
+  prevStep() {
+    this.currentStep = 1;
   }
 
   crearUsuario(){
