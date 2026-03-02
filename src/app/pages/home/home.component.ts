@@ -10,6 +10,8 @@ import { LoadingComponent } from '../../shared/loading/loading.component';
 import { MenuComponent } from "../../shared/menu/menu.component";
 import { ColorService } from '../../services/color.service';
 import { CarritoService } from '../../services/carrito.service';
+import { TiendaService } from '../../services/tienda.service';
+import { Tienda } from '../../models/tienda.model';
 
 @Component({
   selector: 'app-home',
@@ -30,15 +32,21 @@ export class HomeComponent {
   @Input() product:any;
   isLoading:boolean=false;
 
+  tienda!: Tienda;
+    tiendaSlug: string = 'slidedish';
+
   private colorService = inject(ColorService);
   private carritoService = inject(CarritoService);
+  private tiendaService = inject(TiendaService);
   private cdr = inject(ChangeDetectorRef);
 
- @Output() tiendaSelected: string = 'Panadería'
+ @Output() tiendaSelected: string = 'Panadería';
+ 
 
   constructor() {
     this.loadBandejaListFromLocalStorage();
     window.scroll(0,0);
+    this.getTiendabySlug();
   }
 
   onProductDropped(product: any) {
@@ -116,4 +124,12 @@ export class HomeComponent {
       console.error('Error saving bandejaList to localStorage', e);
     }
   }
+
+   getTiendabySlug() {
+    this.tiendaService.getTiendaBySlug(this.tiendaSlug).subscribe((resp: any) => {
+      this.tienda = resp;
+      console.log(this.tienda);
+    })
+  }
+
 }

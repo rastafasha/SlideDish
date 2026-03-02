@@ -86,6 +86,7 @@ export class CheckoutComponent {
   tienda!: any;
 
   selectedMethod: string = 'Selecciona un método de pago';
+  tiendaSlug: string = 'slidedish';
   public clienteSeleccionado: any;
 
   habilitacionFormTransferencia: boolean = false;

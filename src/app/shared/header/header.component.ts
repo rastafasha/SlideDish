@@ -33,7 +33,6 @@ export class HeaderComponent implements OnInit {
   }
   ngOnInit(): void {
     this.setTiendaDefault();
-
     let USER = localStorage.getItem('user');
     if (USER) {
       this.identity = JSON.parse(USER);
@@ -63,6 +62,8 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+ 
+  
   onSelectStore(tienda: any) {
     this.tiendaSelected = tienda;
     this.tiendaService.setSelectedTienda(this.tiendaSelected);

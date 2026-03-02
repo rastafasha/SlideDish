@@ -1,6 +1,6 @@
 <div class="example-box" cdkDrag>
     <div class="product-image" (click)="openPaymentsModal(product)">
-        <img [src]="product.img" [alt]="product.titulo" />
+        <img [src]="product.img | imagenPipe:'productos'"  [alt]="product.titulo" />
         <!-- <div *ngIf="product.color" class="product-color-indicator" 
              [style.background-color]="product.color.color"
              [title]="product.color.titulo || 'Color'">

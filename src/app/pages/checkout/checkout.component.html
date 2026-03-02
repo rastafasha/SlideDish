@@ -59,7 +59,6 @@
           <div #paypal *ngIf="paypal">
             <ngx-paypal [config]="payPalConfig"></ngx-paypal>
           </div>
-          <!-- <div #paypal></div> -->
           <!-- Contenedor para el botón de transferencia-->
           <div *ngIf="habilitacionFormTransferencia" class="mt-1 mb-1 ">
 
@@ -124,7 +123,7 @@
               </div>
               </div>
 
-
+              <!-- pagomovil -->
               <div class="row" *ngIf="paymentSelected && paymentSelected?.tipo === 'pagomovil'">
                 <!-- monto -->
                 <div class="mb-3 col-xs-12 col-sm-6">
@@ -161,7 +160,7 @@
                 </button>
               </div>
               </div>
-
+              <!-- zelle -->
               <div *ngIf="paymentSelected && paymentSelected?.tipo === 'zelle'">
                 <div class="row">
                   <!-- numero de referencia -->

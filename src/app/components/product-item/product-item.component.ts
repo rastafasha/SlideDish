@@ -5,11 +5,13 @@ import { CarritoService } from '../../services/carrito.service';
 import { SelectorService } from '../../services/selector.service';
 import { forkJoin } from 'rxjs';
 import Swal from 'sweetalert2';
+import { ImagenPipe } from '../../pipes/imagen-pipe.pipe';
 
 @Component({
   selector: 'app-product-item',
   imports: [
-    CommonModule
+    CommonModule,
+    ImagenPipe
   ],
   templateUrl: './product-item.component.html',
   styleUrl: './product-item.component.scss'

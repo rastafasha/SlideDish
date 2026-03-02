@@ -12,8 +12,6 @@ import { LoadingComponent } from '../../shared/loading/loading.component';
 import { TiendaService } from '../../services/tienda.service';
 import { Tienda } from '../../models/tienda.model';
 import { Subscription } from 'rxjs';
-import { CarritoService } from '../../services/carrito.service';
-import { ColorService } from '../../services/color.service';
 
 @Component({
   selector: 'app-sliderproducts',
@@ -22,7 +20,7 @@ import { ColorService } from '../../services/color.service';
     ProductItemComponent,
     CdkDropList, CdkDrag,
     ModalproductComponent,
-    LoadingComponent, NgIf
+    LoadingComponent, NgIf,
   ],
   templateUrl: './sliderproducts.component.html',
   styleUrls: ['./sliderproducts.component.scss']
@@ -48,8 +46,7 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges, OnDest
   public color_to_cart!: string;
   public productoId!: any;
 
-  private _colorService = inject(ColorService);
-  private carritoService = inject(CarritoService);
+
 
   private productoService = inject(ProductoService);
   private tiendasService = inject(TiendaService);
@@ -177,33 +174,9 @@ export class SliderproductsComponent implements AfterViewInit, OnChanges, OnDest
   onAddToBandeja(product: Producto) {
     this.productoId = product._id;
 
-    // this._colorService.colorByProduct(this.productoId).subscribe(
-    //   response => {
-    //     this.colores = response;
-    //     this.color_to_cart = this.colores[0]?.color || '#333333';
-    //     console.log('color_to_cart: ', this.color_to_cart);
-
-    //     // Create product with color included
-    //     let data = {
-    //       ...product,
-    //       color: this.color_to_cart
-    //     };
-
-    //     // Emit product with color to bandeja
-    //     this.addToBandeja.emit(data);
-
-    //     // Also add to cart service
-    //     this.carritoService.addItem(data);
-    //   },
-    //   error => {
-    //     // If color service fails, emit product without color
-    //     console.error('Error getting color:', error);
-    //     this.addToBandeja.emit(product);
-    //     this.carritoService.addItem(product);
-    //   }
-    // );
-
   }
+
+  
 
 
 

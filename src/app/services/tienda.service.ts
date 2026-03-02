@@ -46,6 +46,14 @@ export class TiendaService {
         );
   }
 
+  getTiendaBySlug(slug: any){
+    const url = `${base_url}/tiendas/by_slug/${slug}`;
+    return this.http.get<any>(url, this.headers)
+      .pipe(
+        map((resp:{ok: boolean, tienda: Tienda}) => resp.tienda)
+        );
+  }
+
   crearTienda(tienda: Tienda){
     const url = `${base_url}/tiendas/store`;
     return this.http.post(url, tienda, this.headers);
