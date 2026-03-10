@@ -123,7 +123,7 @@ export class CheckoutComponent {
   ngOnInit() {
     this.loadBandejaListFromLocalStorage();
     this.geneardorOrdeneNumero();
-    this.obtenerMetodosdePago();
+    // this.obtenerMetodosdePago();
     this.total();
     let USER = localStorage.getItem('user');
     if (USER) {
@@ -134,7 +134,6 @@ export class CheckoutComponent {
     let TIENDA = localStorage.getItem('tiendaSelected');
     if (TIENDA) {
       this.tienda = JSON.parse(TIENDA);
-      console.log(this.tienda);
 
       this.data_direccionLocal = this.tienda;
       this.localId = '68752e382f5855586a14b20f';
@@ -153,26 +152,24 @@ export class CheckoutComponent {
     });
 
     this.direccionTienda();
-    // this.loadTiendaFromLocalStorage();
-
     this.listar_carrito();
-  }
-
-  loadTiendaFromLocalStorage() {
-    const storedLocal = localStorage.getItem('tiendaSelected');
-    if (storedLocal) {
-      this.tiendaSelect = JSON.parse(storedLocal);
-
-    }
   }
 
   direccionTienda() {
     this._tiendaService.getTiendaById(this.localId).subscribe(
       tienda => {
         this.data_direccionLocal = tienda;
+        this.tienda = tienda
+        this.getTiposdePagoByLocal();
       }
     );
 
+  }
+
+   getTiposdePagoByLocal() {
+    this._tipoPagosService.getPaymentMethodByTiendaId(this.tienda._id).subscribe(paymentMethods => {
+      this.paymentMethods = paymentMethods;
+    })
   }
 
   private listAndIdentify() {
@@ -371,34 +368,6 @@ export class CheckoutComponent {
   }
 
 
-  // Método que se llama cuando cambia el select
-  // onPaymentMethodChange(event: any) {
-  //   this.selectedMethod = event.target.value;
-  //   console.log('metodo de pago seleccionado: ',this.selectedMethod)
-  //   this.getPaymentMbyName(this.selectedMethod);
-
-  //   if(this.selectedMethod==='paypal' || this.selectedMethod==='card'){
-  //     // transferencia bancaria => abrir formulario (en un futuro un modal con formulario)
-  //     // this.renderPayPalButton(); // Renderiza el botón de nuevo según la opción seleccionada
-  //     this.habilitacionFormTransferencia = false;
-  //     this.habilitacionFormCheque = false;
-  //   }
-  //   if(this.selectedMethod==='Transferencia Dólares' || this.selectedMethod==='Transferencia Bolivares'
-  //     || this.selectedMethod==='pagomovil' || this.selectedMethod==='zelle'
-  //   ){
-  //     // transferencia bancaria => abrir formulario (en un futuro un modal con formulario)
-  //     this.habilitacionFormTransferencia = true;
-  //     this.habilitacionFormCheque = false;
-  //   }
-  //   else if(this.selectedMethod==='cheque'){
-  //     // cheque
-  //     this.habilitacionFormCheque = true;
-
-  //     this.habilitacionFormTransferencia = false;
-
-
-  //   }
-  // }
 
   // Método que se llama cuando cambia el select
   onPaymentMethodChange(event: any) {
